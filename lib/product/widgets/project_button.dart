@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import 'package:todo_app/product/constants/project_colors.dart';
+import 'package:todo_app/product/extensions/context_extensions.dart';
+
+class ProjectButton extends StatelessWidget {
+  const ProjectButton({super.key, required this.text, required this.onPressed});
+  final String text;
+  final void Function() onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+            width: context.dynamicWidht(1),
+            height: context.dynamicHeight(0.07),
+            child: ElevatedButton(
+              onPressed: onPressed,
+               style: ElevatedButton.styleFrom(
+                backgroundColor: ProjectColors.iris,
+              ), 
+             child: Text(text,style: context.textTheme().titleMedium?.copyWith(color: ProjectColors.white),),
+             ),
+          );
+  }
+}
