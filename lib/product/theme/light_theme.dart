@@ -4,6 +4,12 @@ import 'package:todo_app/product/constants/project_colors.dart';
 class LightTheme{
 
   ThemeData themeData = ThemeData.light().copyWith(
+    appBarTheme: const AppBarTheme(
+       backgroundColor: ProjectColors.white,
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        centerTitle: true
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         elevation: 0,
@@ -36,6 +42,7 @@ class LightTheme{
         fontSize: 16
       )
     ),
+    scaffoldBackgroundColor: ProjectColors.white,
   );
 
 }

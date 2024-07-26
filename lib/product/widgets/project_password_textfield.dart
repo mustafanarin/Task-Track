@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 
 class ProjectPasswordTextfield extends StatefulWidget {
-  const ProjectPasswordTextfield({super.key, required this.hintText, required this.controller, required this.keyBoardType, this.validator,});
+  const ProjectPasswordTextfield({super.key, required this.hintText, required this.controller, required this.keyBoardType,required this.validator,});
   final String hintText;
   final TextEditingController controller;
   final TextInputType keyBoardType;

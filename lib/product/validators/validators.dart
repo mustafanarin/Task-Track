@@ -9,6 +9,9 @@ class Validators{
   static const String _passwordNotEmpty = 'Password cannot be left blank';
   static const String _passwordLeastSixCharecter = 'Password must be at least 6 characters';
 
+  static const String _passwordAgain = 'Please re-enter your password';
+  static const String _passwordDontMatch = 'Passwords don\'t match';
+
   // name 
   String? validateName(String? value) {
   if (value == null || value.isEmpty) {
@@ -41,6 +44,17 @@ class Validators{
     }
     if (value.length < 6) {
       return _passwordLeastSixCharecter;
+    }
+    return null;
+  }
+
+  // confirm
+   String? validateConfirmPassword(String? value, String password) {
+    if (value == null || value.isEmpty) {
+      return _passwordAgain;
+    }
+    if (value != password) {
+      return _passwordDontMatch;
     }
     return null;
   }

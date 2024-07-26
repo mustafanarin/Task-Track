@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:todo_app/feature/authentication/register_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
@@ -18,11 +19,11 @@ class LoginPage extends HookWidget {
   Widget build(BuildContext context) {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    final formKey = useMemoized(() =>GlobalKey<FormState>());
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+     // resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: context.dynamicHeight(0.30),
-        centerTitle: true,
         leading: Padding(
           padding:  EdgeInsets.only(top: context.mediumValue,right: context.lowValue1),
           child: Align(
@@ -40,7 +41,7 @@ class LoginPage extends HookWidget {
                 height: context.dynamicHeight(0.20),
                 width: context.dynamicHeight(0.20),
                 child: Image.asset(PngItems.man_working.path(),fit: BoxFit.contain,)),
-              Text(ProjectStrings.appBarTitle,style: context.textTheme().titleLarge),
+              Text(ProjectStrings.loginButton,style: context.textTheme().titleLarge),
               Text(ProjectStrings.appBarSuptitle,style: context.textTheme().titleSmall?.copyWith(color: ProjectColors.grey),),
             ],
           ),
@@ -52,68 +53,78 @@ class LoginPage extends HookWidget {
             color: ProjectColors.black,
             thickness: 1.5,
           ),
-          Padding(
-            padding: context.paddingHorizontalHeigh,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: context.lowValue1,),
-                Text(ProjectStrings.emailText,style: context.textTheme().titleMedium,),
-                SizedBox(height: context.lowValue1,),
-                ProjectTextfield(hintText: ProjectStrings.tfEmailHint, controller: emailController, keyBoardType: TextInputType.emailAddress, validator: Validators().validateEmail,icon: Icons.person_outline_outlined,),
-                SizedBox(height: context.lowValue1,),
-                Text(ProjectStrings.passwordText,style: context.textTheme().titleMedium,),
-                SizedBox(height: context.lowValue1,),
-                ProjectPasswordTextfield(hintText: ProjectStrings.tfPasswordHint, controller: passwordController, keyBoardType: TextInputType.visiblePassword, validator: Validators().validatePassword),
-                SizedBox(height: context.lowValue1,),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Text(ProjectStrings.forgatPassword,style: context.textTheme().titleSmall,)),
-                SizedBox(height: context.lowValue2,),
-                ProjectButton(text: ProjectStrings.loginButton, onPressed: (){}),
-                SizedBox(height: context.lowValue2,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Expanded(
-                      child: Divider(
-                        color: Colors.black,
-                        thickness: 1,
-                        indent: 50,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: context.paddingHorizontalHeigh,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: context.lowValue1,),
+                      Text(ProjectStrings.emailText,style: context.textTheme().titleMedium,),
+                      SizedBox(height: context.lowValue1,),
+                      ProjectTextfield(hintText: ProjectStrings.tfEmailHint, controller: emailController, keyBoardType: TextInputType.emailAddress, validator: Validators().validateEmail,icon: Icons.person_outline_outlined,),
+                      SizedBox(height: context.lowValue1,),
+                      Text(ProjectStrings.passwordText,style: context.textTheme().titleMedium,),
+                      SizedBox(height: context.lowValue1,),
+                      ProjectPasswordTextfield(hintText: ProjectStrings.tfPasswordHint, controller: passwordController, keyBoardType: TextInputType.visiblePassword, validator: Validators().validatePassword),
+                      SizedBox(height: context.lowValue1,),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Text(ProjectStrings.forgatPassword,style: context.textTheme().titleSmall,)),
+                      SizedBox(height: context.lowValue2,),
+                      ProjectButton(text: ProjectStrings.loginButton, onPressed: (){}),
+                      SizedBox(height: context.lowValue2,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Expanded(
+                            child: Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                              indent: 50,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              ProjectStrings.divderOrText,
+                              style: context.textTheme().titleMedium,
+                            ),
+                          ),
+                          const Expanded(
+                            child: Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                              endIndent: 50,
+                            ),
+                          ),
+                        ],
+                      ),  
+                      SizedBox(height: context.lowValue2,),
+                      TransparentButton(text: ProjectStrings.loginWithGoogle, onPressed: (){}),
+                      SizedBox(height: context.lowValue2,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(ProjectStrings.haventAccont,style: context.textTheme().titleMedium,),
+                          TextButton(
+                            onPressed: (){
+                              if(formKey.currentState?.validate() ?? false){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterPage()));
+                              }
+                              
+                            }, 
+                            child: Text(ProjectStrings.registerButton,style: context.textTheme().titleMedium?.copyWith(color: ProjectColors.iris),))
+                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        ProjectStrings.divderOrText,
-                        style: context.textTheme().titleMedium,
-                      ),
-                    ),
-                    const Expanded(
-                      child: Divider(
-                        color: Colors.black,
-                        thickness: 1,
-                        endIndent: 50,
-                      ),
-                    ),
-                  ],
-                ),  
-                SizedBox(height: context.lowValue2,),
-                TransparentButton(text: ProjectStrings.loginWithGoogle, onPressed: (){}),
-                SizedBox(height: context.lowValue2,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(ProjectStrings.haventAccont,style: context.textTheme().titleMedium,),
-                    TextButton(
-                      onPressed: (){
-                      //  Navigator.of(context).push(MaterialPageRoute(builder: (context)))
-                      }, 
-                      child: Text(ProjectStrings.registerButton,style: context.textTheme().titleMedium?.copyWith(color: ProjectColors.iris),))
-                  ],
+                     SizedBox(height: context.highValue,)
+                    ],
+                  ),
                 ),
-               
-              ],
+              ),
             ),
           )
       ],),

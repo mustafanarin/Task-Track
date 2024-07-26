@@ -12,7 +12,6 @@ class ProjectStrings{
   static const String registerButton = "Register";
 
   // Login Page
-  static const String appBarTitle = "Login";
   static const String appBarSuptitle = "Login to continue using the app";
   static const String emailText = "Email";
   static const String tfEmailHint = "Enter your email";
@@ -22,4 +21,13 @@ class ProjectStrings{
   static const String divderOrText = "or";
   static const String loginWithGoogle = "Login using Google";
   static const String haventAccont = "Don't have an account?";
+
+  // Register Page
+  static const String supTitle = "Enter your personel information";
+  static const String userName = "Username";
+  static const String tfUserNameHint = "Enter your name";
+  static const String confirmText = "Confirm Password";
+  static const String tfConfirmHint = "Enter confirm password";
+  
+  
 }
