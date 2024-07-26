@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/feature/authentication/login_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
@@ -18,19 +19,24 @@ class WelcomePage extends StatelessWidget {
           const _CustomContainerAndAppName(),
           Expanded(
             flex: 50,
-            child: Padding(
-              padding: context.paddingHorizontalHeigh,
-              child: Column(
-                children: [
-                  const Spacer(flex: 5,),
-                   const _DescriptionText(),
-                  const Spacer(flex: 10,),
-                  ProjectButton(text: ProjectStrings.loginButton, onPressed:(){}),
-                  const Spacer(flex: 8,),
-                  TransparentButton(text: ProjectStrings.registerButton, onPressed: (){}),
-                  const Spacer(flex: 15,)
-                ],
-              ),
+            child: Column(
+              children: [
+                const Spacer(flex: 5,),
+                 const _DescriptionText(),
+                const Spacer(flex: 10,),
+                Padding(
+                  padding: context.paddingHorizontalHeigh,
+                  child: ProjectButton(text: ProjectStrings.loginButton, onPressed:(){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                  }),
+                ),
+                const Spacer(flex: 8,),
+                Padding(
+                  padding: context.paddingHorizontalHeigh,
+                  child: TransparentButton(text: ProjectStrings.registerButton, onPressed: (){}),
+                ),
+                const Spacer(flex: 15,)
+              ],
             ),
           )
         ],
@@ -73,8 +79,11 @@ class _DescriptionText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(ProjectStrings.welcomeDescription,
-            style: context.textTheme().titleMedium?.copyWith(
-              color: ProjectColors.grey));
+    return Padding(
+      padding: context.paddingHorizontalMedium,
+      child: Text(ProjectStrings.welcomeDescription,
+              style: context.textTheme().titleMedium?.copyWith(
+                color: ProjectColors.grey)),
+    );
   }
 }

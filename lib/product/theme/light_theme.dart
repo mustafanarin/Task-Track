@@ -10,6 +10,12 @@ class LightTheme{
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10)),)
       )
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: ProjectColors.iris),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      )
+    ),
     textTheme:  const TextTheme(
       titleLarge: TextStyle(
         fontFamily: "Roboto",
@@ -21,13 +27,13 @@ class LightTheme{
         fontFamily: "Roboto",
         color: ProjectColors.black,
         fontWeight: FontWeight.w600,
-        fontSize: 16
+        fontSize: 18
       ),
       titleSmall: TextStyle(
         fontFamily: "Roboto",
         color: ProjectColors.black,
         fontWeight: FontWeight.w600,
-        fontSize: 14
+        fontSize: 16
       )
     ),
   );
