@@ -1,12 +1,15 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/feature/authentication/login_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
+import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
 import 'package:todo_app/product/widgets/transparent_button.dart';
 
+@RoutePage()
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -27,13 +30,15 @@ class WelcomePage extends StatelessWidget {
                 Padding(
                   padding: context.paddingHorizontalHeigh,
                   child: ProjectButton(text: ProjectStrings.loginButton, onPressed:(){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                    context.pushRoute(const LoginRoute());
                   }),
                 ),
                 const Spacer(flex: 8,),
                 Padding(
                   padding: context.paddingHorizontalHeigh,
-                  child: TransparentButton(text: ProjectStrings.registerButton, onPressed: (){}),
+                  child: TransparentButton(text: ProjectStrings.registerButton, onPressed: (){
+                    context.pushRoute(RegisterRoute());
+                  }),
                 ),
                 const Spacer(flex: 15,)
               ],

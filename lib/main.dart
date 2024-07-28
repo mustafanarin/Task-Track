@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/feature/authentication/welcome_page.dart';
-import 'package:todo_app/feature/splash/splash_page.dart';
+import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/theme/light_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+   MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Todo App',
       theme: LightTheme().themeData,
-      home: WelcomePage(),
+      routerConfig: _appRouter.config(),
     );
   }
 }

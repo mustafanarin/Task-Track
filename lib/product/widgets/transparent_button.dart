@@ -11,7 +11,7 @@ class TransparentButton extends StatelessWidget {
             width: context.dynamicWidht(1),
             height: context.dynamicHeight(0.07),
             child: ElevatedButton(
-              onPressed: (){},
+              onPressed: onPressed,
                style: ElevatedButton.styleFrom(
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),

@@ -1,13 +1,17 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
+import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
 import 'package:todo_app/product/widgets/project_password_textfield.dart';
 import 'package:todo_app/product/widgets/project_textfield.dart';
 
+@RoutePage()
 class RegisterPage extends HookWidget{
   const RegisterPage({super.key});
 
@@ -39,7 +43,7 @@ class RegisterPage extends HookWidget{
           child: Align(
             alignment: Alignment.topRight,
             child: IconButton(
-              onPressed: (){Navigator.pop(context);},
+              onPressed: () => context.maybePop(),
               icon: const Icon(Icons.arrow_back_outlined))),
         ),
       ),
@@ -87,7 +91,7 @@ class RegisterPage extends HookWidget{
                         text: ProjectStrings.registerButton, 
                         onPressed: (){
                           if(formKey.currentState?.validate() ?? false){
-                      
+                            context.pushRoute(HomeRoute());
                           }
                         }),
                         SizedBox(height: context.highValue,)
