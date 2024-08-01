@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/theme/light_theme.dart';
+import 'package:todo_app/product/utility/initialize/application_start.dart';
 
-void main() {
+Future<void> main() async {
+  await ApplicationStart.init();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
+  MyApp({super.key});
 
   final _appRouter = AppRouter();
 
