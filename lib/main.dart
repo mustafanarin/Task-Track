@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/theme/light_theme.dart';
 import 'package:todo_app/product/utility/initialize/application_start.dart';
 
 Future<void> main() async {
   await ApplicationStart.init();
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,42 +1,44 @@
-class Validators{
-
+class Validators {
   static const String _nameNotEmpty = 'Name and surname cannot be left blank';
-  static const String _nameIsLetter = 'Name and surname must consist of letters only';
+  static const String _nameIsLetter =
+      'Name and surname must consist of letters only';
 
   static const String _emailNotEmpty = 'Email cannot be left blank';
   static const String _emailIsValid = 'Please enter a valid email';
 
   static const String _passwordNotEmpty = 'Password cannot be left blank';
-  static const String _passwordLeastSixCharecter = 'Password must be at least 6 characters';
+  static const String _passwordLeastSixCharecter =
+      'Password must be at least 6 characters';
 
   static const String _passwordAgain = 'Please re-enter your password';
   static const String _passwordDontMatch = 'Passwords don\'t match';
 
-  // name 
+  // name
   String? validateName(String? value) {
-  if (value == null || value.isEmpty) {
-    return _nameNotEmpty;
+    if (value == null || value.isEmpty) {
+      return _nameNotEmpty;
+    }
+    //Checks that it consists of letters only, regex
+    final nameRegex = RegExp(r'^[a-zA-Z\s]+$');
+    if (!nameRegex.hasMatch(value)) {
+      return _nameIsLetter;
+    }
+    return null;
   }
-  //Checks that it consists of letters only, regex
-  final nameRegex = RegExp(r'^[a-zA-Z\s]+$');
-  if (!nameRegex.hasMatch(value)) {
-    return _nameIsLetter;
-  }
-  return null;
-}
 
-   // email
-  String? validateEmail(String? data) {
-    if (data == null || data.isEmpty) {
+  // email
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
       return _emailNotEmpty;
     }
-    
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (!emailRegex.hasMatch(data)) {
+    // Basit bir e-posta regex'i
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
       return _emailIsValid;
     }
     return null;
   }
+
   // password
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
@@ -49,7 +51,7 @@ class Validators{
   }
 
   // confirm
-   String? validateConfirmPassword(String? value, String password) {
+  String? validateConfirmPassword(String? value, String password) {
     if (value == null || value.isEmpty) {
       return _passwordAgain;
     }
@@ -58,5 +60,4 @@ class Validators{
     }
     return null;
   }
-
 }
