@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/product/model/user_model.dart';
 import 'package:todo_app/service/auth_service.dart';
@@ -20,7 +21,7 @@ class AuthNotifier extends StateNotifier<UserModel?> {
   Future<void> _initializeUser() async {
     try {
       state = await _authService.getCurrentUser();
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e.toString());
     }
   }
@@ -32,7 +33,7 @@ class AuthNotifier extends StateNotifier<UserModel?> {
         state = user;
         return true;
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e.toString());
     }
 
@@ -46,7 +47,7 @@ class AuthNotifier extends StateNotifier<UserModel?> {
         state = user;
         return true;
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e.toString());
     }
     return false;
@@ -56,7 +57,7 @@ class AuthNotifier extends StateNotifier<UserModel?> {
     try {
       await _authService.logout();
       state = null;
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e.toString());
     }
   }

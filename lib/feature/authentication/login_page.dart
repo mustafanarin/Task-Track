@@ -35,11 +35,11 @@ class LoginPage extends HookConsumerWidget {
       if (!context.mounted) return;
 
       if (isLogin) {
-        context.pushRoute(const HomeRoute());
+        context.pushRoute(const TabbarRoute());
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Login failed."),
+            content: Text("Login failed, please try again."),
           ),
         );
       }
