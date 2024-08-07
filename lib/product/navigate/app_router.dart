@@ -3,12 +3,13 @@ import 'package:todo_app/feature/authentication/login_page.dart';
 import 'package:todo_app/feature/authentication/register_page.dart';
 import 'package:todo_app/feature/authentication/welcome_page.dart';
 import 'package:todo_app/feature/home/home_page.dart';
+import 'package:todo_app/feature/home/task_add_page.dart';
 import 'package:todo_app/feature/tabbar/tabbar_page.dart';
 
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
-class AppRouter extends _$AppRouter {
+class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: WelcomeRoute.page, initial: true),
@@ -17,6 +18,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: HomeRoute.page,
         ),
-        AutoRoute(page: TabbarRoute.page)
+        AutoRoute(page: TabbarRoute.page),
+        AutoRoute(page: TaskAddRoute.page)
       ];
 }

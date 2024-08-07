@@ -13,6 +13,8 @@ class Validators {
   static const String _passwordAgain = 'Please re-enter your password';
   static const String _passwordDontMatch = 'Passwords don\'t match';
 
+  static const String _taskNameNotEmpty = 'Please enter a task name.';
+
   // name
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -57,6 +59,14 @@ class Validators {
     }
     if (value != password) {
       return _passwordDontMatch;
+    }
+    return null;
+  }
+
+  // Task name
+  String? validateTaskNameNotEmpty(String? value) {
+    if (value == null || value.isEmpty) {
+      return _taskNameNotEmpty;
     }
     return null;
   }

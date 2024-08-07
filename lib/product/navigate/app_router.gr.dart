@@ -9,45 +9,6 @@
 
 part of 'app_router.dart';
 
-abstract class _$AppRouter extends RootStackRouter {
-  // ignore: unused_element
-  _$AppRouter({super.navigatorKey});
-
-  @override
-  final Map<String, PageFactory> pagesMap = {
-    HomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const HomePage(),
-      );
-    },
-    LoginRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const LoginPage(),
-      );
-    },
-    RegisterRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const RegisterPage(),
-      );
-    },
-    TabbarRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const TabbarPage(),
-      );
-    },
-    WelcomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const WelcomePage(),
-      );
-    },
-  };
-}
-
 /// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
@@ -59,7 +20,12 @@ class HomeRoute extends PageRouteInfo<void> {
 
   static const String name = 'HomeRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const HomePage();
+    },
+  );
 }
 
 /// generated route for
@@ -73,7 +39,12 @@ class LoginRoute extends PageRouteInfo<void> {
 
   static const String name = 'LoginRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LoginPage();
+    },
+  );
 }
 
 /// generated route for
@@ -87,7 +58,12 @@ class RegisterRoute extends PageRouteInfo<void> {
 
   static const String name = 'RegisterRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const RegisterPage();
+    },
+  );
 }
 
 /// generated route for
@@ -101,7 +77,31 @@ class TabbarRoute extends PageRouteInfo<void> {
 
   static const String name = 'TabbarRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TabbarPage();
+    },
+  );
+}
+
+/// generated route for
+/// [TaskAddPage]
+class TaskAddRoute extends PageRouteInfo<void> {
+  const TaskAddRoute({List<PageRouteInfo>? children})
+      : super(
+          TaskAddRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TaskAddRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return  TaskAddPage();
+    },
+  );
 }
 
 /// generated route for
@@ -115,5 +115,10 @@ class WelcomeRoute extends PageRouteInfo<void> {
 
   static const String name = 'WelcomeRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const WelcomePage();
+    },
+  );
 }

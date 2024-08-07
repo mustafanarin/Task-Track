@@ -5,6 +5,7 @@ import 'package:todo_app/feature/home/home_page.dart';
 import 'package:todo_app/feature/profile/profile_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
+import 'package:todo_app/product/navigate/app_router.dart';
 
 @RoutePage()
 class TabbarPage extends StatefulWidget {
@@ -28,7 +29,9 @@ class _TabbarPageState extends State<TabbarPage> {
         child: FloatingActionButton(
           backgroundColor: ProjectColors.iris,
           shape: const CircleBorder(),
-          onPressed: () {},
+          onPressed: () {
+            context.pushRoute(const TaskAddRoute());
+          },
           child: const Icon(
             Icons.add,
             color: ProjectColors.white,
@@ -59,16 +62,3 @@ class _TabbarPageState extends State<TabbarPage> {
     );
   }
 }
-//  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-//       bottomNavigationBar: AnimatedBottomNavigationBar(
-//         iconSize: 30,
-//         backgroundColor: Colors.white,
-//         inactiveColor: ProjectColors.grey,
-//         activeColor: ProjectColors.iris,
-//         icons: icons,
-//         activeIndex: _bottomNavIndex,
-//         gapLocation: GapLocation.center,
-//         notchSmoothness: NotchSmoothness.softEdge,
-//         onTap: (index) => setState(() => _bottomNavIndex = index),
-//         //other params
-//       ),
