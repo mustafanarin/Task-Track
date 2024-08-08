@@ -67,6 +67,41 @@ class RegisterRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
+  SplashRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SplashRoute.name,
+          args: SplashRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'SplashRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args =
+          data.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      return SplashPage(key: args.key, signedInWidget: TabbarPage(), signedOutWidget: WelcomePage(),);
+    },
+  );
+}
+
+class SplashRouteArgs {
+  const SplashRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SplashRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [TabbarPage]
 class TabbarRoute extends PageRouteInfo<void> {
   const TabbarRoute({List<PageRouteInfo>? children})
@@ -99,7 +134,7 @@ class TaskAddRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return  TaskAddPage();
+      return const TaskAddPage();
     },
   );
 }

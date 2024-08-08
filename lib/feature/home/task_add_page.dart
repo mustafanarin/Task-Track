@@ -15,11 +15,7 @@ class Task {
   final int importance;
   final int iconCodePoint;
 
-  Task(
-      {this.name = '',
-      this.importance = 1,
-      this.iconCodePoint =
-          58826}); 
+  Task({this.name = '', this.importance = 1, this.iconCodePoint = 58826});
 
   Task copyWith({String? name, int? importance, int? iconCodePoint}) {
     return Task(
@@ -58,22 +54,22 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
   final _formKey = GlobalKey<FormState>();
 
   final List<IconData> _icons = [
-    Icons.task_alt,
-    Icons.home,
-    Icons.work,
-    Icons.school,
-    Icons.shopping_cart,
-    Icons.fitness_center,
-    Icons.restaurant,
-    Icons.local_hospital,
-    Icons.directions_car,
-    Icons.airplanemode_active,
-    Icons.book,
-    Icons.music_note,
-    Icons.movie,
-    Icons.sports_esports,
-    Icons.nature,
-    Icons.pets,
+    Icons.task_alt_outlined,
+    Icons.home_outlined,
+    Icons.work_outline,
+    Icons.school_outlined,
+    Icons.shopping_cart_outlined,
+    Icons.fitness_center_outlined,
+    Icons.restaurant_outlined,
+    Icons.local_hospital_outlined,
+    Icons.directions_car_outlined,
+    Icons.airplanemode_active_outlined,
+    Icons.book_outlined,
+    Icons.music_note_outlined,
+    Icons.movie_outlined,
+    Icons.sports_esports_outlined,
+    Icons.nature_people_outlined,
+    Icons.pets_outlined,
   ];
 
   void _submitForm() {
@@ -122,12 +118,14 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Task Name'),
+                style: context.textTheme().titleSmall,
                 validator: Validators().validateTaskNameNotEmpty,
                 onChanged: (value) => taskNotifier.updateName(value),
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<int>(
-                decoration: const InputDecoration(labelText: 'Importance score'),
+                decoration:
+                    const InputDecoration(labelText: 'Importance score'),
                 value: task.importance,
                 items: [1, 2, 3, 4, 5].map((int value) {
                   return DropdownMenuItem<int>(
@@ -156,7 +154,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: task.iconCodePoint == _icons[index].codePoint
-                            ? Colors.blue.withOpacity(0.3)
+                            ? Colors.blue.withOpacity(0.4)
                             : Colors.transparent,
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),

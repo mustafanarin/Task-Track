@@ -33,7 +33,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return _emailNotEmpty;
     }
-    // Basit bir e-posta regex'i
+    // Basic e-post regex 
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return _emailIsValid;
