@@ -1,17 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/product/model/user_model.dart';
+import 'package:todo_app/feature/authentication/model/user_model.dart';
 import 'package:todo_app/service/auth_service.dart';
 
+// Auth Service Provider
 final authenticationProvider = Provider<AuthService>((ref) {
   return AuthService();
 });
 
+// Auht State Provider
 final authProvider = StateNotifierProvider<AuthNotifier, UserModel?>((ref) {
   final authService = ref.watch(authenticationProvider);
   return AuthNotifier(authService);
 });
 
+
+// State Notifier
 class AuthNotifier extends StateNotifier<UserModel?> {
   final AuthService _authService;
   AuthNotifier(this._authService) : super(null) {

@@ -26,7 +26,7 @@ class TaskModel extends Equatable {
     String? categoryId,
     String? date,
     String? importance,
-    String? id,
+    String? id, required int iconCodePoint,
   }) {
     return TaskModel(
       name: name ?? this.name,

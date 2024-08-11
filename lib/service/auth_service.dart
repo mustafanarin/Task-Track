@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todo_app/product/model/user_model.dart';
+import 'package:todo_app/feature/authentication/model/user_model.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;
