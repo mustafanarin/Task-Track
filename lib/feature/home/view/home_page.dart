@@ -1,8 +1,9 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
+import 'package:todo_app/product/navigate/app_router.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -52,15 +53,18 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: context.paddingHorizontalHeigh,
-      child: Card(
-        color: color,
-        child: SizedBox(
-          width: context.dynamicWidht(1),
-          height: 170,
-          child: Center(
-            child: Text(
-              title,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
+      child: GestureDetector(
+        onTap: () => context.pushRoute(const TaskListRoute()),
+        child: Card(
+          color: color,
+          child: SizedBox(
+            width: context.dynamicWidht(1),
+            height: 170,
+            child: Center(
+              child: Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
             ),
           ),
         ),

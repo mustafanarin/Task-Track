@@ -19,6 +19,7 @@ extension NumberExtension on BuildContext{
 extension PaddingExtension on BuildContext{
   EdgeInsets get paddingAllLow1 => EdgeInsets.all(lowValue1);
   EdgeInsets get paddingAllLow2 => EdgeInsets.all(lowValue2);
+  EdgeInsets get paddingHorizontalLow => EdgeInsets.symmetric(horizontal: lowValue2);
   EdgeInsets get paddingHorizontalMedium => EdgeInsets.symmetric(horizontal: mediumValue);
   EdgeInsets get paddingHorizontalHeigh => EdgeInsets.symmetric(horizontal: highValue);
 }

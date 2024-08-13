@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 
 class TaskService {
@@ -20,9 +19,10 @@ class TaskService {
       final updatedTask = task.copyWith(
         userId: _userId,
         createdAt: now,
-        iconCodePoint: task.iconCodePoint == 62504
-            ? 62504
-            : task.iconCodePoint,
+        description: task.description == "No description has been made yet" ?
+        "No description has been made yet" : task.description,
+        iconCodePoint: task.iconCodePoint == 62504 ? 
+          62504 : task.iconCodePoint,
       );
 
       final newTask = await _collection.add(updatedTask.toMap());

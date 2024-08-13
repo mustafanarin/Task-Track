@@ -6,6 +6,7 @@ class TaskModel extends Equatable {
   final String id;
   final String userId;
   final String name;
+  final String description;
   final int importance;
   final int iconCodePoint;
   final DateTime? createdAt;
@@ -16,6 +17,7 @@ class TaskModel extends Equatable {
     this.id = "",
     required this.userId,
     this.name = "",
+    this.description = "",
     this.importance = 1,
     this.iconCodePoint = 62504,
     this.createdAt,
@@ -27,6 +29,7 @@ class TaskModel extends Equatable {
     String? id,
     String? userId,
     String? name,
+    String? description,
     int? importance,
     int? iconCodePoint,
     DateTime? createdAt,
@@ -37,6 +40,7 @@ class TaskModel extends Equatable {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
+      description: description ?? this.description,
       importance: importance ?? this.importance,
       iconCodePoint: iconCodePoint ?? this.iconCodePoint,
       createdAt: createdAt ?? this.createdAt,
@@ -50,6 +54,7 @@ class TaskModel extends Equatable {
       'id': id,
       'userId': userId,
       'name': name,
+      'description': description,
       'importance': importance,
       'iconCodePoint': iconCodePoint,
       'createdAt': createdAt?.toIso8601String(),
@@ -63,20 +68,31 @@ class TaskModel extends Equatable {
       id: map['id'] ?? '',
       userId: map['userId'] ?? '',
       name: map['name'] ?? '',
+      description: map['description'] ?? "",
       importance: map['importance']?.toInt() ?? 1,
       iconCodePoint: map['iconCodePoint']?.toInt() ?? 62504,
-      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
       category: map['category'] ?? 'Yeni',
       categoryId: map['categoryId']?.toInt() ?? 1,
     );
   }
 
-
   @override
   String toString() {
     return 'TaskModel(id: $id,userId:$userId, name: $name, importance: $importance, iconCodePoint: $iconCodePoint, createdAt: $createdAt, category: $category, categoryId: $categoryId)';
   }
-  
+
   @override
-  List<Object?> get props => [id, userId, name, importance, iconCodePoint, createdAt, category, categoryId];
+  List<Object?> get props => [
+        id,
+        userId,
+        name,
+        description,
+        importance,
+        iconCodePoint,
+        createdAt,
+        category,
+        categoryId
+      ];
 }

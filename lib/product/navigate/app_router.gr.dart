@@ -71,10 +71,16 @@ class RegisterRoute extends PageRouteInfo<void> {
 class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
   SplashRoute({
     Key? key,
+    required Widget signedInWidget,
+    required Widget signedOutWidget,
     List<PageRouteInfo>? children,
   }) : super(
           SplashRoute.name,
-          args: SplashRouteArgs(key: key),
+          args: SplashRouteArgs(
+            key: key,
+            signedInWidget: signedInWidget,
+            signedOutWidget: signedOutWidget,
+          ),
           initialChildren: children,
         );
 
@@ -83,21 +89,32 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args =
-          data.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
-      return SplashPage(key: args.key, signedInWidget: TabbarPage(), signedOutWidget: WelcomePage(),);
+      final args = data.argsAs<SplashRouteArgs>();
+      return SplashPage(
+        key: args.key,
+        signedInWidget: args.signedInWidget,
+        signedOutWidget: args.signedOutWidget,
+      );
     },
   );
 }
 
 class SplashRouteArgs {
-  const SplashRouteArgs({this.key});
+  const SplashRouteArgs({
+    this.key,
+    required this.signedInWidget,
+    required this.signedOutWidget,
+  });
 
   final Key? key;
 
+  final Widget signedInWidget;
+
+  final Widget signedOutWidget;
+
   @override
   String toString() {
-    return 'SplashRouteArgs{key: $key}';
+    return 'SplashRouteArgs{key: $key, signedInWidget: $signedInWidget, signedOutWidget: $signedOutWidget}';
   }
 }
 
@@ -135,6 +152,44 @@ class TaskAddRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const TaskAddPage();
+    },
+  );
+}
+
+/// generated route for
+/// [TaskDetailPage]
+class TaskDetailRoute extends PageRouteInfo<void> {
+  const TaskDetailRoute({List<PageRouteInfo>? children})
+      : super(
+          TaskDetailRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TaskDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TaskDetailPage();
+    },
+  );
+}
+
+/// generated route for
+/// [TaskListPage]
+class TaskListRoute extends PageRouteInfo<void> {
+  const TaskListRoute({List<PageRouteInfo>? children})
+      : super(
+          TaskListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TaskListRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TaskListPage();
     },
   );
 }

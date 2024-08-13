@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,6 +12,8 @@ import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
+
+part '../../../product/part_of/my_icon_list.dart';
 
 @RoutePage()
 class TaskAddPage extends StatefulHookConsumerWidget {
@@ -31,6 +36,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
     });
 
     final newTask = useState(const TaskModel(userId: ""));
+    final descriptionLength = useState<int>(0);
 
     Future<void> submitForm() async {
       if (formkey.currentState!.validate()) {
@@ -49,7 +55,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
               msg: 'An error occurred: $error',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              backgroundColor: ProjectColors.grey,
+              backgroundColor: ProjectColors.black,
               textColor: ProjectColors.white,
               fontSize: 16.0);
         }
@@ -68,11 +74,29 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
             children: [
               const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Task Name'),
+                decoration: const InputDecoration(
+                  labelText: 'Task Name',
+                ),
                 style: context.textTheme().titleSmall,
                 validator: Validators().validateTaskNameNotEmpty,
                 onChanged: (value) {
                   newTask.value = newTask.value.copyWith(name: value);
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                style: context.textTheme().titleSmall,
+                decoration: InputDecoration(
+                    counterText: "${descriptionLength.value}/200",
+                    labelText: "Description...",
+                    alignLabelWithHint: true),
+                maxLength: 200,
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.done,
+                onChanged: (value) {
+                  descriptionLength.value = value.length;
+                  newTask.value = newTask.value.copyWith(description: value);
                 },
               ),
               const SizedBox(height: 20),
@@ -123,36 +147,12 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
                 },
               ),
               const SizedBox(height: 50),
-              ProjectButton(text: "Save", onPressed: submitForm)
+              ProjectButton(text: "Save", onPressed: submitForm),
+              const SizedBox(height: 30),
             ],
           ),
         ),
       ),
     );
-  }
-}
-
-class MyIconList {
-  late final List<IconData> icons;
-
-  MyIconList() {
-    icons = [
-      Icons.task_alt_outlined,
-      Icons.home_outlined,
-      Icons.work_outline,
-      Icons.school_outlined,
-      Icons.shopping_cart_outlined,
-      Icons.fitness_center_outlined,
-      Icons.restaurant_outlined,
-      Icons.local_hospital_outlined,
-      Icons.directions_car_outlined,
-      Icons.airplanemode_active_outlined,
-      Icons.book_outlined,
-      Icons.music_note_outlined,
-      Icons.movie_outlined,
-      Icons.sports_esports_outlined,
-      Icons.nature_people_outlined,
-      Icons.pets_outlined,
-    ];
   }
 }
