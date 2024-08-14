@@ -6,6 +6,7 @@ import 'package:todo_app/feature/authentication/view/welcome_page.dart';
 import 'package:todo_app/feature/home/view/home_page.dart';
 import 'package:todo_app/feature/home/view/task_add_page.dart';
 import 'package:todo_app/feature/home/view/task_detail_page.dart';
+import 'package:todo_app/feature/home/view/task_edit_page.dart';
 import 'package:todo_app/feature/home/view/task_list_page.dart';
 import 'package:todo_app/feature/splash/splash_page.dart';
 import 'package:todo_app/feature/tabbar/tabbar_page.dart';
@@ -23,7 +24,9 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: HomeRoute.page,),
     AutoRoute(page: TabbarRoute.page, initial: true),
     AutoRoute(page: TaskAddRoute.page),
-    AutoRoute(page: TaskListRoute.page),
-    AutoRoute(page: TaskDetailRoute.page)
+    // CustomRoute(page: TaskListRoute.page,transitionsBuilder: TransitionsBuilders.zoomIn,opaque: false, durationInMilliseconds: 2000,),
+    AutoRoute(page: TaskListRoute.page,),
+    AutoRoute(page: TaskDetailRoute.page),
+    AutoRoute(page: TaskEditRoute.page)
   ];
 }

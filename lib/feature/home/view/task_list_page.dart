@@ -1,75 +1,109 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
 @RoutePage()
-class TaskListPage extends ConsumerStatefulWidget {
-  const TaskListPage({super.key});
+class TaskListPage extends HookConsumerWidget {
+  final int categoryId;
+  const TaskListPage(this.categoryId, {Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TaskDetailState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final taskNotifier = ref.read(taskProvider.notifier);
+    final tasks = ref.watch(taskProvider);
 
-class _TaskDetailState extends ConsumerState<TaskListPage> {
-  @override
-  Widget build(BuildContext context) {
+    useEffect(() {
+      // useEffect içinde Future'ı çalıştırıyoruz
+      Future<void> fetchData() async {
+        await taskNotifier.loadTasks(categoryId);
+      }
+
+      fetchData();
+      return null;
+    }, [categoryId]);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Tasks"),
+        title: const Text("Tasks"),
       ),
       body: Padding(
         padding: context.paddingHorizontalLow,
-        child: ListView.builder(itemBuilder: (context, index) {
-          return Card(
-            color: Colors.pink[50],
-            child: ListTile(
-                onTap: () => context.pushRoute(const TaskDetailRoute()),
-                title: const Text(
-                  "Sinemaya git",
-                  style: TextStyle(fontSize: 18),
-                ),
-                subtitle: Row(
-                  children: [
-                    RatingBar.builder(
-                      ignoreGestures: true,
-                      itemSize: 20,
-                      initialRating: 3,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: false,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 0),
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        color: Colors.amber,
+        child: tasks.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+                  return Padding(
+                    padding: context.paddingAllLow1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.green.shade400,
+                            Colors.green.shade800
+                          ],
+                        ),
                       ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
+                      child: ListTile(
+                        onTap: () =>
+                            context.pushRoute(TaskDetailRoute()),
+                        title: Text(
+                          task.name,
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            RatingBar.builder(
+                              ignoreGestures: true,
+                              itemSize: 20,
+                              initialRating: task.importance.toDouble(),
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: false,
+                              itemCount: 5,
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 0),
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                // Burada rating güncellemesi yapabilirsiniz
+                              },
+                            ),
+                            const Spacer(),
+                            Text(
+                              "${task.createdAt}",
+                              style: TextStyle(
+                                  color: Colors.grey[300], fontSize: 15),
+                            )
+                          ],
+                        ),
+                        leading:  Icon(
+                          IconData(task.iconCodePoint,fontFamily: 'MaterialIcons'),
+                          color: Colors.white,
+                        ),
+                        trailing: Icon(Icons.arrow_outward,
+                            color: Colors.white.withOpacity(0.6)),
+                      ),
                     ),
-                    const Spacer(),
-                    const Text(
-                      "12 Ağustos",
-                      style: TextStyle(color: Colors.grey, fontSize: 15),
-                    )
-                  ],
-                ),
-                leading: const Icon(Icons.fitness_center_outlined),
-                ),
-          );
-        }),
+                  );
+                },
+              ),
       ),
     );
   }
 }
-
-
-
-
-
 //POPUO MENU
 // PopupMenuButton(
 //                   icon: const Icon(Icons.menu_outlined),

@@ -9,7 +9,7 @@ class TaskModel extends Equatable {
   final String description;
   final int importance;
   final int iconCodePoint;
-  final DateTime? createdAt;
+  final String? createdAt;
   final String category;
   final int categoryId;
 
@@ -32,7 +32,7 @@ class TaskModel extends Equatable {
     String? description,
     int? importance,
     int? iconCodePoint,
-    DateTime? createdAt,
+    String? createdAt,
     String? category,
     int? categoryId,
   }) {
@@ -57,7 +57,7 @@ class TaskModel extends Equatable {
       'description': description,
       'importance': importance,
       'iconCodePoint': iconCodePoint,
-      'createdAt': createdAt?.toIso8601String(),
+      'createdAt': createdAt,
       'category': category,
       'categoryId': categoryId,
     };
@@ -71,8 +71,7 @@ class TaskModel extends Equatable {
       description: map['description'] ?? "",
       importance: map['importance']?.toInt() ?? 1,
       iconCodePoint: map['iconCodePoint']?.toInt() ?? 62504,
-      createdAt:
-          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      createdAt: map['createdAt'] ?? "Error",
       category: map['category'] ?? 'Yeni',
       categoryId: map['categoryId']?.toInt() ?? 1,
     );

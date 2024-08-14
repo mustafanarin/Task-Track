@@ -1,30 +1,26 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
+import 'package:todo_app/feature/home/view/task_add_page.dart';
 import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
 
-part '../../../product/part_of/my_icon_list.dart';
-
 @RoutePage()
-class TaskAddPage extends StatefulHookConsumerWidget {
-  const TaskAddPage({super.key});
+class TaskEditPage extends StatefulHookConsumerWidget {
+  const TaskEditPage({super.key});
 
   @override
-  _AddTaskPageState createState() => _AddTaskPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TaskEditPageState();
 }
+class _TaskEditPageState extends ConsumerState<TaskEditPage> {
 
-class _AddTaskPageState extends ConsumerState<TaskAddPage> {
-  @override
+     @override
   Widget build(BuildContext context) {
     final formkey = useMemoized(() => GlobalKey<FormState>());
     final taskNotifier = ref.read(taskProvider.notifier);
@@ -41,7 +37,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
     Future<void> submitForm() async {
       if (formkey.currentState!.validate()) {
         try {
-          await taskNotifier.addTask(newTask.value);
+          await taskNotifier.updateTask(newTask.value);
           Fluttertoast.showToast(
               msg: "Task added successfully!",
               toastLength: Toast.LENGTH_SHORT,
@@ -64,7 +60,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Task'),
+        title: const Text('Task Edit'),
       ),
       body: Padding(
         padding: context.paddingHorizontalMedium,

@@ -176,11 +176,37 @@ class TaskDetailRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [TaskListPage]
-class TaskListRoute extends PageRouteInfo<void> {
-  const TaskListRoute({List<PageRouteInfo>? children})
+/// [TaskEditPage]
+class TaskEditRoute extends PageRouteInfo<void> {
+  const TaskEditRoute({List<PageRouteInfo>? children})
       : super(
+          TaskEditRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TaskEditRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const TaskEditPage();
+    },
+  );
+}
+
+/// generated route for
+/// [TaskListPage]
+class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
+  TaskListRoute({
+    required int categoryId,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           TaskListRoute.name,
+          args: TaskListRouteArgs(
+            categoryId: categoryId,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -189,9 +215,29 @@ class TaskListRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const TaskListPage();
+      final args = data.argsAs<TaskListRouteArgs>();
+      return TaskListPage(
+        args.categoryId,
+        key: args.key,
+      );
     },
   );
+}
+
+class TaskListRouteArgs {
+  const TaskListRouteArgs({
+    required this.categoryId,
+    this.key,
+  });
+
+  final int categoryId;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TaskListRouteArgs{categoryId: $categoryId, key: $key}';
+  }
 }
 
 /// generated route for

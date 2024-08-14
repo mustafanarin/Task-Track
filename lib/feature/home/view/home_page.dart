@@ -34,9 +34,9 @@ class _HomePageState extends State<HomePage> {
       body: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CardWidget(title: 'New Added', color: Colors.green),
-          CardWidget(title: 'Continues', color: Colors.amber),
-          CardWidget(title: 'Finished', color: Colors.blue),
+          CardWidget(title: 'New Added', color: Colors.green, categoryId: 1,),
+          CardWidget(title: 'Continues', color: Colors.amber, categoryId: 2,),
+          CardWidget(title: 'Finished', color: Colors.blue, categoryId: 3,),
         ],
       ),
     );
@@ -46,15 +46,16 @@ class _HomePageState extends State<HomePage> {
 class CardWidget extends StatelessWidget {
   final String title;
   final Color color;
+  final int categoryId;
 
-  const CardWidget({super.key, required this.title, required this.color});
+  const CardWidget({super.key, required this.title, required this.color, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: context.paddingHorizontalHeigh,
       child: GestureDetector(
-        onTap: () => context.pushRoute(const TaskListRoute()),
+        onTap: () => context.pushRoute(TaskListRoute(categoryId: categoryId)),
         child: Card(
           color: color,
           child: SizedBox(
