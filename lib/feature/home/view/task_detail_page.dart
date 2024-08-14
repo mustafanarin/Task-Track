@@ -6,11 +6,11 @@ import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
-import 'package:todo_app/service/task_service.dart';
 
 @RoutePage()
 class TaskDetailPage extends ConsumerStatefulWidget {
-  const TaskDetailPage({super.key});
+  final TaskModel model;
+  const TaskDetailPage(this.model, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TaskDetailPageState();
@@ -26,11 +26,13 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
         body: Center(
           child: Padding(
               padding: context.paddingHorizontalMedium,
-              child: const EnhancedCard(
-                title: 'her gün yarım saat yürüyüş',
-                description:
-                    'asdasmdjasasdasmdjasasdasmdjasasdasmdjasasdasmdjasasdasmdjasasdasmdjasasda smdjasasdasmdjas',
-                rating: 3,
+              child: EnhancedCard(
+                title: widget.model.name,
+                description: widget.model.description,
+                rating: widget.model.importance, 
+                categoryName: widget.model.category, 
+                date: widget.model.createdAt ?? "", 
+                iconCodePoint: widget.model.iconCodePoint,
               )),
         ));
   }
@@ -40,17 +42,21 @@ class EnhancedCard extends StatelessWidget {
   final String title;
   final String description;
   final int rating;
+  final String categoryName;
+  final String date;
+  final int iconCodePoint;
 
   const EnhancedCard({
     super.key,
     required this.title,
     required this.description,
     required this.rating,
+    required this.categoryName,
+    required this.date, required this.iconCodePoint,
   });
 
   @override
   Widget build(BuildContext context) {
-    final model = TaskModel(userId: TaskService().userId);
     return SizedBox(
       height: context.dynamicHeight(0.5),
       child: GestureDetector(
@@ -84,8 +90,9 @@ class EnhancedCard extends StatelessWidget {
                                   ?.copyWith(color: Colors.white)),
                         ),
                       ),
-                      const Icon(
-                        Icons.fitness_center_outlined,
+                      Icon(
+                        IconData(iconCodePoint,
+                        fontFamily: "MaterialIcons"),
                         color: ProjectColors.white,
                       ),
                       const Spacer(),
@@ -100,14 +107,14 @@ class EnhancedCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  Spacer(),
                   Align(
                       alignment: Alignment.topRight,
-                      child: Text("12 Ağustos",
+                      child: Text(date,
                           style: context.textTheme().titleSmall?.copyWith(
                               color: Colors.black.withOpacity(0.5)))),
-                  const Spacer(),
                   const SizedBox(height: 16),
-                  Text("Category: New",
+                  Text("Category: ${categoryName}",
                       style: context
                           .textTheme()
                           .titleMedium

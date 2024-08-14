@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/feature/authentication/view/login_page.dart';
 import 'package:todo_app/feature/authentication/view/register_page.dart';
 import 'package:todo_app/feature/authentication/view/welcome_page.dart';
+import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/feature/home/view/home_page.dart';
 import 'package:todo_app/feature/home/view/task_add_page.dart';
 import 'package:todo_app/feature/home/view/task_detail_page.dart';

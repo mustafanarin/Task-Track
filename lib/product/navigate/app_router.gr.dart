@@ -158,10 +158,17 @@ class TaskAddRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [TaskDetailPage]
-class TaskDetailRoute extends PageRouteInfo<void> {
-  const TaskDetailRoute({List<PageRouteInfo>? children})
-      : super(
+class TaskDetailRoute extends PageRouteInfo<TaskDetailRouteArgs> {
+  TaskDetailRoute({
+    required TaskModel model,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           TaskDetailRoute.name,
+          args: TaskDetailRouteArgs(
+            model: model,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -170,9 +177,29 @@ class TaskDetailRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const TaskDetailPage();
+      final args = data.argsAs<TaskDetailRouteArgs>();
+      return TaskDetailPage(
+        args.model,
+        key: args.key,
+      );
     },
   );
+}
+
+class TaskDetailRouteArgs {
+  const TaskDetailRouteArgs({
+    required this.model,
+    this.key,
+  });
+
+  final TaskModel model;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TaskDetailRouteArgs{model: $model, key: $key}';
+  }
 }
 
 /// generated route for
