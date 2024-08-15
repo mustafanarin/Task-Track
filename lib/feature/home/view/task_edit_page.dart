@@ -8,30 +8,37 @@ import 'package:todo_app/feature/home/view/task_add_page.dart';
 import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
+import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
 
 @RoutePage()
 class TaskEditPage extends StatefulHookConsumerWidget {
-  const TaskEditPage({super.key});
+  final TaskModel model;
+  const TaskEditPage(this.model, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TaskEditPageState();
 }
-class _TaskEditPageState extends ConsumerState<TaskEditPage> {
 
-     @override
+class _TaskEditPageState extends ConsumerState<TaskEditPage> {
+  @override
   Widget build(BuildContext context) {
+    final tfTitle = useTextEditingController(text: widget.model.name);
+    final tfDescription =
+        useTextEditingController(text: widget.model.description);
     final formkey = useMemoized(() => GlobalKey<FormState>());
     final taskNotifier = ref.read(taskProvider.notifier);
     late final List<IconData> icons;
+
 
     useEffect(() {
       icons = MyIconList().icons;
       return () {};
     });
 
-    final newTask = useState(const TaskModel(userId: ""));
+    final newTask = useState( widget.model);
+
     final descriptionLength = useState<int>(0);
 
     Future<void> submitForm() async {
@@ -39,13 +46,13 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
         try {
           await taskNotifier.updateTask(newTask.value);
           Fluttertoast.showToast(
-              msg: "Task added successfully!",
+              msg: "Task updated successfully!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: ProjectColors.grey,
               textColor: ProjectColors.white,
               fontSize: 16.0);
-          context.mounted ? context.maybePop() : null;
+          context.mounted ? context.pushRoute(TabbarRoute()) : null;
         } catch (error) {
           Fluttertoast.showToast(
               msg: 'An error occurred: $error',
@@ -70,6 +77,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
             children: [
               const SizedBox(height: 20),
               TextFormField(
+                controller: tfTitle,
                 decoration: const InputDecoration(
                   labelText: 'Task Name',
                 ),
@@ -81,6 +89,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: tfDescription,
                 style: context.textTheme().titleSmall,
                 decoration: InputDecoration(
                     counterText: "${descriptionLength.value}/200",
@@ -99,7 +108,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               DropdownButtonFormField<int>(
                 decoration:
                     const InputDecoration(labelText: 'Importance score'),
-                value: newTask.value.importance,
+                value: widget.model.importance,
                 items: [1, 2, 3, 4, 5].map((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
@@ -108,6 +117,28 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
                 }).toList(),
                 onChanged: (value) {
                   newTask.value = newTask.value.copyWith(importance: value);
+                },
+              ),
+              SizedBox(height: 20,),
+              DropdownButtonFormField<int>(
+               decoration: const InputDecoration(labelText: 'Durum Seçin'),
+              value: widget.model.categoryId,
+              items: [
+                DropdownMenuItem<int>(
+                  value: 1,
+                  child: Text('New',style: context.textTheme().titleSmall,),
+                ),
+                DropdownMenuItem<int>(
+                  value: 2,
+                  child: Text('Continue',style: context.textTheme().titleSmall,),
+                ),
+                DropdownMenuItem<int>(
+                   value: 3,
+                  child: Text('Finished',style: context.textTheme().titleSmall,),
+                 ),
+              ],
+                onChanged: (value) {
+                  newTask.value = newTask.value.copyWith(categoryId: value);
                 },
               ),
               const SizedBox(height: 20),

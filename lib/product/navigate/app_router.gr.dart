@@ -204,10 +204,17 @@ class TaskDetailRouteArgs {
 
 /// generated route for
 /// [TaskEditPage]
-class TaskEditRoute extends PageRouteInfo<void> {
-  const TaskEditRoute({List<PageRouteInfo>? children})
-      : super(
+class TaskEditRoute extends PageRouteInfo<TaskEditRouteArgs> {
+  TaskEditRoute({
+    required TaskModel model,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           TaskEditRoute.name,
+          args: TaskEditRouteArgs(
+            model: model,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -216,9 +223,29 @@ class TaskEditRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const TaskEditPage();
+      final args = data.argsAs<TaskEditRouteArgs>();
+      return TaskEditPage(
+        args.model,
+        key: args.key,
+      );
     },
   );
+}
+
+class TaskEditRouteArgs {
+  const TaskEditRouteArgs({
+    required this.model,
+    this.key,
+  });
+
+  final TaskModel model;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TaskEditRouteArgs{model: $model, key: $key}';
+  }
 }
 
 /// generated route for

@@ -42,6 +42,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+// enum oluştur new continue finish diye bunlara değe roalrak 1 2 3 ver burda direkt yazma
+//
 
 class CardWidget extends StatelessWidget {
   final String title;

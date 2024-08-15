@@ -7,6 +7,10 @@ import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
+final asdProvider = Provider.autoDispose<TaskModel>(
+  (ref) => throw UnimplementedError(),
+);
+
 @RoutePage()
 class TaskDetailPage extends ConsumerStatefulWidget {
   final TaskModel model;
@@ -27,11 +31,12 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
           child: Padding(
               padding: context.paddingHorizontalMedium,
               child: EnhancedCard(
+                model: widget.model,
                 title: widget.model.name,
                 description: widget.model.description,
-                rating: widget.model.importance, 
-                categoryName: widget.model.category, 
-                date: widget.model.createdAt ?? "", 
+                rating: widget.model.importance,
+                categoryName: widget.model.category,
+                date: widget.model.createdAt ?? "",
                 iconCodePoint: widget.model.iconCodePoint,
               )),
         ));
@@ -39,6 +44,7 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
 }
 
 class EnhancedCard extends StatelessWidget {
+  final TaskModel model;
   final String title;
   final String description;
   final int rating;
@@ -48,11 +54,13 @@ class EnhancedCard extends StatelessWidget {
 
   const EnhancedCard({
     super.key,
+    required this.model,
     required this.title,
     required this.description,
     required this.rating,
     required this.categoryName,
-    required this.date, required this.iconCodePoint,
+    required this.date,
+    required this.iconCodePoint,
   });
 
   @override
@@ -60,7 +68,7 @@ class EnhancedCard extends StatelessWidget {
     return SizedBox(
       height: context.dynamicHeight(0.5),
       child: GestureDetector(
-        onTap: () => context.pushRoute(TaskEditRoute()),
+        onTap: () => context.pushRoute(TaskEditRoute(model: model)),
         child: Card(
           elevation: 4,
           child: Container(
@@ -91,8 +99,7 @@ class EnhancedCard extends StatelessWidget {
                         ),
                       ),
                       Icon(
-                        IconData(iconCodePoint,
-                        fontFamily: "MaterialIcons"),
+                        IconData(iconCodePoint, fontFamily: "MaterialIcons"),
                         color: ProjectColors.white,
                       ),
                       const Spacer(),
@@ -107,14 +114,14 @@ class EnhancedCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Align(
                       alignment: Alignment.topRight,
                       child: Text(date,
                           style: context.textTheme().titleSmall?.copyWith(
                               color: Colors.black.withOpacity(0.5)))),
                   const SizedBox(height: 16),
-                  Text("Category: ${categoryName}",
+                  Text("Category: $categoryName",
                       style: context
                           .textTheme()
                           .titleMedium

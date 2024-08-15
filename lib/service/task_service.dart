@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:intl/intl.dart';
 
-
 class TaskService {
   final _collection = FirebaseFirestore.instance.collection("tasks");
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,8 +22,7 @@ class TaskService {
         userId: userId,
         createdAt: formattedDate,
         description: task.description,
-        iconCodePoint: task.iconCodePoint == 62504 ? 
-          62504 : task.iconCodePoint,
+        iconCodePoint: task.iconCodePoint == 62504 ? 62504 : task.iconCodePoint,
       );
 
       final newTask = await _collection.add(updatedTask.toMap());
@@ -40,8 +38,13 @@ class TaskService {
       if (userId.isEmpty) {
         throw Exception('User not authenticated');
       }
-      final querySnapshot =
-          await _collection.where('userId', isEqualTo: userId,).where('categoryId',isEqualTo: categoryId).get();
+      final querySnapshot = await _collection
+          .where(
+            'userId',
+            isEqualTo: userId,
+          )
+          .where('categoryId', isEqualTo: categoryId)
+          .get();
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
         data['id'] = doc.id;

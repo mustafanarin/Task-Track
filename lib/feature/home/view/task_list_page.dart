@@ -17,6 +17,7 @@ class TaskListPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final taskNotifier = ref.read(taskProvider.notifier);
     final tasks = ref.watch(taskProvider);
+    final shortBy = ref.read(taskProvider.notifier);
     Future<void> fetchData() async {
       await taskNotifier.loadTasks(categoryId);
     }
@@ -29,6 +30,21 @@ class TaskListPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Tasks"),
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.menu_outlined),
+            itemBuilder: (context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                onTap: () => shortBy.sortTasks(SortType.name),
+                child: const Text('Sort by name'),
+              ),
+              PopupMenuItem<String>(
+                onTap: () => shortBy.sortTasks(SortType.importance),
+                child: const Text('Sort by importance'),
+              ),
+            ],
+          )
+        ],
       ),
       body: Padding(
         padding: context.paddingHorizontalLow,
@@ -63,6 +79,7 @@ class TaskListPage extends HookConsumerWidget {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
+//switcht oluştur enumdan gelen değere eşitse yeşil sarı mavi olsun renkleri
                               Colors.green.shade400,
                               Colors.green.shade800
                             ],
@@ -120,51 +137,3 @@ class TaskListPage extends HookConsumerWidget {
   }
 }
 //POPUO MENU
-// PopupMenuButton(
-//                   icon: const Icon(Icons.menu_outlined),
-//                   onSelected: (String result) {
-//                     switch (result) {
-//                       case 'dialog':
-//                         showDialog(
-//                             context: context,
-//                             builder: (context) {
-//                               return AlertDialog(
-//                                 title: const Text(
-//                                   "DÜZENLE",
-//                                   style: TextStyle(color: Colors.black),
-//                                 ),
-//                                 content: const Text(
-//                                   "Alert dialog",
-//                                   style: TextStyle(color: Colors.black),
-//                                 ),
-//                                 actions: [
-//                                   TextButton(
-//                                       onPressed: () {
-//                                         print("iptal");
-//                                         context.maybePop();
-//                                       },
-//                                       child: const Text("iptal")),
-//                                   ElevatedButton(
-//                                       onPressed: () {
-//                                         print("kaydet");
-//                                         context.maybePop();
-//                                       },
-//                                       child: const Text("Kaydet"))
-//                                 ],
-//                               );
-//                             });
-//                       case "delete":
-//                         print("delete");
-//                     }
-//                   },
-//                   itemBuilder: (context) => <PopupMenuEntry<String>>[
-//                     const PopupMenuItem<String>(
-//                       value: 'dialog',
-//                       child: Text('Edit'),
-//                     ),
-//                     const PopupMenuItem<String>(
-//                       value: 'delete',
-//                       child: Text('Delete'),
-//                     ),
-//                   ],
-//                 )
