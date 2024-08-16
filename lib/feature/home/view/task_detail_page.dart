@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
+import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
-final asdProvider = Provider.autoDispose<TaskModel>(
-  (ref) => throw UnimplementedError(),
-);
-
 @RoutePage()
 class TaskDetailPage extends ConsumerStatefulWidget {
   final TaskModel model;
-  const TaskDetailPage(this.model, {super.key});
+  final CategoryId category;
+  const TaskDetailPage(this.model, this.category, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TaskDetailPageState();
@@ -37,7 +35,8 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
                 rating: widget.model.importance,
                 categoryName: widget.model.category,
                 date: widget.model.createdAt ?? "",
-                iconCodePoint: widget.model.iconCodePoint,
+                iconCodePoint: widget.model.iconCodePoint, 
+                category: widget.category,
               )),
         ));
   }
@@ -51,6 +50,7 @@ class EnhancedCard extends StatelessWidget {
   final String categoryName;
   final String date;
   final int iconCodePoint;
+  final CategoryId category;
 
   const EnhancedCard({
     super.key,
@@ -60,11 +60,15 @@ class EnhancedCard extends StatelessWidget {
     required this.rating,
     required this.categoryName,
     required this.date,
-    required this.iconCodePoint,
+    required this.iconCodePoint, 
+    required this.category,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Color> cardColor = CardColor().colorByCategory(category);
+
     return SizedBox(
       height: context.dynamicHeight(0.5),
       child: GestureDetector(
@@ -77,7 +81,7 @@ class EnhancedCard extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.green.shade400, Colors.green.shade800],
+                colors: cardColor,
               ),
             ),
             child: Padding(

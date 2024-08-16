@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
@@ -31,36 +32,63 @@ class _HomePageState extends State<HomePage> {
                   style: context.textTheme().titleLarge)
             ])),
       ),
-      body: const Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CardWidget(title: 'New Added', color: Colors.green, categoryId: 1,),
-          CardWidget(title: 'Continues', color: Colors.amber, categoryId: 2,),
-          CardWidget(title: 'Finished', color: Colors.blue, categoryId: 3,),
+          CardWidget(
+              title: 'New Added',
+              color: Colors.green.shade600,
+              categoryId: CategoryId.newTask.value, 
+              category: CategoryId.newTask,),
+          CardWidget(
+              title: 'Continues',
+              color: Colors.blue.shade600,
+              categoryId: CategoryId.continueTask.value, category: CategoryId.continueTask,),
+          CardWidget(
+              title: 'Finished',
+              color: Colors.red.shade600,
+              categoryId: CategoryId.finishTask.value, 
+              category: CategoryId.finishTask,),
         ],
       ),
     );
   }
 }
-// enum oluştur new continue finish diye bunlara değe roalrak 1 2 3 ver burda direkt yazma
-//
+
 
 class CardWidget extends StatelessWidget {
   final String title;
   final Color color;
   final int categoryId;
+  final CategoryId category;
 
-  const CardWidget({super.key, required this.title, required this.color, required this.categoryId});
+  const CardWidget(
+      {super.key,
+      required this.title,
+      required this.color,
+      required this.categoryId, 
+      required this.category});
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Color> cardColor = CardColor().colorByCategory(category);
+
     return Padding(
       padding: context.paddingHorizontalHeigh,
       child: GestureDetector(
-        onTap: () => context.pushRoute(TaskListRoute(categoryId: categoryId)),
+        onTap: () => context.pushRoute(TaskListRoute(categoryId: categoryId, category: category)),
         child: Card(
-          color: color,
-          child: SizedBox(
+          elevation: 4,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: cardColor,
+              ),
+            ),
             width: context.dynamicWidht(1),
             height: 170,
             child: Center(

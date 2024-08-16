@@ -1,39 +1,46 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/service/task_service.dart';
 
 // Task service provider
-final serviceProvider = Provider<TaskService>((ref) {
+final serviceProvider = Provider((ref) {
   return TaskService();
 });
 
 // Task state notifier provider
 final taskProvider =
-    StateNotifierProvider<TaskNotifier, List<TaskModel>>((ref) {
+    StateNotifierProvider<TaskNotifier, TaskState>((ref) {
   final service = ref.watch(serviceProvider);
-  return TaskNotifier(service,ref);
+  return TaskNotifier(service, ref);
 });
 
 // Sort type provider
-enum SortType { creationDate, name, importance }
+enum SortType { name, importance }
 
-// Default sort type is creation Date
-final sortTypeProvider = StateProvider<SortType>((ref) => SortType.creationDate);
+// Default sort type is none
+final sortTypeProvider = StateProvider<SortType?>((ref) => null);
 
-class TaskNotifier extends StateNotifier<List<TaskModel>> {
-  TaskNotifier(this._taskService, this._ref) : super([]);
+class TaskState {
+  final List<TaskModel> tasks;
+  final bool isLoading;
+
+  TaskState({required this.tasks, required this.isLoading});
+}
+
+class TaskNotifier extends StateNotifier<TaskState> {
+  TaskNotifier(this._taskService, this._ref) : super(TaskState(tasks: [], isLoading: false));
 
   final TaskService _taskService;
   final Ref _ref;
 
   Future<void> loadTasks(int categoryId) async {
+    state = TaskState(tasks: state.tasks, isLoading: true);
     try {
       final tasks = await _taskService.getTasks(categoryId);
-      state = tasks;
+      state = TaskState(tasks: tasks, isLoading: false);
     } catch (e) {
-      print('Error loading tasks: $e');
-      state = [];
+      print('Görevler yüklenirken hata oluştu: $e');
+      state = TaskState(tasks: [], isLoading: false);
     }
   }
 
@@ -64,32 +71,24 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     }
   }
 
-  
   void sortTasks(SortType sortType) {
     _ref.read(sortTypeProvider.notifier).state = sortType;
     _sortTasks();
   }
 
-
   void _sortTasks() {
     final sortType = _ref.read(sortTypeProvider);
+    if (sortType == null) return;
+
     switch (sortType) {
-      case SortType.creationDate:
-        state.sort((a, b) {
-          final dateFormat = DateFormat('d MMMM');
-          final dateA = dateFormat.parse(a.createdAt ?? "");
-          final dateB = dateFormat.parse(b.createdAt ?? "");
-          return dateB.compareTo(dateA); 
-        });
-        break;
       case SortType.name:
-        state.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        state.tasks.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         break;
       case SortType.importance:
-        state.sort((a, b) => b.importance.compareTo(a.importance));
+        state.tasks.sort((a, b) => b.importance.compareTo(a.importance));
         break;
     }
-    state = [...state];
+    state = TaskState(tasks: state.tasks, isLoading: false);
   }
-
 }

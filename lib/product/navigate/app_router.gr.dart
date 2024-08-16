@@ -161,12 +161,14 @@ class TaskAddRoute extends PageRouteInfo<void> {
 class TaskDetailRoute extends PageRouteInfo<TaskDetailRouteArgs> {
   TaskDetailRoute({
     required TaskModel model,
+    required CategoryId category,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           TaskDetailRoute.name,
           args: TaskDetailRouteArgs(
             model: model,
+            category: category,
             key: key,
           ),
           initialChildren: children,
@@ -180,6 +182,7 @@ class TaskDetailRoute extends PageRouteInfo<TaskDetailRouteArgs> {
       final args = data.argsAs<TaskDetailRouteArgs>();
       return TaskDetailPage(
         args.model,
+        args.category,
         key: args.key,
       );
     },
@@ -189,16 +192,19 @@ class TaskDetailRoute extends PageRouteInfo<TaskDetailRouteArgs> {
 class TaskDetailRouteArgs {
   const TaskDetailRouteArgs({
     required this.model,
+    required this.category,
     this.key,
   });
 
   final TaskModel model;
 
+  final CategoryId category;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'TaskDetailRouteArgs{model: $model, key: $key}';
+    return 'TaskDetailRouteArgs{model: $model, category: $category, key: $key}';
   }
 }
 
@@ -253,12 +259,14 @@ class TaskEditRouteArgs {
 class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
   TaskListRoute({
     required int categoryId,
+    required CategoryId category,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           TaskListRoute.name,
           args: TaskListRouteArgs(
             categoryId: categoryId,
+            category: category,
             key: key,
           ),
           initialChildren: children,
@@ -272,6 +280,7 @@ class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
       final args = data.argsAs<TaskListRouteArgs>();
       return TaskListPage(
         args.categoryId,
+        args.category,
         key: args.key,
       );
     },
@@ -281,16 +290,19 @@ class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
 class TaskListRouteArgs {
   const TaskListRouteArgs({
     required this.categoryId,
+    required this.category,
     this.key,
   });
 
   final int categoryId;
 
+  final CategoryId category;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'TaskListRouteArgs{categoryId: $categoryId, key: $key}';
+    return 'TaskListRouteArgs{categoryId: $categoryId, category: $category, key: $key}';
   }
 }
 

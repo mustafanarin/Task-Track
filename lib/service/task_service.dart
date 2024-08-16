@@ -44,6 +44,7 @@ class TaskService {
             isEqualTo: userId,
           )
           .where('categoryId', isEqualTo: categoryId)
+          .orderBy('createdAt', descending: true)
           .get();
       return querySnapshot.docs.map((doc) {
         final data = doc.data();

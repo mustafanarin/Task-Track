@@ -24,6 +24,7 @@ class TaskEditPage extends StatefulHookConsumerWidget {
 class _TaskEditPageState extends ConsumerState<TaskEditPage> {
   @override
   Widget build(BuildContext context) {
+    //tf controllerları widgetlara böldüğün yere götür
     final tfTitle = useTextEditingController(text: widget.model.name);
     final tfDescription =
         useTextEditingController(text: widget.model.description);

@@ -5,25 +5,25 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
+import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
 @RoutePage()
 class TaskListPage extends HookConsumerWidget {
   final int categoryId;
-  const TaskListPage(this.categoryId, {super.key});
+  final CategoryId category;
+   TaskListPage(this.categoryId, this.category, {super.key});
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final List<Color> cardColor = CardColor().colorByCategory(category);
     final taskNotifier = ref.read(taskProvider.notifier);
-    final tasks = ref.watch(taskProvider);
+    final taskState = ref.watch(taskProvider);
     final shortBy = ref.read(taskProvider.notifier);
-    Future<void> fetchData() async {
-      await taskNotifier.loadTasks(categoryId);
-    }
-
     useEffect(() {
-      fetchData();
+      Future.microtask(() => taskNotifier.loadTasks(categoryId));
       return null;
     }, [categoryId]);
 
@@ -48,12 +48,14 @@ class TaskListPage extends HookConsumerWidget {
       ),
       body: Padding(
         padding: context.paddingHorizontalLow,
-        child: tasks.isEmpty
+        child: taskState.isLoading
             ? const Center(child: CircularProgressIndicator())
+            : taskState.tasks.isEmpty
+                ? const Center(child: Text("Henüz bir görev oluşturulmadı", style: TextStyle(color: Colors.black)))
             : ListView.builder(
-                itemCount: tasks.length,
+                itemCount: taskState.tasks.length,
                 itemBuilder: (context, index) {
-                  final task = tasks[index];
+                  final task = taskState.tasks[index];
                   return Slidable(
                     key: ValueKey(index),
                     startActionPane: ActionPane(
@@ -76,18 +78,13 @@ class TaskListPage extends HookConsumerWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-//switcht oluştur enumdan gelen değere eşitse yeşil sarı mavi olsun renkleri
-                              Colors.green.shade400,
-                              Colors.green.shade800
-                            ],
-                          ),
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: cardColor),
                         ),
                         child: ListTile(
                           onTap: () =>
-                              context.pushRoute(TaskDetailRoute(model: task)),
+                              context.pushRoute(TaskDetailRoute(model: task, category: category)),
                           title: Text(
                             task.name,
                             style: const TextStyle(
@@ -136,4 +133,3 @@ class TaskListPage extends HookConsumerWidget {
     );
   }
 }
-//POPUO MENU
