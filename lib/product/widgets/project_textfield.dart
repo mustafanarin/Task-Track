@@ -19,7 +19,6 @@ class ProjectTextfield extends StatelessWidget {
       style: context.textTheme().titleSmall,
       decoration: InputDecoration(
        hintText: hintText,
-    
          suffixIcon: Icon(icon)
        ),
      );

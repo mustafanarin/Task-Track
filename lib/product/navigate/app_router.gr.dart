@@ -48,6 +48,71 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ProfileEditPage]
+class ProfileEditRoute extends PageRouteInfo<ProfileEditRouteArgs> {
+  ProfileEditRoute({
+    required ProfileEditEnum profileEditEnum,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfileEditRoute.name,
+          args: ProfileEditRouteArgs(
+            profileEditEnum: profileEditEnum,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileEditRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ProfileEditRouteArgs>();
+      return ProfileEditPage(
+        args.profileEditEnum,
+        key: args.key,
+      );
+    },
+  );
+}
+
+class ProfileEditRouteArgs {
+  const ProfileEditRouteArgs({
+    required this.profileEditEnum,
+    this.key,
+  });
+
+  final ProfileEditEnum profileEditEnum;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileEditRouteArgs{profileEditEnum: $profileEditEnum, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfilePage]
+class ProfileRoute extends PageRouteInfo<void> {
+  const ProfileRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ProfilePage();
+    },
+  );
+}
+
+/// generated route for
 /// [RegisterPage]
 class RegisterRoute extends PageRouteInfo<void> {
   const RegisterRoute({List<PageRouteInfo>? children})
