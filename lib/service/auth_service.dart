@@ -41,16 +41,65 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+    } on FirebaseAuthException catch (error) {
+      print("Sing Out Error: $error");
+    }
   }
 
   Future<UserModel?> getCurrentUser() async {
     final user = _auth.currentUser;
-
     if (user != null) {
+    try{
+      
       DocumentSnapshot userDoc = await _collection.doc(user.uid).get();
-      return UserModel(id: user.uid, name: userDoc["name"], email: user.email);
+      return UserModel(id: user.uid, name: userDoc["name"] ?? "", email: user.email ?? "");
+    
+    } on FirebaseAuthException catch (error) {
+      print("Get Current User Error: $error");
+    }
     }
     return null;
+  }
+
+   Future<void> updateUserName(String newName) async {
+    final user = _auth.currentUser;
+    try{
+      if (user != null) {
+      await _collection.doc(user.uid).update({"name": newName});
+    }
+    } on FirebaseAuthException catch (error) {
+      print("Update User name Error: $error");
+    }
+    
+  }
+
+  Future<void> updateUserEmail(String newEmail) async {
+    final user = _auth.currentUser;
+    try{
+      if (user != null) {
+
+      await user.verifyBeforeUpdateEmail(newEmail);
+      if(user.email == newEmail){
+        await _collection.doc(user.uid).update({"email": newEmail});
+      }
+      
+    }
+    }on FirebaseAuthException catch (error) {
+      print("Update User email Error: $error");
+    }
+    
+  }
+
+    Stream<UserModel> getUserStream(String userId) {
+    return _collection.doc(userId).snapshots().map((snapshot) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      return UserModel(
+        id: userId,
+        name: data['name'] ?? '',
+        email: data['email'] ?? '',
+      );
+    });
   }
 }

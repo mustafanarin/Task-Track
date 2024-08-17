@@ -2,7 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/feature/home/view/home_page.dart';
-import 'package:todo_app/feature/profile/profile_page.dart';
+import 'package:todo_app/feature/profile/view/profile_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
@@ -52,6 +52,7 @@ class _TabbarPageState extends State<TabbarPage> {
         leftCornerRadius: 32,
         rightCornerRadius: 32,
         onTap: (index) {
+          // TODO SET STATE
           setState(() => _bottomNavIndex = index);
         },
       ),
