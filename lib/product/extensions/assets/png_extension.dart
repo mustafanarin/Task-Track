@@ -1,6 +1,7 @@
 enum PngItems{
     man_working,
-    woman_shopping
+    woman_shopping,
+    
 }
 
 extension PngItemsExtension on PngItems{

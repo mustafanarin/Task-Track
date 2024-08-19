@@ -45,6 +45,22 @@ class LoginPage extends HookConsumerWidget {
       }
     }
 
+    Future<void> handleGoogleLogin() async {
+      final isLogin = await ref.read(authProvider.notifier).signInWithGoogle();
+
+      if (!context.mounted) return;
+
+      if (isLogin) {
+        context.pushRoute(const TabbarRoute());
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Google login failed, please try again."),
+          ),
+        );
+      }
+    }
+
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -155,8 +171,9 @@ class LoginPage extends HookConsumerWidget {
                         height: context.lowValue2,
                       ),
                       TransparentButton(
+                        stringIcon: "assets/png/google_icona.png",
                           text: ProjectStrings.loginWithGoogle,
-                          onPressed: () {}),
+                          onPressed: () => handleGoogleLogin()),
                       SizedBox(
                         height: context.lowValue2,
                       ),

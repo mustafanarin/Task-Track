@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;
   final _collection = FirebaseFirestore.instance.collection("users");
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<UserModel?> login(String email, String password) async {
     try {
@@ -39,14 +41,14 @@ class AuthService {
       return null;
     }
   }
-
   Future<void> logout() async {
-    try {
-      await _auth.signOut();
-    } on FirebaseAuthException catch (error) {
-      print("Sing Out Error: $error");
+      try {
+        await _auth.signOut();
+        await _googleSignIn.signOut();  
+      } on FirebaseAuthException catch (error) {
+        print("Sign Out Error: $error");
+      }
     }
-  }
 
   Future<UserModel?> getCurrentUser() async {
     final user = _auth.currentUser;
@@ -101,5 +103,38 @@ class AuthService {
         email: data['email'] ?? '',
       );
     });
+  }
+
+  Future<UserModel?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null;
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Firestore'da kullanıcı bilgilerini güncelle veya oluştur
+        await _collection.doc(user.uid).set({
+          'name': user.displayName ?? '',
+          'email': user.email ?? '',
+        }, SetOptions(merge: true));
+
+        return UserModel(
+          id: user.uid,
+          name: user.displayName ?? '',
+          email: user.email ?? '',
+        );
+      }
+    } catch (error) {
+      print("Google Sign In Error: $error");
+    }
+    return null;
   }
 }
