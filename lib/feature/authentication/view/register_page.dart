@@ -23,19 +23,24 @@ class RegisterPage extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final confirmController = useTextEditingController();
+    final isLoading = useState(false);
+
 
     final authPrecess = ref.read(authProvider.notifier);
 
     Future<void> handleRegister() async {
       if (!(formKey.currentState?.validate() ?? false)) return;
-
+    
+      isLoading.value = true; // Loading başlat
       bool isRegister = await authPrecess.register(
           nameController.text, emailController.text, passwordController.text);
-
+      
+    
       if (!context.mounted) return;
-
-      if (isRegister) {
-        context.pushRoute(const TabbarRoute());
+    
+     if (isRegister) {
+    context.pushRoute(const TabbarRoute());
+    isLoading.value = false; // Loading durdur
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -44,6 +49,7 @@ class RegisterPage extends HookConsumerWidget {
         );
       }
     }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -159,9 +165,15 @@ class RegisterPage extends HookConsumerWidget {
                               .validateConfirmPassword(
                                   value, passwordController.text)),
                       SizedBox(height: context.dynamicHeight(0.08)),
-                      ProjectButton(
-                          text: ProjectStrings.registerButton,
-                          onPressed: () async => await handleRegister()),
+                      Stack(
+                        children: [
+                          ProjectButton(
+                              text:  isLoading.value ? "": ProjectStrings.registerButton,
+                              onPressed: () async => isLoading.value ? null : await handleRegister()),
+                          if (isLoading.value)
+                          Center(heightFactor: 1,child: CircularProgressIndicator(color: Colors.white,)),
+                        ],
+                      ),
                       SizedBox(
                         height: context.highValue,
                       )
@@ -170,7 +182,7 @@ class RegisterPage extends HookConsumerWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

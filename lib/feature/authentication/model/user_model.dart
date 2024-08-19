@@ -4,11 +4,13 @@ class UserModel extends Equatable {
   final String? id;
   final String? name;
   final String? email;
+  final String? pendingEmail;
 
   const UserModel({
     this.id,
     this.name,
     this.email,
+    this.pendingEmail
   });
 
   @override

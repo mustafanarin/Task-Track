@@ -8,8 +8,8 @@ class ProjectAlertDialog extends StatelessWidget {
     super.key, required this.titleText,
   });
   
-  final String noButtonText = "Hayır";
-  final String yesButtonText = "Evet";
+  final String noButtonText = "No";
+  final String yesButtonText = "Yes";
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
 import 'package:todo_app/service/auth_service.dart';
@@ -8,30 +11,38 @@ final profileViewModelProvider = StateNotifierProvider<ProfileViewModel, AsyncVa
 
 class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
   final AuthService _authService;
+  late final StreamSubscription<User?> _authStateSubscription;
 
   ProfileViewModel(this._authService) : super(const AsyncValue.loading()) {
-    getCurrentUser();
-  }
-  
-  Future<void> getCurrentUser() async {
-    state = const AsyncValue.loading();
-    try {
-      final user = await _authService.getCurrentUser();
+    _authStateSubscription = _authService.authStateChanges.listen((user) {
       if (user != null) {
-        state = AsyncValue.data(user);
+        getCurrentUser();
       } else {
         state = const AsyncValue.data(null);
       }
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-    }
+    });
+  }
+
+  @override
+  void dispose() {
+    _authStateSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> updateUserName(String newName) async {
     state = const AsyncValue.loading();
     try {
       await _authService.updateUserName(newName);
-      await getCurrentUser();
+      await getCurrentUser(); // Güncellenmiş kullanıcı bilgilerini hemen al
+    } catch (e) {
+      state = AsyncValue.error(e, StackTrace.current);
+    }
+  }
+
+  Future<void> getCurrentUser() async {
+    try {
+      final user = await _authService.getCurrentUser();
+      state = AsyncValue.data(user);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
@@ -41,9 +52,10 @@ class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
     state = const AsyncValue.loading();
     try {
       await _authService.updateUserEmail(newEmail);
-      await getCurrentUser();
+      await getCurrentUser(); // Güncellenmiş kullanıcı bilgilerini al
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
+      rethrow; // Hatayı UI'da göstermek için yeniden fırlat
     }
   }
 

@@ -23,19 +23,26 @@ class LoginPage extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final formKey = useMemoized(() => GlobalKey<FormState>());
+    final isLoading = useState<bool>(false);
 
     final authProcesses = ref.read(authProvider.notifier);
+    
 
     Future<void> handleLogin() async {
       if (!(formKey.currentState?.validate() ?? false)) return;
 
+      isLoading.value = true;
+
       final isLogin = await authProcesses.login(
           emailController.text, passwordController.text);
+
+      
 
       if (!context.mounted) return;
 
       if (isLogin) {
         context.pushRoute(const TabbarRoute());
+        isLoading.value = false;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -46,23 +53,40 @@ class LoginPage extends HookConsumerWidget {
     }
 
     Future<void> handleGoogleLogin() async {
-      final isLogin = await ref.read(authProvider.notifier).signInWithGoogle();
+      try {
+        isLoading.value = true;
 
-      if (!context.mounted) return;
+        final isLogin = await ref.read(authProvider.notifier).signInWithGoogle();
 
-      if (isLogin) {
-        context.pushRoute(const TabbarRoute());
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Google login failed, please try again."),
-          ),
-        );
+        
+        if (!context.mounted) return;
+
+        if (isLogin) {
+          context.pushRoute(const TabbarRoute());
+          isLoading.value = false;
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Google login failed, please try again."),
+            ),
+          );
+        }
+      } catch (e) {
+        print("Error during Google login: $e");
+
+        isLoading.value = false;
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("An error occurred during Google login. Please try again."),
+            ),
+          );
+        }
       }
     }
 
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: context.dynamicHeight(0.30),
         leading: Padding(
@@ -101,115 +125,130 @@ class LoginPage extends HookConsumerWidget {
           ),
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          const Divider(
-            color: ProjectColors.black,
-            thickness: 1.5,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: context.paddingHorizontalHeigh,
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: context.lowValue1,
-                      ),
-                      Text(
-                        ProjectStrings.emailText,
-                        style: context.textTheme().titleMedium,
-                      ),
-                      SizedBox(
-                        height: context.lowValue1,
-                      ),
-                      ProjectTextfield(
-                        hintText: ProjectStrings.tfEmailHint,
-                        controller: emailController,
-                        keyBoardType: TextInputType.emailAddress,
-                        validator: Validators().validateEmail,
-                        icon: Icons.person_outline_outlined,
-                      ),
-                      SizedBox(
-                        height: context.lowValue1,
-                      ),
-                      Text(
-                        ProjectStrings.passwordText,
-                        style: context.textTheme().titleMedium,
-                      ),
-                      SizedBox(
-                        height: context.lowValue1,
-                      ),
-                      ProjectPasswordTextfield(
-                          hintText: ProjectStrings.tfPasswordHint,
-                          controller: passwordController,
-                          keyBoardType: TextInputType.visiblePassword,
-                          validator: Validators().validatePassword),
-                      SizedBox(
-                        height: context.lowValue1,
-                      ),
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: Text(
-                            ProjectStrings.forgatPassword,
-                            style: context.textTheme().titleSmall,
-                          )),
-                      SizedBox(
-                        height: context.lowValue2,
-                      ),
-                      ProjectButton(
-                          text: ProjectStrings.loginButton,
-                          onPressed: () async => await handleLogin()),
-                      SizedBox(
-                        height: context.lowValue2,
-                      ),
-                      const _OrDivider(),
-                      SizedBox(
-                        height: context.lowValue2,
-                      ),
-                      TransparentButton(
-                        stringIcon: "assets/png/google_icona.png",
-                          text: ProjectStrings.loginWithGoogle,
-                          onPressed: () => handleGoogleLogin()),
-                      SizedBox(
-                        height: context.lowValue2,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+          Column(
+            children: [
+              const Divider(
+                color: ProjectColors.black,
+                thickness: 1.5,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: context.paddingHorizontalHeigh,
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(
+                            height: context.lowValue1,
+                          ),
                           Text(
-                            ProjectStrings.haventAccont,
+                            ProjectStrings.emailText,
                             style: context.textTheme().titleMedium,
                           ),
-                          TextButton(
-                              onPressed: () =>
-                                  context.pushRoute(const RegisterRoute()),
+                          SizedBox(
+                            height: context.lowValue1,
+                          ),
+                          ProjectTextfield(
+                            hintText: ProjectStrings.tfEmailHint,
+                            controller: emailController,
+                            keyBoardType: TextInputType.emailAddress,
+                            validator: Validators().validateEmail,
+                            icon: Icons.person_outline_outlined,
+                          ),
+                          SizedBox(
+                            height: context.lowValue1,
+                          ),
+                          Text(
+                            ProjectStrings.passwordText,
+                            style: context.textTheme().titleMedium,
+                          ),
+                          SizedBox(
+                            height: context.lowValue1,
+                          ),
+                          ProjectPasswordTextfield(
+                              hintText: ProjectStrings.tfPasswordHint,
+                              controller: passwordController,
+                              keyBoardType: TextInputType.visiblePassword,
+                              validator: Validators().validatePassword),
+                          SizedBox(
+                            height: context.lowValue1,
+                          ),
+                          Align(
+                              alignment: Alignment.topRight,
                               child: Text(
-                                ProjectStrings.registerButton,
-                                style: context
-                                    .textTheme()
-                                    .titleMedium
-                                    ?.copyWith(color: ProjectColors.iris),
-                              ))
+                                ProjectStrings.forgatPassword,
+                                style: context.textTheme().titleSmall,
+                              )),
+                          SizedBox(
+                            height: context.lowValue2,
+                          ),
+                          ProjectButton(
+                              text: ProjectStrings.loginButton,
+                              onPressed: () async => await handleLogin()),
+                          SizedBox(
+                            height: context.lowValue2,
+                          ),
+                          const _OrDivider(),
+                          SizedBox(
+                            height: context.lowValue2,
+                          ),
+                          TransparentButton(
+                            stringIcon: "assets/png/google_icona.png",
+                            text: ProjectStrings.loginWithGoogle,
+                            onPressed: () => handleGoogleLogin()),
+                          SizedBox(
+                            height: context.lowValue2,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                ProjectStrings.haventAccont,
+                                style: context.textTheme().titleMedium,
+                              ),
+                              TextButton(
+                                  onPressed: () =>
+                                      context.pushRoute(const RegisterRoute()),
+                                  child: Text(
+                                    ProjectStrings.registerButton,
+                                    style: context
+                                        .textTheme()
+                                        .titleMedium
+                                        ?.copyWith(color: ProjectColors.iris),
+                                  ))
+                            ],
+                          ),
+                          SizedBox(
+                            height: context.highValue,
+                          )
                         ],
                       ),
-                      SizedBox(
-                        height: context.highValue,
-                      )
-                    ],
+                    ),
                   ),
                 ),
+              )
+            ],
+          ),
+          if (isLoading.value) 
+            Center(
+              child: Column(
+                children: [
+                  Spacer(flex: 2,),
+                  CircularProgressIndicator(),
+                  Spacer(flex: 3,)
+                ],
               ),
-            ),
-          )
+            )
         ],
       ),
     );
   }
 }
+
 
 class _OrDivider extends StatelessWidget {
   const _OrDivider({

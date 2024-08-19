@@ -73,8 +73,10 @@ class AuthNotifier extends StateNotifier<UserModel?> {
         state = user;
         return true;
       }
+    } on FirebaseAuthException catch (e) {
+      print("Firebase Auth Error: ${e.message}");
     } catch (e) {
-      print(e.toString());
+      print("Unexpected error during Google Sign In: $e");
     }
     return false;
   }
