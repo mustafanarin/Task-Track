@@ -66,6 +66,16 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
       }
     }
 
+    String getCategoryName(int value){
+      if(value == 1){
+        return "New";
+      }else if(value == 2){
+        return "Continue";
+      }else{
+        return "Finished";
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task Edit'),
@@ -140,6 +150,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               ],
                 onChanged: (value) {
                   newTask.value = newTask.value.copyWith(categoryId: value);
+                  newTask.value = newTask.value.copyWith(category: getCategoryName(value ?? 1));
                 },
               ),
               const SizedBox(height: 20),

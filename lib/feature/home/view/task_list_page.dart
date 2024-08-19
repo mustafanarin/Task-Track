@@ -13,8 +13,8 @@ import 'package:todo_app/product/navigate/app_router.dart';
 class TaskListPage extends HookConsumerWidget {
   final int categoryId;
   final CategoryId category;
-   TaskListPage(this.categoryId, this.category, {super.key});
-
+  final String categoryName;
+  TaskListPage(this.categoryId, this.category, this.categoryName, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,7 @@ class TaskListPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tasks"),
+        title: Text(categoryName),
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.menu_outlined),
@@ -51,84 +51,86 @@ class TaskListPage extends HookConsumerWidget {
         child: taskState.isLoading
             ? const Center(child: CircularProgressIndicator())
             : taskState.tasks.isEmpty
-                ? const Center(child: Text("Henüz bir görev oluşturulmadı", style: TextStyle(color: Colors.black)))
-            : ListView.builder(
-                itemCount: taskState.tasks.length,
-                itemBuilder: (context, index) {
-                  final task = taskState.tasks[index];
-                  return Slidable(
-                    key: ValueKey(index),
-                    startActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) {
-                            taskNotifier.deleteTask(task);
-                          },
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Sil',
+                ?  Center(
+                    child: Text("No ${categoryName.toLowerCase()} missions yet.",
+                        style: TextStyle(color: Colors.black)))
+                : ListView.builder(
+                    itemCount: taskState.tasks.length,
+                    itemBuilder: (context, index) {
+                      final task = taskState.tasks[index];
+                      return Slidable(
+                        key: ValueKey(index),
+                        startActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (context) {
+                                taskNotifier.deleteTask(task);
+                              },
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete,
+                              label: 'Sil',
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: context.paddingAllLow1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: cardColor),
-                        ),
-                        child: ListTile(
-                          onTap: () =>
-                              context.pushRoute(TaskDetailRoute(model: task, category: category)),
-                          title: Text(
-                            task.name,
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.white),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              RatingBar.builder(
-                                ignoreGestures: true,
-                                itemSize: 20,
-                                initialRating: task.importance.toDouble(),
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: false,
-                                itemCount: 5,
-                                itemPadding:
-                                    const EdgeInsets.symmetric(horizontal: 0),
-                                itemBuilder: (context, _) => const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                onRatingUpdate: (double value) {},
+                        child: Padding(
+                          padding: context.paddingAllLow1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: cardColor),
+                            ),
+                            child: ListTile(
+                              onTap: () => context.pushRoute(TaskDetailRoute(
+                                  model: task, category: category)),
+                              title: Text(
+                                task.name,
+                                style: const TextStyle(
+                                    fontSize: 18, color: Colors.white),
                               ),
-                              const Spacer(),
-                              Text(
-                                "${task.createdAt}",
-                                style: TextStyle(
-                                    color: Colors.grey[300], fontSize: 15),
-                              )
-                            ],
+                              subtitle: Row(
+                                children: [
+                                  RatingBar.builder(
+                                    ignoreGestures: true,
+                                    itemSize: 20,
+                                    initialRating: task.importance.toDouble(),
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: false,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(
+                                        horizontal: 0),
+                                    itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    onRatingUpdate: (double value) {},
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    "${task.createdAt}",
+                                    style: TextStyle(
+                                        color: Colors.grey[300], fontSize: 15),
+                                  )
+                                ],
+                              ),
+                              leading: Icon(
+                                IconData(task.iconCodePoint,
+                                    fontFamily: 'MaterialIcons'),
+                                color: Colors.white,
+                              ),
+                              trailing: Icon(Icons.arrow_outward,
+                                  color: Colors.white.withOpacity(0.6)),
+                            ),
                           ),
-                          leading: Icon(
-                            IconData(task.iconCodePoint,
-                                fontFamily: 'MaterialIcons'),
-                            color: Colors.white,
-                          ),
-                          trailing: Icon(Icons.arrow_outward,
-                              color: Colors.white.withOpacity(0.6)),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
       ),
     );
   }

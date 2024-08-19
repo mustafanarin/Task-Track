@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
+import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/service/task_service.dart';
 
 // Task service provider
@@ -8,10 +9,15 @@ final serviceProvider = Provider((ref) {
 });
 
 // Task state notifier provider
-final taskProvider =
-    StateNotifierProvider<TaskNotifier, TaskState>((ref) {
+final taskProvider = StateNotifierProvider<TaskNotifier, TaskState>((ref) {
   final service = ref.watch(serviceProvider);
   return TaskNotifier(service, ref);
+});
+
+// Task count state notifier provider
+final taskCountProvider = StateNotifierProvider<TaskCountNotifier, TaskCountState>((ref) {
+  final service = ref.watch(serviceProvider);
+  return TaskCountNotifier(service, ref);
 });
 
 // Sort type provider
@@ -38,6 +44,7 @@ class TaskNotifier extends StateNotifier<TaskState> {
     try {
       final tasks = await _taskService.getTasks(categoryId);
       state = TaskState(tasks: tasks, isLoading: false);
+      await _ref.read(taskCountProvider.notifier).updateTaskCounts(); // Count güncelleme
     } catch (e) {
       print('Görevler yüklenirken hata oluştu: $e');
       state = TaskState(tasks: [], isLoading: false);
@@ -90,5 +97,30 @@ class TaskNotifier extends StateNotifier<TaskState> {
         break;
     }
     state = TaskState(tasks: state.tasks, isLoading: false);
+  }
+}
+
+class TaskCountState {
+  final Map<int, int> taskCounts;
+
+  TaskCountState(this.taskCounts);
+}
+
+class TaskCountNotifier extends StateNotifier<TaskCountState> {
+  final TaskService _taskService;
+  final Ref ref;
+
+  TaskCountNotifier(this._taskService, this.ref) : super(TaskCountState({}));
+
+  Future<void> updateTaskCounts() async {
+    final newTasks = await _taskService.getTasks(CategoryId.newTask.value);
+    final continueTasks = await _taskService.getTasks(CategoryId.continueTask.value);
+    final finishedTasks = await _taskService.getTasks(CategoryId.finishTask.value);
+
+    state = TaskCountState({
+      CategoryId.newTask.value: newTasks.length,
+      CategoryId.continueTask.value: continueTasks.length,
+      CategoryId.finishTask.value: finishedTasks.length,
+    });
   }
 }

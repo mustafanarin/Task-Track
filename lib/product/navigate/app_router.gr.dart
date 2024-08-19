@@ -325,6 +325,7 @@ class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
   TaskListRoute({
     required int categoryId,
     required CategoryId category,
+    required String categoryName,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -332,6 +333,7 @@ class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
           args: TaskListRouteArgs(
             categoryId: categoryId,
             category: category,
+            categoryName: categoryName,
             key: key,
           ),
           initialChildren: children,
@@ -346,6 +348,7 @@ class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
       return TaskListPage(
         args.categoryId,
         args.category,
+        args.categoryName,
         key: args.key,
       );
     },
@@ -356,6 +359,7 @@ class TaskListRouteArgs {
   const TaskListRouteArgs({
     required this.categoryId,
     required this.category,
+    required this.categoryName,
     this.key,
   });
 
@@ -363,11 +367,13 @@ class TaskListRouteArgs {
 
   final CategoryId category;
 
+  final String categoryName;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'TaskListRouteArgs{categoryId: $categoryId, category: $category, key: $key}';
+    return 'TaskListRouteArgs{categoryId: $categoryId, category: $category, categoryName: $categoryName, key: $key}';
   }
 }
 
