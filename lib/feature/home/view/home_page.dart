@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
+import 'package:todo_app/feature/home/viewmodel/home/home_viewmodel.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';

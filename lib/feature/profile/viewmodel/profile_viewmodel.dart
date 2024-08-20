@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
@@ -33,7 +32,7 @@ class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
     state = const AsyncValue.loading();
     try {
       await _authService.updateUserName(newName);
-      await getCurrentUser(); // Güncellenmiş kullanıcı bilgilerini hemen al
+      await getCurrentUser(); 
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
@@ -52,10 +51,10 @@ class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
     state = const AsyncValue.loading();
     try {
       await _authService.updateUserEmail(newEmail);
-      await getCurrentUser(); // Güncellenmiş kullanıcı bilgilerini al
+      await getCurrentUser(); 
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
-      rethrow; // Hatayı UI'da göstermek için yeniden fırlat
+      rethrow; 
     }
   }
 

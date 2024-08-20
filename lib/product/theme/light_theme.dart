@@ -9,6 +9,7 @@ class LightTheme {
             scrolledUnderElevation: 0,
             elevation: 0,
             centerTitle: true),
+        //Doğru thema oluşturulacak
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
                 elevation: 0,
@@ -38,4 +39,5 @@ class LightTheme {
                 fontSize: 16)),
         scaffoldBackgroundColor: ProjectColors.white,
       );
+  //TODO TextButton theme add
 }

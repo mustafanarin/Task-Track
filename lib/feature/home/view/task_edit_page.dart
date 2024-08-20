@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/feature/home/view/task_add_page.dart';
-import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
+import 'package:todo_app/feature/home/viewmodel/task/task_crud_viewmodel.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
@@ -27,7 +27,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
   Widget build(BuildContext context) {
     final formkey = useMemoized(() => GlobalKey<FormState>());
     final taskNotifier = ref.read(taskProvider.notifier);
-
+    final updateLoading = ref.watch(taskProvider).isLoading;
     final newTask = useState(widget.model);
 
     Future<void> submitForm() async {
@@ -41,7 +41,9 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               backgroundColor: ProjectColors.grey,
               textColor: ProjectColors.white,
               fontSize: 16.0);
-          context.mounted ? context.router.replaceAll([const TabbarRoute()]) : null;
+          context.mounted
+              ? context.router.replaceAll([const TabbarRoute()])
+              : null;
         } catch (error) {
           Fluttertoast.showToast(
               msg: '${ProjectStrings.toastErrorAddMessage} $error',
@@ -54,7 +56,11 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
       }
     }
 
-    return Scaffold(
+    return updateLoading ? Container(
+            color: ProjectColors.white,
+            child: Center(child: CircularProgressIndicator()),
+          )
+        : Scaffold(
       appBar: AppBar(
         title: const Text(ProjectStrings.taskEditAppbarTitle),
       ),
@@ -70,9 +76,10 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
                 model: widget.model,
               ),
               SizedBox(height: context.lowValue2),
-              _TextfieldDescription(model: widget.model,
-                  newTask: newTask,
-                  ),
+              _TextfieldDescription(
+                model: widget.model,
+                newTask: newTask,
+              ),
               SizedBox(height: context.lowValue2),
               _DropdownImportanceScore(widget: widget, newTask: newTask),
               SizedBox(height: context.lowValue2),
@@ -94,8 +101,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
 }
 
 class _TextfieldTaskName extends HookWidget {
-  _TextfieldTaskName({
-    super.key,
+  const _TextfieldTaskName({
     required this.newTask,
     required this.model,
   });
@@ -122,7 +128,7 @@ class _TextfieldTaskName extends HookWidget {
 
 class _TextfieldDescription extends HookWidget {
   const _TextfieldDescription({
-    required this.model, 
+    required this.model,
     required this.newTask,
   });
 
@@ -154,7 +160,6 @@ class _TextfieldDescription extends HookWidget {
 
 class _DropdownImportanceScore extends StatelessWidget {
   const _DropdownImportanceScore({
-    super.key,
     required this.widget,
     required this.newTask,
   });
@@ -183,7 +188,6 @@ class _DropdownImportanceScore extends StatelessWidget {
 
 class _DropdownChangeCategory extends StatelessWidget {
   const _DropdownChangeCategory({
-    super.key,
     required this.widget,
     required this.newTask,
   });
@@ -242,9 +246,7 @@ class _DropdownChangeCategory extends StatelessWidget {
 }
 
 class _TaskIconListTitle extends StatelessWidget {
-  const _TaskIconListTitle({
-    super.key,
-  });
+  const _TaskIconListTitle();
 
   @override
   Widget build(BuildContext context) {
@@ -254,7 +256,7 @@ class _TaskIconListTitle extends StatelessWidget {
 }
 
 class _GridviewTaskIconList extends HookWidget {
-  _GridviewTaskIconList({
+  const _GridviewTaskIconList({
     required this.newTask,
   });
 

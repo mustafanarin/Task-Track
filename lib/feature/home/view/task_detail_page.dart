@@ -29,14 +29,9 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
         body: Center(
           child: Padding(
               padding: context.paddingHorizontalMedium,
+
               child: _EnhancedCard(
-                model: widget.model,
-                title: widget.model.name,
-                description: widget.model.description,
-                rating: widget.model.importance,
-                categoryName: widget.model.category,
-                date: widget.model.createdAt ?? "",
-                iconCodePoint: widget.model.iconCodePoint, 
+                model: widget.model, 
                 category: widget.category,
               )),
         ));
@@ -45,22 +40,10 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
 
 class _EnhancedCard extends StatelessWidget {
   final TaskModel model;
-  final String title;
-  final String description;
-  final int rating;
-  final String categoryName;
-  final String date;
-  final int iconCodePoint;
   final CategoryId category;
 
   const _EnhancedCard({
     required this.model,
-    required this.title,
-    required this.description,
-    required this.rating,
-    required this.categoryName,
-    required this.date,
-    required this.iconCodePoint, 
     required this.category,
   });
 
@@ -90,15 +73,15 @@ class _EnhancedCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   
-                  _TaskTitleAndIconRow(title: title, iconCodePoint: iconCodePoint),
+                  _TaskTitleAndIconRow(title: model.name, iconCodePoint: model.iconCodePoint),
                   SizedBox(height: context.lowValue1),
-                  _TextDescription(description: description),
+                  _TextDescription(description: model.description),
                   const Spacer(),
-                  _TextTaskDate(date: date),
+                  _TextTaskDate(date: model.createdAt ?? ""),
                   SizedBox(height: context.lowValue1),
-                  _TextCategoryName(categoryName: categoryName),
+                  _TextCategoryName(categoryName: model.category),
                   SizedBox(height: context.lowValue1),
-                  _RatingBarRow(rating: rating),
+                  _RatingBarRow(rating: model.importance),
                 ],
               ),
             ),
@@ -111,7 +94,6 @@ class _EnhancedCard extends StatelessWidget {
 
 class _TaskTitleAndIconRow extends StatelessWidget {
   const _TaskTitleAndIconRow({
-    super.key,
     required this.title,
     required this.iconCodePoint,
   });
@@ -147,7 +129,6 @@ class _TaskTitleAndIconRow extends StatelessWidget {
 
 class _TextDescription extends StatelessWidget {
   const _TextDescription({
-    super.key,
     required this.description,
   });
 
@@ -166,7 +147,6 @@ class _TextDescription extends StatelessWidget {
 
 class _TextTaskDate extends StatelessWidget {
   const _TextTaskDate({
-    super.key,
     required this.date,
   });
 
@@ -184,7 +164,6 @@ class _TextTaskDate extends StatelessWidget {
 
 class _TextCategoryName extends StatelessWidget {
   const _TextCategoryName({
-    super.key,
     required this.categoryName,
   });
 
@@ -202,7 +181,6 @@ class _TextCategoryName extends StatelessWidget {
 
 class _RatingBarRow extends StatelessWidget {
   const _RatingBarRow({
-    super.key,
     required this.rating,
   });
 
@@ -228,9 +206,7 @@ class _RatingBarRow extends StatelessWidget {
               Icons.star,
               color: ProjectColors.amber,
             ),
-            onRatingUpdate: (rating) {
-              print(rating);
-            },
+            onRatingUpdate: (rating) {},
           ),
         ]),
         Container(

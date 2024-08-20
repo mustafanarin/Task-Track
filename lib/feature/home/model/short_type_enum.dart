@@ -1,0 +1,1 @@
+enum SortType { name, importance }

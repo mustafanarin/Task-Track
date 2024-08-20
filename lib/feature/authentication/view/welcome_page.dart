@@ -5,8 +5,9 @@ import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
-import 'package:todo_app/product/widgets/project_button.dart';
-import 'package:todo_app/product/widgets/transparent_button.dart';
+
+import '../../../product/widgets/project_button.dart';
+import '../../../product/widgets/transparent_button.dart';
 
 @RoutePage()
 class WelcomePage extends StatelessWidget {

@@ -5,12 +5,14 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
-import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
+import 'package:todo_app/feature/home/viewmodel/task/task_crud_viewmodel.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
+
+import '../model/short_type_enum.dart';
 
 @RoutePage()
 class TaskListPage extends HookConsumerWidget {
@@ -25,7 +27,7 @@ class TaskListPage extends HookConsumerWidget {
     final List<Color> cardColor = CardColor().colorByCategory(category);
     final taskNotifier = ref.read(taskProvider.notifier);
     final taskState = ref.watch(taskProvider);
-    final shortBy = ref.read(taskProvider.notifier);
+
     useEffect(() {
       Future.microtask(() => taskNotifier.loadTasks(categoryId));
       return null;
@@ -34,7 +36,7 @@ class TaskListPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryName),
-        actions: [_PopupShortMenu(shortBy: shortBy)],
+        actions: [const _PopupShortMenu()],
       ),
       body: Padding(
         padding: context.paddingHorizontalLow,
@@ -46,30 +48,28 @@ class TaskListPage extends HookConsumerWidget {
                         "No ${categoryName.toLowerCase()} missions yet.",
                         style: const TextStyle(color: Colors.black)))
                 : _ListviewBuilderTasks(
-                    taskState: taskState,
-                    taskNotifier: taskNotifier,
                     cardColor: cardColor,
-                    category: category),
+                    category: category,
+                  ),
       ),
     );
   }
 }
 
-class _ListviewBuilderTasks extends StatelessWidget {
+class _ListviewBuilderTasks extends ConsumerWidget {
   const _ListviewBuilderTasks({
-    required this.taskState,
-    required this.taskNotifier,
     required this.cardColor,
     required this.category,
   });
 
-  final TaskState taskState;
-  final TaskNotifier taskNotifier;
   final List<Color> cardColor;
   final CategoryId category;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final taskNotifier = ref.read(taskProvider.notifier);
+    final taskState = ref.watch(taskProvider);
+
     return ListView.builder(
       itemCount: taskState.tasks.length,
       itemBuilder: (context, index) {
@@ -98,24 +98,22 @@ class _ListviewBuilderTasks extends StatelessWidget {
   }
 }
 
-class _PopupShortMenu extends StatelessWidget {
-  const _PopupShortMenu({
-    required this.shortBy,
-  });
-
-  final TaskNotifier shortBy;
+class _PopupShortMenu extends ConsumerWidget {
+  const _PopupShortMenu();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final taskNotifier = ref.read(taskProvider.notifier);
+
     return PopupMenuButton(
       icon: const Icon(Icons.menu_outlined),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          onTap: () => shortBy.sortTasks(SortType.name),
+          onTap: () => taskNotifier.sortTasks(SortType.name),
           child: const Text(ProjectStrings.shortByName),
         ),
         PopupMenuItem<String>(
-          onTap: () => shortBy.sortTasks(SortType.importance),
+          onTap: () => taskNotifier.sortTasks(SortType.importance),
           child: const Text(ProjectStrings.shortByImportance),
         ),
       ],

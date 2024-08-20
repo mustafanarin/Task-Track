@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
-import 'package:todo_app/feature/home/viewmodel/task_crud_viewmodel.dart';
+import 'package:todo_app/feature/home/viewmodel/task/task_crud_viewmodel.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
@@ -27,11 +27,10 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
   Widget build(BuildContext context) {
     final formkey = useMemoized(() => GlobalKey<FormState>());
     final taskNotifier = ref.read(taskProvider.notifier);
-    
+
     final isLoading = useState(false);
 
     final newTask = useState(const TaskModel(userId: ""));
-    
 
     Future<void> submitForm() async {
       if (formkey.currentState!.validate()) {
@@ -45,9 +44,10 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
               backgroundColor: ProjectColors.grey,
               textColor: ProjectColors.white,
               fontSize: 16.0);
-          isLoading.value = false;
           context.mounted ? context.maybePop() : null;
         } catch (error) {
+          //TODO isloading
+          isLoading.value = false;
           Fluttertoast.showToast(
               msg: '${ProjectStrings.toastErrorAddMessage} $error',
               toastLength: Toast.LENGTH_SHORT,
@@ -76,7 +76,6 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
                 key: formkey,
                 child: ListView(
                   children: [
-
                     SizedBox(height: context.lowValue2),
                     _TextFormFieldName(newTask: newTask),
                     SizedBox(height: context.lowValue2),

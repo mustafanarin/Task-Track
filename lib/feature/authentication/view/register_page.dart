@@ -23,33 +23,29 @@ class RegisterPage extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final confirmController = useTextEditingController();
-    final isLoading = useState(false);
-
+    final authwatch = ref.watch(authProvider);
 
     final authPrecess = ref.read(authProvider.notifier);
 
     Future<void> handleRegister() async {
-      if (!(formKey.currentState?.validate() ?? false)) return;
-    
-      isLoading.value = true; 
-      bool isRegister = await authPrecess.register(
-          nameController.text, emailController.text, passwordController.text);
-      
-    
-      if (!context.mounted) return;
-    
-     if (isRegister) {
-    context.router.replaceAll([const TabbarRoute()]);
-    isLoading.value = false; 
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(ProjectStrings.registerError),
-          ),
-        );
-      }
-    }
+      try {
+        if (!(formKey.currentState?.validate() ?? false)) return;
 
+        await authPrecess.register(
+            nameController.text, emailController.text, passwordController.text);
+
+        if (!context.mounted) return;
+        context.router.replaceAll([const TabbarRoute()]);
+      } catch (e) {
+        print(e.toString());
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(ProjectStrings.registerError),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -168,10 +164,18 @@ class RegisterPage extends HookConsumerWidget {
                       Stack(
                         children: [
                           ProjectButton(
-                              text:  isLoading.value ? "": ProjectStrings.registerButton,
-                              onPressed: () async => isLoading.value ? null : await handleRegister()),
-                          if (isLoading.value)
-                          Center(heightFactor: 1,child: CircularProgressIndicator(color: Colors.white,)),
+                              text: authwatch.isLoading
+                                  ? ""
+                                  : ProjectStrings.registerButton,
+                              onPressed: () async => authwatch.isLoading
+                                  ? null
+                                  : await handleRegister()),
+                          if (authwatch.isLoading)
+                            Center(
+                                heightFactor: 1,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                )),
                         ],
                       ),
                       SizedBox(

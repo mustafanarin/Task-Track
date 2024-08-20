@@ -21,7 +21,7 @@ class TaskModel extends Equatable {
     this.importance = 1,
     this.iconCodePoint = 62504,
     this.createdAt,
-    this.category = 'Yeni',
+    this.category = 'New',
     this.categoryId = 1,
   });
 
@@ -72,7 +72,7 @@ class TaskModel extends Equatable {
       importance: map['importance']?.toInt() ?? 1,
       iconCodePoint: map['iconCodePoint']?.toInt() ?? 62504,
       createdAt: map['createdAt'] ?? "Error",
-      category: map['category'] ?? 'Yeni',
+      category: map['category'] ?? 'New',
       categoryId: map['categoryId']?.toInt() ?? 1,
     );
   }
