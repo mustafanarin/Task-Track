@@ -31,7 +31,7 @@ class RegisterPage extends HookConsumerWidget {
     Future<void> handleRegister() async {
       if (!(formKey.currentState?.validate() ?? false)) return;
     
-      isLoading.value = true; // Loading başlat
+      isLoading.value = true; 
       bool isRegister = await authPrecess.register(
           nameController.text, emailController.text, passwordController.text);
       
@@ -39,12 +39,12 @@ class RegisterPage extends HookConsumerWidget {
       if (!context.mounted) return;
     
      if (isRegister) {
-    context.pushRoute(const TabbarRoute());
-    isLoading.value = false; // Loading durdur
+    context.router.replaceAll([const TabbarRoute()]);
+    isLoading.value = false; 
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Register failed, please try again."),
+            content: Text(ProjectStrings.registerError),
           ),
         );
       }

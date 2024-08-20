@@ -26,7 +26,6 @@ class LoginPage extends HookConsumerWidget {
     final isLoading = useState<bool>(false);
 
     final authProcesses = ref.read(authProvider.notifier);
-    
 
     Future<void> handleLogin() async {
       if (!(formKey.currentState?.validate() ?? false)) return;
@@ -36,17 +35,15 @@ class LoginPage extends HookConsumerWidget {
       final isLogin = await authProcesses.login(
           emailController.text, passwordController.text);
 
-      
-
       if (!context.mounted) return;
 
       if (isLogin) {
-        context.pushRoute(const TabbarRoute());
+        context.router.replaceAll([const TabbarRoute()]);
         isLoading.value = false;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Login failed, please try again."),
+            content: Text(ProjectStrings.loginError),
           ),
         );
       }
@@ -56,18 +53,18 @@ class LoginPage extends HookConsumerWidget {
       try {
         isLoading.value = true;
 
-        final isLogin = await ref.read(authProvider.notifier).signInWithGoogle();
+        final isLogin =
+            await ref.read(authProvider.notifier).signInWithGoogle();
 
-        
         if (!context.mounted) return;
 
         if (isLogin) {
-          context.pushRoute(const TabbarRoute());
+          context.router.replaceAll([const TabbarRoute()]);
           isLoading.value = false;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Google login failed, please try again."),
+              content: Text(ProjectStrings.googleLoginError),
             ),
           );
         }
@@ -79,7 +76,7 @@ class LoginPage extends HookConsumerWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("An error occurred during Google login. Please try again."),
+              content: Text(ProjectStrings.tryAgainMessage),
             ),
           );
         }
@@ -96,7 +93,7 @@ class LoginPage extends HookConsumerWidget {
               alignment: Alignment.topRight,
               child: IconButton(
                   onPressed: () {
-                    context.maybePop();
+                    context.router.replaceAll([WelcomeRoute()]);
                   },
                   icon: const Icon(Icons.arrow_back_outlined))),
         ),
@@ -197,9 +194,9 @@ class LoginPage extends HookConsumerWidget {
                             height: context.lowValue2,
                           ),
                           TransparentButton(
-                            stringIcon: "assets/png/google_icona.png",
-                            text: ProjectStrings.loginWithGoogle,
-                            onPressed: () => handleGoogleLogin()),
+                              stringIcon: "assets/png/google_icona.png",
+                              text: ProjectStrings.loginWithGoogle,
+                              onPressed: () => handleGoogleLogin()),
                           SizedBox(
                             height: context.lowValue2,
                           ),
@@ -233,13 +230,17 @@ class LoginPage extends HookConsumerWidget {
               )
             ],
           ),
-          if (isLoading.value) 
-            Center(
+          if (isLoading.value)
+            const Center(
               child: Column(
                 children: [
-                  Spacer(flex: 2,),
+                  Spacer(
+                    flex: 2,
+                  ),
                   CircularProgressIndicator(),
-                  Spacer(flex: 3,)
+                  Spacer(
+                    flex: 3,
+                  )
                 ],
               ),
             )
@@ -249,11 +250,8 @@ class LoginPage extends HookConsumerWidget {
   }
 }
 
-
 class _OrDivider extends StatelessWidget {
-  const _OrDivider({
-    super.key,
-  });
+  const _OrDivider();
 
   @override
   Widget build(BuildContext context) {

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/profile/viewmodel/profile_viewmodel.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
+import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/profile_edit_field.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_alert_dialog.dart';
@@ -24,36 +25,32 @@ class ProfileEditPage extends HookConsumerWidget {
     final profileViewModel = ref.watch(profileViewModelProvider.notifier);
     final isLoading = useState<bool>(false);
 
-    return isLoading.value ? Container(color: ProjectColors.white,child: Center(child: CircularProgressIndicator(),),) :Scaffold(
-      appBar: AppBar(
-        title: Text("Profile Edit", style: TextStyle(color: Colors.black)),
-      ),
-      body: Padding(
-        padding: context.paddingHorizontalMedium,
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              Spacer(flex: 1),
-              profileEditEnum.isName
-                  ? ProjectTextfield(
-                      hintText: "Adınızı giriniz",
-                      controller: tfController,
-                      keyBoardType: TextInputType.name,
-                      validator: Validators().validateName,
-                      icon: Icons.person_outline,
-                    )
-                  : ProjectTextfield(
-                      hintText: "Emailinizi giriniz",
-                      controller: tfController,
-                      keyBoardType: TextInputType.emailAddress,
-                      validator: Validators().validateEmail,
-                      icon: Icons.email_outlined,
-                    ),
-              Spacer(flex: 19),
-              ProjectButton(
-                text: "Save",
-                onPressed: () async {
+    return isLoading.value
+        ? Container(
+            color: ProjectColors.white,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text(ProjectStrings.profileEditAppbar,
+                  style: TextStyle(color: Colors.black)),
+            ),
+            body: Padding(
+              padding: context.paddingHorizontalMedium,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    const Spacer(flex: 1),
+                    profileEditEnum.isName
+                        ? _TextfieldName(tfController: tfController)
+                        : _TextFieldEmail(tfController: tfController),
+                    const Spacer(flex: 19),
+                    ProjectButton(
+                      text: ProjectStrings.saveButtonText,
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           isLoading.value = true;
                           if (profileEditEnum.isName) {
@@ -61,7 +58,8 @@ class ProfileEditPage extends HookConsumerWidget {
                                 .updateUserName(tfController.text);
                             isLoading.value = false;
                             Fluttertoast.showToast(
-                                msg: "Name updated successfully!",
+                                msg: ProjectStrings
+                                    .toastSuccessUpdateNameMessage,
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 backgroundColor: ProjectColors.grey,
@@ -71,16 +69,15 @@ class ProfileEditPage extends HookConsumerWidget {
                             final result = await showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return ProjectAlertDialog(
-                                    titleText:
-                                        "We will send you a verification link. Do you still want to do it?",
-                                  );
+                                  return const ProjectAlertDialog(
+                                      titleText: ProjectStrings
+                                          .alertDialogVertificationQuestion);
                                 });
                             if (result is bool) {
                               await profileViewModel
                                   .updateUserEmail(tfController.text);
                               Fluttertoast.showToast(
-                                  msg: "Please check your email!",
+                                  msg: ProjectStrings.toastUpdateEmail,
                                   toastLength: Toast.LENGTH_LONG,
                                   gravity: ToastGravity.BOTTOM,
                                   backgroundColor: ProjectColors.grey,
@@ -92,12 +89,52 @@ class ProfileEditPage extends HookConsumerWidget {
                           context.mounted ? context.maybePop() : null;
                         }
                       },
+                    ),
+                    const Spacer(flex: 2)
+                  ],
+                ),
               ),
-              Spacer(flex: 2)
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
+  }
+}
+
+class _TextfieldName extends StatelessWidget {
+  const _TextfieldName({
+    super.key,
+    required this.tfController,
+  });
+
+  final TextEditingController tfController;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProjectTextfield(
+        hintText: ProjectStrings.enterName,
+        controller: tfController,
+        keyBoardType: TextInputType.name,
+        validator: Validators().validateName,
+        icon: Icons.person_outline,
+      );
+  }
+}
+
+class _TextFieldEmail extends StatelessWidget {
+  const _TextFieldEmail({
+    super.key,
+    required this.tfController,
+  });
+
+  final TextEditingController tfController;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProjectTextfield(
+        hintText: ProjectStrings.enterEmail,
+        controller: tfController,
+        keyBoardType: TextInputType.emailAddress,
+        validator: Validators().validateEmail,
+        icon: Icons.email_outlined,
+      );
   }
 }

@@ -25,46 +25,31 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // taskCountProvider'ı dinleyerek sayfa açıldığında ve taskProvider'da değişiklik olduğunda sayıların güncellenmesini sağlıyoruz.
-    // ref.listen<TaskState>(taskProvider, (previous, next) {
-    //   ref.read(taskCountProvider.notifier).updateTaskCounts();
-    // });
 
     return Scaffold(
       appBar: AppBar(
-        title: RichText(
-            text: TextSpan(
-                text: ProjectStrings.appName1,
-                style: context
-                    .textTheme()
-                    .titleLarge
-                    ?.copyWith(color: ProjectColors.black),
-                children: [
-              TextSpan(
-                  text: ProjectStrings.appName2,
-                  style: context.textTheme().titleLarge)
-            ])),
+        title: const _AppbarTitle(),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CardWidget(
-            title: 'New Added',
+          _CardWidget(
+            title: ProjectStrings.newTaskCard,
             color: Colors.green.shade600,
             categoryId: CategoryId.newTask.value,
-            category: CategoryId.newTask, categoryName: 'New Added',
+            category: CategoryId.newTask,
           ),
-          CardWidget(
-            title: 'Continues',
+          _CardWidget(
+            title: ProjectStrings.continuesTaskCard,
             color: Colors.blue.shade600,
             categoryId: CategoryId.continueTask.value,
-            category: CategoryId.continueTask, categoryName: 'Continues',
+            category: CategoryId.continueTask,
           ),
-          CardWidget(
-            title: 'Finished',
+          _CardWidget(
+            title: ProjectStrings.finishedTaskCard,
             color: Colors.red.shade600,
             categoryId: CategoryId.finishTask.value,
-            category: CategoryId.finishTask, categoryName: 'Finished',
+            category: CategoryId.finishTask,
           ),
         ],
       ),
@@ -72,20 +57,39 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-class CardWidget extends ConsumerWidget {
+class _AppbarTitle extends StatelessWidget {
+  const _AppbarTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        text: TextSpan(
+            text: ProjectStrings.appName1,
+            style: context
+                .textTheme()
+                .titleLarge
+                ?.copyWith(color: ProjectColors.black),
+            children: [
+          TextSpan(
+              text: ProjectStrings.appName2,
+              style: context.textTheme().titleLarge)
+        ]));
+  }
+}
+
+class _CardWidget extends ConsumerWidget {
   final String title;
   final Color color;
   final int categoryId;
   final CategoryId category;
-  final String categoryName;
 
-  const CardWidget( 
-      {super.key,
+
+  const _CardWidget( 
+      {
       required this.title,
       required this.color,
       required this.categoryId,
       required this.category,
-      required this.categoryName,
       });
 
   @override
@@ -98,7 +102,7 @@ class CardWidget extends ConsumerWidget {
       padding: context.paddingHorizontalHeigh,
       child: GestureDetector(
         onTap: () => context.pushRoute(TaskListRoute(
-            categoryId: categoryId, category: category, categoryName: categoryName)),
+            categoryId: categoryId, category: category, categoryName: title)),
         child: Card(
           elevation: 4,
           child: Container(
@@ -111,11 +115,14 @@ class CardWidget extends ConsumerWidget {
               ),
             ),
             width: context.dynamicWidht(1),
-            height: 170,
+            height: context.dynamicHeight(0.22),
             child: Center(
               child: Text(
                 '$title ($taskCount)',
-                style: const TextStyle(color: Colors.white, fontSize: 20),
+                style: context.textTheme().titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontSize: 20
+                ),
               ),
             ),
           ),

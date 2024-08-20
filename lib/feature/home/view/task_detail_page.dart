@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
+import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
@@ -23,12 +24,12 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Task Detail"),
+          title: const Text(ProjectStrings.taskDetailAppbarTitle),
         ),
         body: Center(
           child: Padding(
               padding: context.paddingHorizontalMedium,
-              child: EnhancedCard(
+              child: _EnhancedCard(
                 model: widget.model,
                 title: widget.model.name,
                 description: widget.model.description,
@@ -42,7 +43,7 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
   }
 }
 
-class EnhancedCard extends StatelessWidget {
+class _EnhancedCard extends StatelessWidget {
   final TaskModel model;
   final String title;
   final String description;
@@ -52,8 +53,7 @@ class EnhancedCard extends StatelessWidget {
   final int iconCodePoint;
   final CategoryId category;
 
-  const EnhancedCard({
-    super.key,
+  const _EnhancedCard({
     required this.model,
     required this.title,
     required this.description,
@@ -85,96 +85,168 @@ class EnhancedCard extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: context.paddingAllLow2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          width: context.dynamicWidht(0.8),
-                          child: Text(title,
-                              style: context
-                                  .textTheme()
-                                  .titleLarge
-                                  ?.copyWith(color: Colors.white)),
-                        ),
-                      ),
-                      Icon(
-                        IconData(iconCodePoint, fontFamily: "MaterialIcons"),
-                        color: ProjectColors.white,
-                      ),
-                      const Spacer(),
-                      const Icon(Icons.arrow_outward, color: Colors.white70),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    description,
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.9), fontSize: 16),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  
+                  _TaskTitleAndIconRow(title: title, iconCodePoint: iconCodePoint),
+                  SizedBox(height: context.lowValue1),
+                  _TextDescription(description: description),
                   const Spacer(),
-                  Align(
-                      alignment: Alignment.topRight,
-                      child: Text(date,
-                          style: context.textTheme().titleSmall?.copyWith(
-                              color: Colors.black.withOpacity(0.5)))),
-                  const SizedBox(height: 16),
-                  Text("Category: $categoryName",
-                      style: context
-                          .textTheme()
-                          .titleMedium
-                          ?.copyWith(color: Colors.black.withOpacity(0.5))),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(children: [
-                        RatingBar.builder(
-                          ignoreGestures: true,
-                          itemSize: 20,
-                          initialRating: rating.toDouble(),
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: false,
-                          itemCount: 5,
-                          itemPadding:
-                              const EdgeInsets.symmetric(horizontal: 0),
-                          itemBuilder: (context, _) => const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
-                        ),
-                      ]),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '$rating/5',
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
+                  _TextTaskDate(date: date),
+                  SizedBox(height: context.lowValue1),
+                  _TextCategoryName(categoryName: categoryName),
+                  SizedBox(height: context.lowValue1),
+                  _RatingBarRow(rating: rating),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _TaskTitleAndIconRow extends StatelessWidget {
+  const _TaskTitleAndIconRow({
+    super.key,
+    required this.title,
+    required this.iconCodePoint,
+  });
+
+  final String title;
+  final int iconCodePoint;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: SizedBox(
+            width: context.dynamicWidht(0.8),
+            child: Text(title,
+                style: context
+                    .textTheme()
+                    .titleLarge
+                    ?.copyWith(color: ProjectColors.white)),
+          ),
+        ),
+        Icon(
+          IconData(iconCodePoint, fontFamily: "MaterialIcons"),
+          color: ProjectColors.white,
+        ),
+        const Spacer(),
+        const Icon(Icons.arrow_outward, color: Colors.white70),
+      ],
+    );
+  }
+}
+
+class _TextDescription extends StatelessWidget {
+  const _TextDescription({
+    super.key,
+    required this.description,
+  });
+
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      description,
+      style: context.textTheme().titleSmall?.copyWith(color: ProjectColors.white.withOpacity(0.9)),
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+}
+
+class _TextTaskDate extends StatelessWidget {
+  const _TextTaskDate({
+    super.key,
+    required this.date,
+  });
+
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.topRight,
+        child: Text(date,
+            style: context.textTheme().titleSmall?.copyWith(
+                color: ProjectColors.black.withOpacity(0.5))));
+  }
+}
+
+class _TextCategoryName extends StatelessWidget {
+  const _TextCategoryName({
+    super.key,
+    required this.categoryName,
+  });
+
+  final String categoryName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("Category: $categoryName",
+        style: context
+            .textTheme()
+            .titleMedium
+            ?.copyWith(color: ProjectColors.black.withOpacity(0.5)));
+  }
+}
+
+class _RatingBarRow extends StatelessWidget {
+  const _RatingBarRow({
+    super.key,
+    required this.rating,
+  });
+
+  final int rating;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(children: [
+          RatingBar.builder(
+            ignoreGestures: true,
+            itemSize: 20,
+            initialRating: rating.toDouble(),
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: false,
+            itemCount: 5,
+            itemPadding:
+                const EdgeInsets.symmetric(horizontal: 0),
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: ProjectColors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              print(rating);
+            },
+          ),
+        ]),
+        Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: ProjectColors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            '$rating/5',
+            style: const TextStyle(
+                color: ProjectColors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 }

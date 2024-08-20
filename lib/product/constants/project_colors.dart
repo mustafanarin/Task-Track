@@ -9,4 +9,7 @@ class ProjectColors {
   // static const Color orochimaru = Color(0Xfff8edeb);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+  static const Color amber = Colors.amber;
+
+
 }
