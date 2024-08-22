@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Todo App',
-      theme: LightTheme().themeData,
+      theme: LightTheme().getThemeData(context),
       routerConfig: _appRouter.config(),
     );
   }

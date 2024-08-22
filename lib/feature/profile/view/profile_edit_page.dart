@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo_app/feature/profile/viewmodel/profile_viewmodel.dart';
+import 'package:todo_app/feature/profile/provider/profile_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/profile_edit_field.dart';
@@ -22,7 +22,7 @@ class ProfileEditPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tfController = useTextEditingController();
     final formKey = useMemoized(() => GlobalKey<FormState>());
-    final profileViewModel = ref.watch(profileViewModelProvider.notifier);
+    final profileViewModel = ref.watch(profileProvider.notifier);
     final isLoading = useState<bool>(false);
 
     return isLoading.value
@@ -69,9 +69,16 @@ class ProfileEditPage extends HookConsumerWidget {
                             final result = await showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return const ProjectAlertDialog(
-                                      titleText: ProjectStrings
-                                          .alertDialogVertificationQuestion);
+                                  return ProjectAlertDialog(
+                                    titleText: ProjectStrings
+                                        .alertDialogVertificationQuestion,
+                                    onPressedNO: () {
+                                      context.maybePop();
+                                    },
+                                    onPressedYES: () {
+                                      context.maybePop<bool>(true);
+                                    },
+                                  );
                                 });
                             if (result is bool) {
                               await profileViewModel
@@ -101,7 +108,6 @@ class ProfileEditPage extends HookConsumerWidget {
 
 class _TextfieldName extends StatelessWidget {
   const _TextfieldName({
-    super.key,
     required this.tfController,
   });
 
@@ -110,18 +116,17 @@ class _TextfieldName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProjectTextfield(
-        hintText: ProjectStrings.enterName,
-        controller: tfController,
-        keyBoardType: TextInputType.name,
-        validator: Validators().validateName,
-        icon: Icons.person_outline,
-      );
+      hintText: ProjectStrings.enterName,
+      controller: tfController,
+      keyBoardType: TextInputType.name,
+      validator: Validators().validateName,
+      icon: Icons.person_outline,
+    );
   }
 }
 
 class _TextFieldEmail extends StatelessWidget {
   const _TextFieldEmail({
-    super.key,
     required this.tfController,
   });
 
@@ -130,11 +135,11 @@ class _TextFieldEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProjectTextfield(
-        hintText: ProjectStrings.enterEmail,
-        controller: tfController,
-        keyBoardType: TextInputType.emailAddress,
-        validator: Validators().validateEmail,
-        icon: Icons.email_outlined,
-      );
+      hintText: ProjectStrings.enterEmail,
+      controller: tfController,
+      keyBoardType: TextInputType.emailAddress,
+      validator: Validators().validateEmail,
+      icon: Icons.email_outlined,
+    );
   }
 }

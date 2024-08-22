@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
-import 'package:todo_app/feature/profile/viewmodel/profile_viewmodel.dart';
+import 'package:todo_app/feature/profile/provider/profile_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/profile_edit_field.dart';
@@ -16,7 +17,7 @@ class ProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileViewModelProvider);
+    final profileState = ref.watch(profileProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,8 +28,8 @@ class ProfilePage extends ConsumerWidget {
         data: (user) {
           if (user == null) {
             return const Center(
-                child: Text(
-              ProjectStrings.userIsNull,
+                child: Text("User not logged in",
+              // ProjectStrings.userIsNull,
               style: TextStyle(color: Colors.black),
             ));
           }
@@ -36,8 +37,12 @@ class ProfilePage extends ConsumerWidget {
             padding: context.paddingAllLow1,
             child: ListView(
               children: [
-                _ListTileUserName(user: user,),
-                _ListTileEmail(user: user,),
+                _ListTileUserName(
+                  user: user,
+                ),
+                _ListTileEmail(
+                  user: user,
+                ),
                 _ListTileLogOut(ref),
               ],
             ),
@@ -73,7 +78,7 @@ class _ListTileUserName extends StatelessWidget {
 }
 
 class _ListTileEmail extends StatelessWidget {
-  _ListTileEmail({required this.user});
+  const _ListTileEmail({required this.user});
   final UserModel user;
 
   @override
@@ -109,15 +114,32 @@ class _ListTileLogOut extends StatelessWidget {
         onTap: () async {
           final result = await showDialog(
               context: context,
-              builder: (context) {
-                return const ProjectAlertDialog(
-                    titleText: ProjectStrings.logOutQuestionText);
+              builder: (context1) {
+                return ProjectAlertDialog(
+                  titleText: ProjectStrings.logOutQuestionText,
+                  onPressedNO: () {
+                    context.maybePop();
+                  },
+                  onPressedYES: () {
+                    context.maybePop<bool>(true);
+                  },
+                );
               });
           if (result is bool) {
-            ref.read(profileViewModelProvider.notifier).logout();
-            context.mounted
-                ? context.router.replaceAll([const LoginRoute()])
-                : null;
+            try {
+              await ref.read(profileProvider.notifier).logout();
+              context.mounted ?
+              context.router.replaceAll([const LoginRoute()]) : null;
+            } catch (e) {
+              print("ERRRRRROR: ${e.toString()}");
+              Fluttertoast.showToast(
+                  msg: e.toString(),
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: ProjectColors.grey,
+                  textColor: ProjectColors.white,
+                  fontSize: 16.0);
+            }
           }
         },
       ),

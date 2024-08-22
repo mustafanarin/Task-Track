@@ -5,7 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
-import 'package:todo_app/feature/home/viewmodel/task/task_crud_viewmodel.dart';
+import 'package:todo_app/feature/home/providers/task_crud_provider.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';

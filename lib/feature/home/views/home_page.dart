@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_app/feature/home/viewmodel/home/home_viewmodel.dart';
+import 'package:todo_app/feature/home/providers/home_provider.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
@@ -25,34 +25,36 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
+    final taskCountState = ref.watch(taskCountProvider);
     return Scaffold(
       appBar: AppBar(
         title: const _AppbarTitle(),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _CardWidget(
-            title: ProjectStrings.newTaskCard,
-            color: Colors.green.shade600,
-            categoryId: CategoryId.newTask.value,
-            category: CategoryId.newTask,
-          ),
-          _CardWidget(
-            title: ProjectStrings.continuesTaskCard,
-            color: Colors.blue.shade600,
-            categoryId: CategoryId.continueTask.value,
-            category: CategoryId.continueTask,
-          ),
-          _CardWidget(
-            title: ProjectStrings.finishedTaskCard,
-            color: Colors.red.shade600,
-            categoryId: CategoryId.finishTask.value,
-            category: CategoryId.finishTask,
-          ),
-        ],
-      ),
+      body: taskCountState.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _CardWidget(
+                  title: ProjectStrings.newTaskCard,
+                  color: Colors.green.shade600,
+                  categoryId: CategoryId.newTask.value,
+                  category: CategoryId.newTask,
+                ),
+                _CardWidget(
+                  title: ProjectStrings.continuesTaskCard,
+                  color: Colors.blue.shade600,
+                  categoryId: CategoryId.continueTask.value,
+                  category: CategoryId.continueTask,
+                ),
+                _CardWidget(
+                  title: ProjectStrings.finishedTaskCard,
+                  color: Colors.red.shade600,
+                  categoryId: CategoryId.finishTask.value,
+                  category: CategoryId.finishTask,
+                ),
+              ],
+            ),
     );
   }
 }
@@ -83,14 +85,12 @@ class _CardWidget extends ConsumerWidget {
   final int categoryId;
   final CategoryId category;
 
-
-  const _CardWidget( 
-      {
-      required this.title,
-      required this.color,
-      required this.categoryId,
-      required this.category,
-      });
+  const _CardWidget({
+    required this.title,
+    required this.color,
+    required this.categoryId,
+    required this.category,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -119,10 +119,10 @@ class _CardWidget extends ConsumerWidget {
             child: Center(
               child: Text(
                 '$title ($taskCount)',
-                style: context.textTheme().titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontSize: 20
-                ),
+                style: context
+                    .textTheme()
+                    .titleMedium
+                    ?.copyWith(color: Colors.white, fontSize: 20),
               ),
             ),
           ),

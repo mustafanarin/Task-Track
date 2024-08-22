@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
-import 'package:todo_app/feature/home/viewmodel/home/home_viewmodel.dart';
+import 'package:todo_app/feature/home/providers/home_provider.dart';
 import 'package:todo_app/service/task_service.dart';
 
-import '../../model/short_type_enum.dart';
+import '../model/short_type_enum.dart';
+import '../states/task_state.dart';
 
 // Task service provider
 final serviceProvider = Provider((ref) {
@@ -19,22 +20,6 @@ final taskProvider = StateNotifierProvider<TaskNotifier, TaskState>((ref) {
 // Default sort type is none
 final sortTypeProvider = StateProvider<SortType?>((ref) => null);
 
-class TaskState {
-  final List<TaskModel> tasks;
-  final bool isLoading;
-
-  TaskState({required this.tasks, required this.isLoading});
-
-  TaskState copyWith({
-    List<TaskModel>? tasks,
-    bool? isLoading,
-  }) {
-    return TaskState(
-      tasks: tasks ?? this.tasks,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
-}
 
 class TaskNotifier extends StateNotifier<TaskState> {
   TaskNotifier(this._taskService, this._ref)

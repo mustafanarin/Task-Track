@@ -166,18 +166,16 @@ class AuthService {
       // Yeni bir Google Sign-In işlemi başlat
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        throw AuthException(message: "Google user null");
+        throw AuthException(message: "Google sign-in cancelled by user");
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
       if (user != null) {
@@ -196,7 +194,7 @@ class AuthService {
         throw AuthException(message: "Google sign in failed!");
       }
     } catch (error) {
-      throw AuthException(message: "Google sing in error!: ${error.toString()}");
+      throw AuthException(message: "Google sign in error: ${error.toString()}");
     }
   }
 }

@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo_app/feature/authentication/viewmodel/authentication_viewmodel.dart';
+import 'package:todo_app/feature/authentication/providers/register_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
@@ -23,9 +23,9 @@ class RegisterPage extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
     final confirmController = useTextEditingController();
-    final authwatch = ref.watch(authProvider);
+    final authwatch = ref.watch(registerProvider);
 
-    final authPrecess = ref.read(authProvider.notifier);
+    final authPrecess = ref.read(registerProvider.notifier);
 
     Future<void> handleRegister() async {
       try {
@@ -171,7 +171,7 @@ class RegisterPage extends HookConsumerWidget {
                                   ? null
                                   : await handleRegister()),
                           if (authwatch.isLoading)
-                            Center(
+                            const Center(
                                 heightFactor: 1,
                                 child: CircularProgressIndicator(
                                   color: Colors.white,

@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:todo_app/feature/authentication/viewmodel/authentication_viewmodel.dart';
+import 'package:todo_app/feature/authentication/providers/login_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
@@ -24,8 +24,8 @@ class LoginPage extends HookConsumerWidget {
     final passwordController = useTextEditingController();
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
-    final authWatch = ref.watch(authProvider);
-    final authProcesses = ref.read(authProvider.notifier);
+    final authWatch = ref.watch(loginProvider);
+    final authProcesses = ref.read(loginProvider.notifier);
 
     Future<void> handleLogin() async {
       try {
@@ -39,34 +39,42 @@ class LoginPage extends HookConsumerWidget {
       } catch (e) {
         print(e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(ProjectStrings.loginError),
-        ),
-      );
+          const SnackBar(
+            content: Text(ProjectStrings.loginError),
+          ),
+        );
       }
     }
 
     Future<void> handleGoogleLogin() async {
       try {
+        await ref.read(loginProvider.notifier).signInWithGoogle();
 
-      await ref.read(authProvider.notifier).signInWithGoogle();
-
-        if (!context.mounted) return;
-        context.router.replaceAll([const TabbarRoute()]);
+        if (context.mounted) {
+          context.router.replaceAll([const TabbarRoute()]);
+        } else if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Google sign-in was cancelled or failed.'),
+            ),
+          );
+        }
       } catch (e) {
         print("Error during Google login: $e");
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(ProjectStrings.tryAgainMessage),
             ),
           );
+        }
       }
     }
 
     return authWatch.isLoading
         ? Container(
             color: ProjectColors.white,
-            child: Center(child: CircularProgressIndicator()),
+            child: const Center(child: CircularProgressIndicator()),
           )
         : Scaffold(
             appBar: _CustomAppbar(
@@ -121,18 +129,14 @@ class LoginPage extends HookConsumerWidget {
                                     controller: passwordController,
                                     keyBoardType: TextInputType.visiblePassword,
                                     validator: Validators().validatePassword),
-                                SizedBox(
-                                  height: context.lowValue1,
-                                ),
                                 Align(
                                     alignment: Alignment.topRight,
-                                    child: Text(
-                                      ProjectStrings.forgatPassword,
-                                      style: context.textTheme().titleSmall,
+                                    child: TextButton(
+                                      child: Text(ProjectStrings.forgatPassword,
+                                          style:
+                                              context.textTheme().titleSmall),
+                                      onPressed: () {},
                                     )),
-                                SizedBox(
-                                  height: context.lowValue2,
-                                ),
                                 ProjectButton(
                                     text: ProjectStrings.loginButton,
                                     onPressed: () async => await handleLogin()),

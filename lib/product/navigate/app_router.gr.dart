@@ -133,19 +133,10 @@ class RegisterRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SplashPage]
-class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
-  SplashRoute({
-    Key? key,
-    required Widget signedInWidget,
-    required Widget signedOutWidget,
-    List<PageRouteInfo>? children,
-  }) : super(
+class SplashRoute extends PageRouteInfo<void> {
+  const SplashRoute({List<PageRouteInfo>? children})
+      : super(
           SplashRoute.name,
-          args: SplashRouteArgs(
-            key: key,
-            signedInWidget: signedInWidget,
-            signedOutWidget: signedOutWidget,
-          ),
           initialChildren: children,
         );
 
@@ -154,33 +145,9 @@ class SplashRoute extends PageRouteInfo<SplashRouteArgs> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<SplashRouteArgs>();
-      return SplashPage(
-        key: args.key,
-        signedInWidget: args.signedInWidget,
-        signedOutWidget: args.signedOutWidget,
-      );
+      return const SplashPage();
     },
   );
-}
-
-class SplashRouteArgs {
-  const SplashRouteArgs({
-    this.key,
-    required this.signedInWidget,
-    required this.signedOutWidget,
-  });
-
-  final Key? key;
-
-  final Widget signedInWidget;
-
-  final Widget signedOutWidget;
-
-  @override
-  String toString() {
-    return 'SplashRouteArgs{key: $key, signedInWidget: $signedInWidget, signedOutWidget: $signedOutWidget}';
-  }
 }
 
 /// generated route for

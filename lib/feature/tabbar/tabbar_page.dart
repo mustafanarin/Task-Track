@@ -1,27 +1,30 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/feature/home/view/home_page.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:todo_app/feature/home/views/home_page.dart';
 import 'package:todo_app/feature/profile/view/profile_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
+
 @RoutePage()
-class TabbarPage extends StatefulWidget {
+class TabbarPage extends StatefulHookWidget {
   const TabbarPage({super.key});
 
   @override
-  State<TabbarPage> createState() => _TabbarPageState();
+  _TabbarPageState createState() => _TabbarPageState();
 }
 
 class _TabbarPageState extends State<TabbarPage> {
-  int _bottomNavIndex = 0;
   final List<IconData> _icons = [Icons.home, Icons.person];
   final List<Widget> _pages = [const HomePage(), const ProfilePage()];
+  
 
   @override
   Widget build(BuildContext context) {
+    final bottomNavIndex = useState<int>(0);
     return Scaffold(
       floatingActionButton: SizedBox(
         height: context.dynamicHeight(0.1),
@@ -46,18 +49,17 @@ class _TabbarPageState extends State<TabbarPage> {
         inactiveColor: ProjectColors.grey,
         activeColor: ProjectColors.white,
         icons: _icons,
-        activeIndex: _bottomNavIndex,
+        activeIndex: bottomNavIndex.value,
         gapLocation: GapLocation.center,
         notchSmoothness: NotchSmoothness.verySmoothEdge,
         leftCornerRadius: 32,
         rightCornerRadius: 32,
         onTap: (index) {
-          // TODO SET STATE
-          setState(() => _bottomNavIndex = index);
+          bottomNavIndex.value = index;
         },
       ),
       body: IndexedStack(
-        index: _bottomNavIndex,
+        index: bottomNavIndex.value,
         children: _pages,
       ),
     );

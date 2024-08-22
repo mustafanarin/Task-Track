@@ -2,17 +2,24 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
+import 'package:todo_app/product/utility/exception/auth_exception.dart';
 import 'package:todo_app/service/auth_service.dart';
 
-final profileViewModelProvider = StateNotifierProvider<ProfileViewModel, AsyncValue<UserModel?>>((ref) {
-  return ProfileViewModel(AuthService());
+final authServiceProvider = Provider<AuthService>((ref) {
+  return AuthService();
 });
 
-class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
+final profileProvider =
+    StateNotifierProvider<ProfileProvider, AsyncValue<UserModel?>>((ref) {
+  final service = ref.watch(authServiceProvider);
+  return ProfileProvider(service);
+});
+
+class ProfileProvider extends StateNotifier<AsyncValue<UserModel?>> {
   final AuthService _authService;
   late final StreamSubscription<User?> _authStateSubscription;
 
-  ProfileViewModel(this._authService) : super(const AsyncValue.loading()) {
+  ProfileProvider(this._authService) : super(const AsyncValue.loading()) {
     _authStateSubscription = _authService.authStateChanges.listen((user) {
       if (user != null) {
         getCurrentUser();
@@ -32,7 +39,7 @@ class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
     state = const AsyncValue.loading();
     try {
       await _authService.updateUserName(newName);
-      await getCurrentUser(); 
+      await getCurrentUser();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
@@ -51,15 +58,33 @@ class ProfileViewModel extends StateNotifier<AsyncValue<UserModel?>> {
     state = const AsyncValue.loading();
     try {
       await _authService.updateUserEmail(newEmail);
-      await getCurrentUser(); 
+      await getCurrentUser();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
-      rethrow; 
+      rethrow;
     }
   }
 
   Future<void> logout() async {
-    await _authService.logout();
-    state = const AsyncValue.data(null);
+    try {
+      await _authService.logout();
+    } catch (e) {
+      print(e.toString());
+      state = const AsyncValue.data(null);
+      throw AuthException(message: e.toString());
+    }
   }
+
+  // Future<void> logout() async {
+  //   state = state.copyWith(isLoading: true);
+  //   try {
+  //     await _authService.logout();
+  //   } on FirebaseAuthException catch (e) {
+  //     state = state.copyWith(isLoading: false);
+  //     print(e.toString());
+  //   } catch (e) {
+  //     state = state.copyWith(isLoading: false);
+  //     print(e.toString());
+  //   }
+  // }
 }

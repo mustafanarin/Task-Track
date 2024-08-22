@@ -1,16 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
-import 'package:todo_app/feature/home/viewmodel/task/task_crud_viewmodel.dart';
+import 'package:todo_app/feature/home/providers/task_crud_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
+
+import '../../../product/widgets/project_textfield.dart';
 
 part '../../../product/part_of/my_icon_list.dart';
 
@@ -118,11 +119,9 @@ class _TextFormFieldName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: ProjectStrings.tfhintTaskName,
-      ),
-      style: context.textTheme().titleSmall,
+    return ProjectTextfield(
+      label: const Text(ProjectStrings.tfhintTaskName),
+      keyBoardType: TextInputType.text,
       validator: Validators().validateTaskNameNotEmpty,
       onChanged: (value) {
         newTask.value = newTask.value.copyWith(name: value);
@@ -141,16 +140,15 @@ class _TextfieldDescription extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final descriptionLength = useState<int>(0);
-    return TextFormField(
-      style: context.textTheme().titleSmall,
+    return ProjectTextfield(
+      keyBoardType: TextInputType.multiline,
+      validator: null,
+      label: const Text(ProjectStrings.tfhintTaskDes),
       decoration: InputDecoration(
-          counterText: "${descriptionLength.value}/200",
-          labelText: ProjectStrings.tfhintTaskDes,
-          alignLabelWithHint: true),
-      maxLength: 200,
-      maxLines: 3,
-      keyboardType: TextInputType.multiline,
-      textInputAction: TextInputAction.done,
+        counterText: "${descriptionLength.value}/200",
+        alignLabelWithHint: true,
+      ),
+      maxLenght: 200,
       onChanged: (value) {
         descriptionLength.value = value.length;
         newTask.value = newTask.value.copyWith(description: value);
@@ -158,6 +156,7 @@ class _TextfieldDescription extends HookWidget {
     );
   }
 }
+
 
 class _DropdownImportanceScore extends StatelessWidget {
   const _DropdownImportanceScore({

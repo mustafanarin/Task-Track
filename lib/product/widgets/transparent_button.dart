@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 
 class TransparentButton extends StatelessWidget {
@@ -19,6 +20,7 @@ class TransparentButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
+          backgroundColor: ProjectColors.white,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 side: BorderSide(width: 1))),

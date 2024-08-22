@@ -1,5 +1,6 @@
-part of '../../feature/home/view/task_add_page.dart';
+part of '../../feature/home/views/task_add_page.dart';
 
+@immutable
 class MyIconList {
   late final List<IconData> icons;
 
