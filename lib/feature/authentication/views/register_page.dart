@@ -9,7 +9,6 @@ import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
-import 'package:todo_app/product/widgets/project_password_textfield.dart';
 import 'package:todo_app/product/widgets/project_textfield.dart';
 
 @RoutePage()
@@ -137,7 +136,8 @@ class RegisterPage extends HookConsumerWidget {
                       SizedBox(
                         height: context.lowValue1,
                       ),
-                      ProjectPasswordTextfield(
+                      ProjectTextfield(
+                        isPassword: true,
                         hintText: ProjectStrings.tfPasswordHint,
                         controller: passwordController,
                         keyBoardType: TextInputType.visiblePassword,
@@ -153,7 +153,8 @@ class RegisterPage extends HookConsumerWidget {
                       SizedBox(
                         height: context.lowValue1,
                       ),
-                      ProjectPasswordTextfield(
+                      ProjectTextfield(
+                        isPassword: true,
                           hintText: ProjectStrings.tfConfirmHint,
                           controller: confirmController,
                           keyBoardType: TextInputType.visiblePassword,

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/extensions/context_extensions.dart';
 
 @immutable
 class LightTheme {
-  ThemeData getThemeData(BuildContext context) => ThemeData.light().copyWith(
+  ThemeData getThemeData() => ThemeData.light().copyWith(
         appBarTheme: const AppBarTheme(
             backgroundColor: ProjectColors.white,
             scrolledUnderElevation: 0,
@@ -12,27 +11,20 @@ class LightTheme {
             centerTitle: true),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-                textStyle: context.textTheme().titleMedium?.copyWith(
-                  fontSize: 18,
-                ),
+                textStyle: _titleMediumStyle,
                 elevation: 0,
                 backgroundColor: ProjectColors.iris,
                 foregroundColor: ProjectColors.white,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ))),
-         dialogTheme: DialogTheme(
-           titleTextStyle: context.textTheme().titleMedium?.copyWith(
-             fontSize: 20
-           ),
-        ),// TODO COPY WİTH TEXT AYARLA
+        dialogTheme: DialogTheme(
+          titleTextStyle: _titleMediumStyle.copyWith(fontSize: 20),
+        ),
         textButtonTheme: TextButtonThemeData(
-         style: ButtonStyle(
+          style: ButtonStyle(
             textStyle: WidgetStateProperty.all(
-              Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.red
-              )
-            ),
+                _titleMediumStyle.copyWith(color: Colors.red)),
           ),
         ),
         inputDecorationTheme: const InputDecorationTheme(
@@ -41,22 +33,27 @@ class LightTheme {
           borderRadius: BorderRadius.all(Radius.circular(10)),
         )),
         textTheme: const TextTheme(
-            titleLarge: TextStyle(
-                fontFamily: "Roboto",
-                color: ProjectColors.iris,
-                fontWeight: FontWeight.w600,
-                fontSize: 24),
-            titleMedium: TextStyle(
-                fontFamily: "Roboto",
-                color: ProjectColors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 18),
-            titleSmall: TextStyle(
-                fontFamily: "Roboto",
-                color: ProjectColors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 16)),
+            titleLarge: _titleLargeStyle,
+            titleMedium: _titleMediumStyle,
+            titleSmall: _titleSmallStyle),
         scaffoldBackgroundColor: ProjectColors.white,
       );
 }
 
+const _titleLargeStyle = TextStyle(
+    fontFamily: "Roboto",
+    color: ProjectColors.iris,
+    fontWeight: FontWeight.w600,
+    fontSize: 24);
+
+const _titleMediumStyle = TextStyle(
+    fontFamily: "Roboto",
+    color: ProjectColors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 18);
+
+const _titleSmallStyle = TextStyle(
+    fontFamily: "Roboto",
+    color: ProjectColors.black,
+    fontWeight: FontWeight.w600,
+    fontSize: 16);

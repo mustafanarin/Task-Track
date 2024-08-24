@@ -148,7 +148,9 @@ class _TextfieldDescription extends HookWidget {
         counterText: "${descriptionLength.value}/200",
         alignLabelWithHint: true,
       ),
-      maxLenght: 200,
+      maxLength: 200,
+      maxLines: 3,
+      minLines: 3,
       onChanged: (value) {
         descriptionLength.value = value.length;
         newTask.value = newTask.value.copyWith(description: value);

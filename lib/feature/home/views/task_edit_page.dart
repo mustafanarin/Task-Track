@@ -152,7 +152,7 @@ class _TextfieldDescription extends HookWidget {
         counterText: "${descriptionLength.value}/200",
         alignLabelWithHint: true,
       ),
-      maxLenght: 200,
+      maxLength: 200,
       maxLines: 3,
       onChanged: (value) {
         descriptionLength.value = value.length;
@@ -176,7 +176,7 @@ class _DropdownImportanceScore extends StatelessWidget {
     return ProjectDropdown(
       labelText: ProjectStrings.dropdownImportance,
       value: widget.model.importance,
-      itemValues: [1, 2, 3, 4, 5], // items listesi
+      itemValues: [1, 2, 3, 4, 5], 
       onChanged: (value) {
         newTask.value = newTask.value.copyWith(importance: value);
       },
@@ -211,8 +211,8 @@ class _DropdownChangeCategory extends StatelessWidget {
     return ProjectDropdown(
       labelText: ProjectStrings.dropdownCategory,
       value: widget.model.categoryId,
-      itemValues: [1, 2, 3], // items listesi
-      itemBuilder: getCategoryName, // item label'ını dinamik hale getirdik
+      itemValues: [1, 2, 3],
+      itemBuilder: getCategoryName, 
       onChanged: (value) {
         newTask.value = newTask.value.copyWith(categoryId: value);
         newTask.value =
