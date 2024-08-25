@@ -124,7 +124,7 @@ class LoginPage extends HookConsumerWidget {
                                   height: context.lowValue1,
                                 ),
                                 ProjectTextfield(
-                                  isPassword: true,
+                                    isPassword: true,
                                     hintText: ProjectStrings.tfPasswordHint,
                                     controller: passwordController,
                                     keyBoardType: TextInputType.visiblePassword,

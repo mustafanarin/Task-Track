@@ -19,17 +19,17 @@ import '../../feature/home/views/task_list_page.dart';
 
 part 'app_router.gr.dart';
 
-//TODO: custom route override
+//TODO: custom route override route type
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: SplashRoute.page),
-        AutoRoute(page: WelcomeRoute.page, initial: true),
+        AutoRoute(page: SplashRoute.page, initial: true),
+        AutoRoute(page: WelcomeRoute.page),
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(
-          page: HomeRoute.page,
+          page: HomeRoute.page
         ),
         AutoRoute(page: TabbarRoute.page),
         AutoRoute(page: TaskAddRoute.page),

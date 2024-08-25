@@ -39,6 +39,8 @@ class ProjectTextfield extends HookWidget {
     void changeObscure() {
       obscure.value = !obscure.value;
     }
+    
+    final activeMaxLines = isPassword ? 1 : maxLines;
 
     return TextFormField(
       onChanged: onChanged,
@@ -46,7 +48,7 @@ class ProjectTextfield extends HookWidget {
       maxLength: maxLength,
       keyboardType: keyBoardType,
       validator: validator,
-      maxLines: maxLines,
+      maxLines: activeMaxLines,
       minLines: minLines,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       style: context.textTheme().titleSmall,
