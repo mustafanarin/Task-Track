@@ -1,4 +1,3 @@
-
 // Auth Service Provider
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,23 +6,21 @@ import 'package:todo_app/feature/authentication/state/user_state.dart';
 import '../../../service/auth_service.dart';
 import '../model/user_model.dart';
 
-final authenticationProvider = Provider<AuthService>((ref) {
-  return AuthService();
-});
-
 // Auht State Provider
-final registerProvider = StateNotifierProvider<RegisterProvider, UserState>((ref) {
-  final authService = ref.watch(authenticationProvider);
-  return RegisterProvider(authService);
-});
-
+final registerProvider =
+    AutoDisposeNotifierProvider<RegisterProvider, UserState>(
+      () => RegisterProvider.new(AuthService())
+    );
 
 // State Notifier
-class RegisterProvider extends StateNotifier<UserState> {
+class RegisterProvider extends AutoDisposeNotifier<UserState> {
   final AuthService _authService;
-  RegisterProvider(this._authService)
-      : super(UserState(user: const UserModel(), isLoading: false));
+  RegisterProvider(this._authService);
 
+  @override
+  UserState build() {
+    return UserState(user: const UserModel(), isLoading: false);
+  }
 
   Future<void> register(String name, String email, String password) async {
     state = state.copyWith(isLoading: true);
@@ -38,5 +35,4 @@ class RegisterProvider extends StateNotifier<UserState> {
       print(e.toString());
     }
   }
-
 }

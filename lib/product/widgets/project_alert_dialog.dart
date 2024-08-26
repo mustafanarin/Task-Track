@@ -5,13 +5,9 @@ import 'package:todo_app/product/extensions/context_extensions.dart';
 
 class ProjectAlertDialog extends StatelessWidget {
   final String titleText;
-  final void Function()? onPressedNO;
-  final void Function()? onPressedYES;
   const ProjectAlertDialog({
     super.key,
     required this.titleText,
-    required this.onPressedNO, 
-    required this.onPressedYES,
   });
 
   final String noButtonText = "No";
@@ -25,14 +21,16 @@ class ProjectAlertDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton(
-            onPressed: onPressedNO,
+            onPressed:() {
+              context.maybePop();
+            },
             child: Text(
               noButtonText,
             )),
-        TextButton( onPressed: onPressedYES,
-            // onPressed: () {
-            //   context.maybePop<bool>(true);
-            // },
+        TextButton( 
+            onPressed: () {
+              context.maybePop<bool>(true);
+            },
             child: Text(yesButtonText,))
       ],
     );

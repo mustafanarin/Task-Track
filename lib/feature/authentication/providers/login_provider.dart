@@ -7,22 +7,22 @@ import '../../../product/utility/exception/auth_exception.dart';
 import '../model/user_model.dart';
 import '../state/user_state.dart';
 
-final authenticationProvider = Provider<AuthService>((ref) {
-  return AuthService();
-});
-
 // Auht State Provider
-final loginProvider = StateNotifierProvider<LoginProvider, UserState>((ref) {
-  final authService = ref.watch(authenticationProvider);
-  return LoginProvider(authService);
-});
+final loginProvider = AutoDisposeNotifierProvider<LoginProvider, UserState>(
+    () => LoginProvider.new(AuthService()));
 
 // State Notifier
-class LoginProvider extends StateNotifier<UserState> {
+class LoginProvider extends AutoDisposeNotifier<UserState> {
   final AuthService _authService;
-  LoginProvider(this._authService)
-      : super(UserState(user: const UserModel(), isLoading: false));
+  LoginProvider(this._authService);
 
+  @override
+  UserState build() {
+    _initializeUser();
+    return UserState(user: const UserModel(), isLoading: false);
+  }
+ //TODO init'e gerek var mı?
+ 
   Future<void> _initializeUser() async {
     state = state.copyWith(isLoading: true);
     try {

@@ -1,90 +1,76 @@
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
-import 'package:todo_app/product/utility/exception/auth_exception.dart';
+import 'package:todo_app/feature/profile/state/profile_state.dart';
 import 'package:todo_app/service/auth_service.dart';
-
-final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService();
-});
+import 'package:todo_app/product/utility/exception/auth_exception.dart';
 
 final profileProvider =
-    StateNotifierProvider<ProfileProvider, AsyncValue<UserModel?>>((ref) {
-  final service = ref.watch(authServiceProvider);
-  return ProfileProvider(service);
-});
+    AutoDisposeNotifierProvider<ProfileProvider, ProfileState>(
+        () => ProfileProvider.new(AuthService()));
 
-class ProfileProvider extends StateNotifier<AsyncValue<UserModel?>> {
+class ProfileProvider extends AutoDisposeNotifier<ProfileState> {
   final AuthService _authService;
-  late final StreamSubscription<User?> _authStateSubscription;
 
-  ProfileProvider(this._authService) : super(const AsyncValue.loading()) {
-    _authStateSubscription = _authService.authStateChanges.listen((user) {
-      if (user != null) {
-        getCurrentUser();
-      } else {
-        state = const AsyncValue.data(null);
-      }
-    });
+  ProfileProvider(this._authService);
+  @override
+  ProfileState build() {
+    _init();
+    return ProfileState(user: const UserModel(), isLoading: true);
   }
 
-  @override
-  void dispose() {
-    _authStateSubscription.cancel();
-    super.dispose();
+  Future<void> _init() async {
+    await _initializeUser();
+  }
+
+  Future<void> _initializeUser() async {
+    try {
+      final UserModel? currentUser = await _authService.getCurrentUser();
+      if (currentUser != null) {
+        state = state.copyWith(user: currentUser, isLoading: false);
+      } else {
+        state = state.copyWith(user: const UserModel(), isLoading: false);
+      }
+    } catch (e) {
+      print("Initialize user error: ${e.toString()}");
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   Future<void> updateUserName(String newName) async {
-    state = const AsyncValue.loading();
+    state = state.copyWith(isLoading: true);
     try {
       await _authService.updateUserName(newName);
-      await getCurrentUser();
+      final updatedUser = state.user.copyWith(name: newName);
+      state = state.copyWith(user: updatedUser, isLoading: false);
     } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-    }
-  }
-
-  Future<void> getCurrentUser() async {
-    try {
-      final user = await _authService.getCurrentUser();
-      state = AsyncValue.data(user);
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-    }
-  }
-
-  Future<void> updateUserEmail(String newEmail) async {
-    state = const AsyncValue.loading();
-    try {
-      await _authService.updateUserEmail(newEmail);
-      await getCurrentUser();
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-      rethrow;
-    }
-  }
-
-  Future<void> logout() async {
-    try {
-      await _authService.logout();
-    } catch (e) {
-      print(e.toString());
-      state = const AsyncValue.data(null);
+      print("Update user name error: ${e.toString()}");
+      state = state.copyWith(isLoading: false);
       throw AuthException(message: e.toString());
     }
   }
 
-  // Future<void> logout() async {
-  //   state = state.copyWith(isLoading: true);
-  //   try {
-  //     await _authService.logout();
-  //   } on FirebaseAuthException catch (e) {
-  //     state = state.copyWith(isLoading: false);
-  //     print(e.toString());
-  //   } catch (e) {
-  //     state = state.copyWith(isLoading: false);
-  //     print(e.toString());
-  //   }
-  // }
+  Future<void> updateUserEmail(String newEmail) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      await _authService.updateUserEmail(newEmail);
+      final updatedUser = state.user.copyWith(email: newEmail);
+      state = state.copyWith(user: updatedUser, isLoading: false);
+    } catch (e) {
+      print("Update user email error: ${e.toString()}");
+      state = state.copyWith(isLoading: false);
+      throw AuthException(message: e.toString());
+    }
+  }
+
+  Future<void> logout() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      await _authService.logout();
+      state = ProfileState(user: const UserModel(), isLoading: false);
+    } catch (e) {
+      print("Logout error: ${e.toString()}");
+      state = state.copyWith(isLoading: false);
+      throw AuthException(message: e.toString());
+    }
+  }
 }

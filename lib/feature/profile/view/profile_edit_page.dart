@@ -22,7 +22,7 @@ class ProfileEditPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tfController = useTextEditingController();
     final formKey = useMemoized(() => GlobalKey<FormState>());
-    final profileViewModel = ref.watch(profileProvider.notifier);
+    final profileRead = ref.read(profileProvider.notifier);
     final isLoading = useState<bool>(false);
 
     return isLoading.value
@@ -54,7 +54,7 @@ class ProfileEditPage extends HookConsumerWidget {
                         if (formKey.currentState!.validate()) {
                           isLoading.value = true;
                           if (profileEditEnum.isName) {
-                            await profileViewModel
+                            await profileRead
                                 .updateUserName(tfController.text);
                             isLoading.value = false;
                             Fluttertoast.showToast(
@@ -72,16 +72,10 @@ class ProfileEditPage extends HookConsumerWidget {
                                   return ProjectAlertDialog(
                                     titleText: ProjectStrings
                                         .alertDialogVertificationQuestion,
-                                    onPressedNO: () {
-                                      context.maybePop();
-                                    },
-                                    onPressedYES: () {
-                                      context.maybePop<bool>(true);
-                                    },
                                   );
                                 });
                             if (result is bool) {
-                              await profileViewModel
+                              await profileRead
                                   .updateUserEmail(tfController.text);
                               Fluttertoast.showToast(
                                   msg: ProjectStrings.toastUpdateEmail,

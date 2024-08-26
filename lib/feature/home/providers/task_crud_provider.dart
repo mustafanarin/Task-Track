@@ -6,34 +6,29 @@ import 'package:todo_app/service/task_service.dart';
 import '../model/short_type_enum.dart';
 import '../states/task_state.dart';
 
-// Task service provider
-final serviceProvider = Provider((ref) {
-  return TaskService();
-});
-
 // Task state notifier provider
-final taskProvider = StateNotifierProvider<TaskNotifier, TaskState>((ref) {
-  final service = ref.watch(serviceProvider);
-  return TaskNotifier(service, ref);
-});
+final taskProvider = AutoDisposeNotifierProvider<TaskProvider, TaskState>(
+    () => TaskProvider(TaskService()));
 
 // Default sort type is none
 final sortTypeProvider = StateProvider<SortType?>((ref) => null);
 
-
-class TaskNotifier extends StateNotifier<TaskState> {
-  TaskNotifier(this._taskService, this._ref)
-      : super(TaskState(tasks: [], isLoading: false));
+class TaskProvider extends AutoDisposeNotifier<TaskState> {
+  TaskProvider(this._taskService);
 
   final TaskService _taskService;
-  final Ref _ref;
+
+  @override
+  TaskState build() {
+    return TaskState(tasks: [], isLoading: false);
+  }
 
   Future<void> loadTasks(int categoryId) async {
     state = state.copyWith(isLoading: true);
     try {
       final tasks = await _taskService.getTasks(categoryId);
       state = TaskState(tasks: tasks, isLoading: false);
-      await _ref.read(taskCountProvider.notifier).updateTaskCounts();
+      await ref.read(taskCountProvider.notifier).updateTaskCounts();
     } catch (e) {
       print('Error loading tasks: $e');
       state = TaskState(tasks: [], isLoading: false);
@@ -77,12 +72,12 @@ class TaskNotifier extends StateNotifier<TaskState> {
   }
 
   void sortTasks(SortType sortType) {
-    _ref.read(sortTypeProvider.notifier).state = sortType;
+    ref.read(sortTypeProvider.notifier).state = sortType;
     _sortTasks();
   }
 
   void _sortTasks() {
-    final sortType = _ref.read(sortTypeProvider);
+    final sortType = ref.read(sortTypeProvider);
     if (sortType == null) return;
 
     switch (sortType) {
