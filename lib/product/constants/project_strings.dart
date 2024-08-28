@@ -8,7 +8,7 @@ class ProjectStrings {
   static const String appName1 = "Todo";
   static const String appName2 = "App";
   static const String welcomeDescription =
-      "Find your daily neccessities at Brand.The world’s largest fashion e-commerce has arrived in a mobile. shop now!";
+      "Every successful day starts with a well-planned list. Manage your tasks and achieve your goals.";
   static const String loginButton = "Login";
   static const String registerButton = "Register";
 

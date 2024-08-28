@@ -9,6 +9,7 @@ import 'package:todo_app/product/extensions/profile_edit_field.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/widgets/project_alert_dialog.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
+import 'package:todo_app/service/push_notifications.dart';
 
 @RoutePage()
 class ProfilePage extends ConsumerWidget {
@@ -92,8 +93,12 @@ class ProfilePage extends ConsumerWidget {
                           try {
                             await profileRead.logout();
                             context.mounted
-                                ? context.router
-                                    .replaceAll([const LoginRoute()])
+                                ? (context.router
+                                    .replaceAll([const LoginRoute()]),
+                               ref.read(notificationServiceProvider).showNotification(
+      'Oturum kapatıldı!',
+      'Gittiğine üzüldük.'
+    ) )
                                 : null;
                           } catch (e) {
                             print("ERROR: ${e.toString()}");

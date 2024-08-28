@@ -116,7 +116,9 @@ class _DescriptionText extends StatelessWidget {
           style: context
               .textTheme()
               .titleMedium
-              ?.copyWith(color: ProjectColors.grey)),
-    );
+              ?.copyWith(color: ProjectColors.grey,
+              ) // TODO ORTALA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+              // VE APP NAMEİNİ ORTAKLAŞTIR
+    ));
   }
 }

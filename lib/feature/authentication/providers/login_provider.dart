@@ -18,7 +18,6 @@ class LoginProvider extends AutoDisposeNotifier<UserState> {
 
   @override
   UserState build() {
-    _initializeUser();
     return UserState(user: const UserModel(), isLoading: false);
   }
  //TODO init'e gerek var mı?
