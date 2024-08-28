@@ -74,11 +74,11 @@ class ProjectStrings {
   static const String logOutQuestionText = "Are you sure you want to log out?";
 
   // Profile Edit
-  static const String profileEditAppbar = "Profile Edit";
+  static const String profileEditAppbar = "Name Edit";
   static const String enterName = "Enter your name";
   static const String enterEmail = "Enter your email";
   static const String toastSuccessUpdateNameMessage =
-      "Task updated successfully!";
+      "Name updated successfully!";
   static const String alertDialogVertificationQuestion =
       "We will send you a verification link. Do you still want to do it?";
   static const String toastUpdateEmail = "Please check your email!";

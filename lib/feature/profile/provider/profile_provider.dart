@@ -49,18 +49,7 @@ class ProfileProvider extends AutoDisposeNotifier<ProfileState> {
     }
   }
 
-  Future<void> updateUserEmail(String newEmail) async {
-    state = state.copyWith(isLoading: true);
-    try {
-      await _authService.updateUserEmail(newEmail);
-      final updatedUser = state.user.copyWith(email: newEmail);
-      state = state.copyWith(user: updatedUser, isLoading: false);
-    } catch (e) {
-      print("Update user email error: ${e.toString()}");
-      state = state.copyWith(isLoading: false);
-      throw AuthException(message: e.toString());
-    }
-  }
+
 
   Future<void> logout() async {
     state = state.copyWith(isLoading: true);

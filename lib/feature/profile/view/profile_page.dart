@@ -62,10 +62,7 @@ class ProfilePage extends ConsumerWidget {
                               .textTheme()
                               .titleMedium
                               ?.copyWith(color: ProjectColors.white)),
-                      trailing: const Icon(Icons.arrow_outward,
-                          color: ProjectColors.white),
-                      onTap: () => context.pushRoute(ProfileEditRoute(
-                          profileEditEnum: ProfileEditEnum.email)),
+                      
                     ),
                   ),
                   Card(

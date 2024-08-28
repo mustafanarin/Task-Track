@@ -101,7 +101,6 @@ class AuthService {
           id: user.uid,
           name: userData['name'] ?? user.displayName ?? "",
           email: user.email ?? "",
-          pendingEmail: userData['pendingEmail'],
         );
       } on FirebaseAuthException catch (error) {
         throw AuthException(message: error.toString());
@@ -112,39 +111,6 @@ class AuthService {
     return null;
   }
 
-  Future<void> updateUserEmail(String newEmail) async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      try {
-        // Önce e-posta değişikliği için doğrulama e-postası gönder
-        await user.verifyBeforeUpdateEmail(newEmail);
-
-        // Firestore'daki kullanıcı belgesini güncelle
-        // Not: Bu güncelleme, e-posta doğrulaması tamamlandıktan sonra yapılmalıdır.
-        // Şu an için sadece bir işaretçi ekliyoruz.
-        await _firestore.collection("users").doc(user.uid).update({
-          "pendingEmail": newEmail,
-        });
-
-        // Burada bir listener ekleyebiliriz ki e-posta doğrulandığında Firestore'u güncelleyelim
-        // Bu örnekte bunu yapmıyoruz, ama gerçek bir uygulamada bu önemli olabilir
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'email-already-in-use') {
-          throw Exception(
-              'The email address is already in use by another account.');
-        } else if (e.code == 'invalid-email') {
-          throw Exception('The email address is invalid.');
-        } else {
-          throw Exception(
-              'An error occurred while updating the email: ${e.message}');
-        }
-      } catch (e) {
-        throw Exception('An unexpected error occurred: $e');
-      }
-    } else {
-      throw Exception("No user is currently signed in.");
-    }
-  }
 
   Stream<UserModel> getUserStream(String userId) {
     return _collection.doc(userId).snapshots().map((snapshot) {
