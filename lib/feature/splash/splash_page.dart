@@ -3,37 +3,55 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:todo_app/product/extensions/assets/json_extension.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../service/auth_service.dart';
+
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 @RoutePage()
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  _SplashPageState createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    _navigateToNextScreen();
   }
 
-  _navigateToHome() async {
-    await Future.delayed(const Duration(milliseconds: 3000), () {});
-    if (!context.mounted) return;
-   context.router.replace(const WelcomeRoute());
+  Future<void> _navigateToNextScreen() async {
+    await Future.delayed(const Duration(milliseconds: 3000));
+    if (!mounted) return;
+
+    final authService = ref.read(authServiceProvider);
+    final currentUser = await authService.getCurrentUser();
+
+    if (currentUser != null) {
+      context.router.replace(const TabbarRoute());
+    } else {
+      context.router.replace(const WelcomeRoute());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(JsonItems.loot.path()),
-            // Icon(
+          ],
+        ),
+      ),
+    );
+  }
+}
+// Icon(
             //   Icons.check_circle_outline,
             //   size: 100,
             //   color: Colors.blue,
@@ -47,9 +65,3 @@ class _SplashPageState extends State<SplashPage> {
             //     fontWeight: FontWeight.bold,
             //   ),
             // ),
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -15,7 +15,7 @@ class NotificationService {
 
     // Android için ikon ayarı güncellendi
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+        AndroidInitializationSettings('@mipmap/white_app_icon');
 
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings();
@@ -56,8 +56,7 @@ class NotificationService {
       channelDescription: 'This channel is used for important notifications.',
       importance: Importance.high,
       priority: Priority.high,
-      icon: '@mipmap/launcher_icon',
-      largeIcon: DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
+      icon: '@mipmap/white_app_icon',
     );
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
