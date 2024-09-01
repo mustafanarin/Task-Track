@@ -77,7 +77,7 @@ class AuthService {
         // Google hesabı ile giriş yapılmış olsa bile, yeniden giriş yapmaya zorlamıyoruz
         // Sadece yerel veritabanı ve Firebase'deki bilgileri güncelliyoruz
       } catch (error) {
-        throw AuthException(message: "Update User Name Error: $error" );
+        throw AuthException(message: "Update User Name Error: $error");
       }
     } else {
       throw AuthException(message: "No user is currently signed in.");
@@ -111,7 +111,6 @@ class AuthService {
     return null;
   }
 
-
   Stream<UserModel> getUserStream(String userId) {
     return _collection.doc(userId).snapshots().map((snapshot) {
       final data = snapshot.data() as Map<String, dynamic>;
@@ -135,13 +134,15 @@ class AuthService {
         throw AuthException(message: "Google sign-in cancelled by user");
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
       if (user != null) {
@@ -161,6 +162,14 @@ class AuthService {
       }
     } catch (error) {
       throw AuthException(message: "Google sign in error: ${error.toString()}");
+    }
+  }
+
+  Future<void> sendPasswordResetLink(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (error) {
+      throw AuthException(message: "Password reset error: ${error.toString()}");
     }
   }
 }

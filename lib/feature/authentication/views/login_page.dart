@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/providers/login_provider.dart';
+import 'package:todo_app/feature/authentication/views/forgat_password_page.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
@@ -135,7 +136,14 @@ class LoginPage extends HookConsumerWidget {
                                       child: Text(ProjectStrings.forgatPassword,
                                           style:
                                               context.textTheme().titleSmall),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ForgatPasswordPage()));
+                                        
+                                      },
                                     )),
                                 ProjectButton(
                                     text: ProjectStrings.loginButton,

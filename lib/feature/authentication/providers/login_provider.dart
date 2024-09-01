@@ -72,4 +72,16 @@ class LoginProvider extends AutoDisposeNotifier<UserState> {
       throw AuthException(message: e.toString());
     }
   }
+
+  Future<void> sendPasswordResetLink(String email) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      await _authService.sendPasswordResetLink(email);
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      print(e.toString());
+      throw AuthException(message: e.toString());
+    }
+  }
 }
