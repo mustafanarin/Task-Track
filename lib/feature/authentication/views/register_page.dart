@@ -154,7 +154,7 @@ class RegisterPage extends HookConsumerWidget {
                         height: context.lowValue1,
                       ),
                       ProjectTextfield(
-                        isPassword: true,
+                          isPassword: true,
                           hintText: ProjectStrings.tfConfirmHint,
                           controller: confirmController,
                           keyBoardType: TextInputType.visiblePassword,
@@ -172,10 +172,10 @@ class RegisterPage extends HookConsumerWidget {
                                   ? null
                                   : await handleRegister()),
                           if (authwatch.isLoading)
-                            const Center(
+                            Center(
                                 heightFactor: 1,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: ProjectColors.white,
                                 )),
                         ],
                       ),

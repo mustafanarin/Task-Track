@@ -40,6 +40,7 @@ class NotificationService {
       'High Importance Notifications', // Yeni kanal adı
       description: 'This channel is used for important notifications.',
       importance: Importance.high,
+      playSound: false
     );
 
     await _localNotifications

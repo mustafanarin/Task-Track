@@ -20,26 +20,6 @@ class LoginProvider extends AutoDisposeNotifier<UserState> {
   UserState build() {
     return UserState(user: const UserModel(), isLoading: false);
   }
- //TODO init'e gerek var mı?
- 
-  Future<void> _initializeUser() async {
-    state = state.copyWith(isLoading: true);
-    try {
-      final UserModel? currentUser = await _authService.getCurrentUser();
-
-      if (currentUser != null) {
-        state = state.copyWith(user: currentUser, isLoading: false);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-    } on FirebaseAuthException catch (e) {
-      print("Firebase Error: ${e.toString()}");
-      state = state.copyWith(isLoading: false);
-    } catch (e) {
-      print("Error: ${e.toString()}");
-      state = state.copyWith(isLoading: false);
-    }
-  }
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(isLoading: true);

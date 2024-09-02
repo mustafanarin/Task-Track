@@ -23,6 +23,34 @@ class ProfileEditPage extends HookConsumerWidget {
     final formKey = useMemoized(() => GlobalKey<FormState>());
     final profileRead = ref.read(profileProvider.notifier);
     final isLoading = useState<bool>(false);
+    //TODO geç mi güncelleniyor name?
+    Future<void> updateName() async {
+      if (formKey.currentState!.validate()) {
+                          isLoading.value = true;
+                          try {
+                            await profileRead.updateUserName(tfController.text);
+                            Fluttertoast.showToast(
+                                msg: ProjectStrings
+                                    .toastSuccessUpdateNameMessage,
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: ProjectColors.grey,
+                                textColor: ProjectColors.white,
+                                fontSize: 16.0);
+                            context.mounted ? context.maybePop() : null;
+                          } catch (error) {
+                            isLoading.value = false;
+                            Fluttertoast.showToast(
+                                msg:
+                                    "An error occurred while updating the name:  ${error.toString()}",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: ProjectColors.grey,
+                                textColor: ProjectColors.white,
+                                fontSize: 16.0);
+                          }
+                        }
+    }
 
     return isLoading.value
         ? Container(
@@ -43,27 +71,11 @@ class ProfileEditPage extends HookConsumerWidget {
                 child: Column(
                   children: [
                     const Spacer(flex: 1),
-                        _TextfieldName(tfController: tfController),
+                    _TextfieldName(tfController: tfController),
                     Spacer(flex: 19),
                     ProjectButton(
                       text: ProjectStrings.saveButtonText,
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          isLoading.value = true;
-                            await profileRead
-                                .updateUserName(tfController.text);
-                            isLoading.value = false;
-                            Fluttertoast.showToast(
-                                msg: ProjectStrings
-                                    .toastSuccessUpdateNameMessage,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: ProjectColors.grey,
-                                textColor: ProjectColors.white,
-                                fontSize: 16.0);
-                          context.mounted ? context.maybePop() : null;
-                        }
-                      },
+                      onPressed: updateName
                     ),
                     const Spacer(flex: 2)
                   ],
@@ -92,4 +104,3 @@ class _TextfieldName extends StatelessWidget {
     );
   }
 }
-

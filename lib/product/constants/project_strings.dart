@@ -18,7 +18,7 @@ class ProjectStrings {
   static const String tfEmailHint = "Enter your email";
   static const String passwordText = "Password";
   static const String tfPasswordHint = "Enter password";
-  static const String forgatPassword = "Forgat password?";
+  static const String forgatPassword = "Forgot password?";
   static const String divderOrText = "or";
   static const String loginWithGoogle = "Login using Google";
   static const String haventAccont = "Don't have an account?";

@@ -30,11 +30,12 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
   Widget build(BuildContext context) {
     final formkey = useMemoized(() => GlobalKey<FormState>());
     final taskNotifier = ref.read(taskProvider.notifier);
-    final updateLoading = ref.watch(taskProvider).isLoading;
     final newTask = useState(widget.model);
+    final isLoading = useState(false);
 
     Future<void> submitForm() async {
       if (formkey.currentState!.validate()) {
+        isLoading.value = true;
         try {
           await taskNotifier.updateTask(newTask.value);
           Fluttertoast.showToast(
@@ -48,6 +49,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
               ? context.router.replaceAll([const TabbarRoute()])
               : null;
         } catch (error) {
+          isLoading.value = false;
           Fluttertoast.showToast(
               msg: '${ProjectStrings.toastErrorAddMessage} $error',
               toastLength: Toast.LENGTH_SHORT,
@@ -59,7 +61,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
       }
     }
 
-    return updateLoading
+    return isLoading.value
         ? Container(
             color: ProjectColors.white,
             child: const Center(child: CircularProgressIndicator()),
@@ -129,7 +131,6 @@ class _TextfieldTaskName extends HookWidget {
   }
 }
 
-
 class _TextfieldDescription extends HookWidget {
   const _TextfieldDescription({
     required this.model,
@@ -146,7 +147,7 @@ class _TextfieldDescription extends HookWidget {
     return ProjectTextfield(
       controller: tfDescription,
       keyBoardType: TextInputType.multiline,
-      validator: null, 
+      validator: null,
       label: const Text(ProjectStrings.tfhintTaskDes),
       decoration: InputDecoration(
         counterText: "${descriptionLength.value}/200",
@@ -176,14 +177,13 @@ class _DropdownImportanceScore extends StatelessWidget {
     return ProjectDropdown(
       labelText: ProjectStrings.dropdownImportance,
       value: widget.model.importance,
-      itemValues: [1, 2, 3, 4, 5], 
+      itemValues: [1, 2, 3, 4, 5],
       onChanged: (value) {
         newTask.value = newTask.value.copyWith(importance: value);
       },
     );
   }
 }
-
 
 class _DropdownChangeCategory extends StatelessWidget {
   final TaskEditPage widget;
@@ -212,7 +212,7 @@ class _DropdownChangeCategory extends StatelessWidget {
       labelText: ProjectStrings.dropdownCategory,
       value: widget.model.categoryId,
       itemValues: [1, 2, 3],
-      itemBuilder: getCategoryName, 
+      itemBuilder: getCategoryName,
       onChanged: (value) {
         newTask.value = newTask.value.copyWith(categoryId: value);
         newTask.value =
@@ -221,7 +221,6 @@ class _DropdownChangeCategory extends StatelessWidget {
     );
   }
 }
-
 
 class _TaskIconListTitle extends StatelessWidget {
   const _TaskIconListTitle();
