@@ -16,7 +16,6 @@ class AuthService {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-
       DocumentSnapshot userDoc =
           await _collection.doc(userCredential.user!.uid).get();
 
@@ -65,17 +64,13 @@ class AuthService {
     final user = _auth.currentUser;
     if (user != null) {
       try {
-        // Firebase Authentication'daki kullanıcı profilini güncelle
         await user.updateDisplayName(newName);
 
-        // Firestore'daki kullanıcı belgesini güncelle
         await _firestore
             .collection("users")
             .doc(user.uid)
             .update({"name": newName});
 
-        // Google hesabı ile giriş yapılmış olsa bile, yeniden giriş yapmaya zorlamıyoruz
-        // Sadece yerel veritabanı ve Firebase'deki bilgileri güncelliyoruz
       } catch (error) {
         throw AuthException(message: "Update User Name Error: $error");
       }
@@ -111,24 +106,14 @@ class AuthService {
     return null;
   }
 
-  Stream<UserModel> getUserStream(String userId) {
-    return _collection.doc(userId).snapshots().map((snapshot) {
-      final data = snapshot.data() as Map<String, dynamic>;
-      return UserModel(
-        id: userId,
-        name: data['name'] ?? '',
-        email: data['email'] ?? '',
-      );
-    });
-  }
 
   Future<UserModel> signInWithGoogle() async {
     try {
-      // Mevcut oturumu kapat
+      // Close current session
       await _googleSignIn.signOut();
       await _auth.signOut();
 
-      // Yeni bir Google Sign-In işlemi başlat
+      // Start a new google sign-in
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         throw AuthException(message: "Google sign-in cancelled by user");
@@ -146,7 +131,7 @@ class AuthService {
       User? user = userCredential.user;
 
       if (user != null) {
-        // Firestore'da kullanıcı bilgilerini güncelle veya oluştur
+        // Update or create user information in firestore
         await _firestore.collection("users").doc(user.uid).set({
           'name': user.displayName ?? '',
           'email': user.email ?? '',

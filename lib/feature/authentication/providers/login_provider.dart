@@ -26,14 +26,17 @@ class LoginProvider extends AutoDisposeNotifier<UserState> {
     try {
       final user = await _authService.login(email, password);
       state = state.copyWith(user: user);
+
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(isLoading: false);
       print(e.toString());
       throw AuthException(message: e.toString());
+
     } catch (e) {
       state = state.copyWith(isLoading: false);
       print(e.toString());
       throw AuthException(message: e.toString());
+
     }
   }
 
@@ -42,14 +45,17 @@ class LoginProvider extends AutoDisposeNotifier<UserState> {
     try {
       final user = await _authService.signInWithGoogle();
       state = state.copyWith(user: user);
+
     } on AuthException catch (e) {
       state = state.copyWith(isLoading: false);
       print("Google Sign In Error: ${e.message}");
       throw AuthException(message: e.toString());
+
     } catch (e) {
       state = state.copyWith(isLoading: false);
       print("Unexpected error during Google Sign In: $e");
       throw AuthException(message: e.toString());
+
     }
   }
 
@@ -58,10 +64,12 @@ class LoginProvider extends AutoDisposeNotifier<UserState> {
     try {
       await _authService.sendPasswordResetLink(email);
       state = state.copyWith(isLoading: false);
+
     } catch (e) {
       state = state.copyWith(isLoading: false);
       print(e.toString());
       throw AuthException(message: e.toString());
+      
     }
   }
 }

@@ -72,10 +72,7 @@ class LoginPage extends HookConsumerWidget {
     }
 
     return authWatch.isLoading
-        ? Container(
-            color: ProjectColors.white,
-            child: const Center(child: CircularProgressIndicator()),
-          )
+        ? _CircularProgressIndicator()
         : Scaffold(
             appBar: _CustomAppbar(
               height: context.dynamicHeight(0.3),
@@ -97,94 +94,23 @@ class LoginPage extends HookConsumerWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  height: context.lowValue1,
-                                ),
-                                Text(
-                                  ProjectStrings.emailText,
-                                  style: context.textTheme().titleMedium,
-                                ),
-                                SizedBox(
-                                  height: context.lowValue1,
-                                ),
-                                ProjectTextfield(
-                                  hintText: ProjectStrings.tfEmailHint,
-                                  controller: emailController,
-                                  keyBoardType: TextInputType.emailAddress,
-                                  validator: Validators().validateEmail,
-                                  icon: Icons.person_outline_outlined,
-                                ),
-                                SizedBox(
-                                  height: context.lowValue1,
-                                ),
-                                Text(
-                                  ProjectStrings.passwordText,
-                                  style: context.textTheme().titleMedium,
-                                ),
-                                SizedBox(
-                                  height: context.lowValue1,
-                                ),
-                                ProjectTextfield(
-                                    isPassword: true,
-                                    hintText: ProjectStrings.tfPasswordHint,
-                                    controller: passwordController,
-                                    keyBoardType: TextInputType.visiblePassword,
-                                    validator: Validators().validatePassword),
-                                Align(
-                                    alignment: Alignment.topRight,
-                                    child: TextButton(
-                                      child: Text(ProjectStrings.forgatPassword,
-                                          style:
-                                              context.textTheme().titleSmall),
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ForgatPasswordPage()));
-                                        
-                                      },
-                                    )),
-                                ProjectButton(
-                                    text: ProjectStrings.loginButton,
-                                    onPressed: () async => await handleLogin()),
-                                SizedBox(
-                                  height: context.lowValue2,
-                                ),
+                                SizedBox(height: context.lowValue1),
+                                _EmailText(),
+                                SizedBox(height: context.lowValue1),
+                                _TextfieldEmail(emailController: emailController),
+                                SizedBox(height: context.lowValue1),
+                                _PasswordText(),
+                                SizedBox(height: context.lowValue1),
+                                _TextfieldPassword(passwordController: passwordController),
+                                _ForgotPaswordButton(),
+                                _LoginButton(onPressed: handleLogin,),
+                                SizedBox(height: context.lowValue2),
                                 const _OrDivider(),
-                                SizedBox(
-                                  height: context.lowValue2,
-                                ),
-                                TransparentButton(
-                                    stringIcon: PngItems.google_icon.path(),
-                                    text: ProjectStrings.loginWithGoogle,
-                                    onPressed: () => handleGoogleLogin()),
-                                SizedBox(
-                                  height: context.lowValue2,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      ProjectStrings.haventAccont,
-                                      style: context.textTheme().titleMedium,
-                                    ),
-                                    TextButton(
-                                        onPressed: () => context
-                                            .pushRoute(const RegisterRoute()),
-                                        child: Text(
-                                          ProjectStrings.registerButton,
-                                          style: context
-                                              .textTheme()
-                                              .titleMedium
-                                              ?.copyWith(
-                                                  color: ProjectColors.iris),
-                                        ))
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: context.highValue,
-                                )
+                                SizedBox(height: context.lowValue2),
+                                _LoginWithGoogleButton(onPressed: handleGoogleLogin),
+                                SizedBox(height: context.lowValue2),
+                                _GoRegisterRow(),
+                                SizedBox(height: context.highValue)
                               ],
                             ),
                           ),
@@ -194,22 +120,187 @@ class LoginPage extends HookConsumerWidget {
                   ],
                 ),
                 if (authWatch.isLoading)
-                  const Center(
-                    child: Column(
-                      children: [
-                        Spacer(
-                          flex: 2,
-                        ),
-                        CircularProgressIndicator(),
-                        Spacer(
-                          flex: 3,
-                        )
-                      ],
-                    ),
-                  )
+                  _CirculerProgesIndicator()
               ],
             ),
           );
+  }
+}
+
+class _CirculerProgesIndicator extends StatelessWidget {
+  const _CirculerProgesIndicator({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        children: [
+          Spacer(
+            flex: 2,
+          ),
+          CircularProgressIndicator(),
+          Spacer(
+            flex: 3,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _CircularProgressIndicator extends StatelessWidget {
+  const _CircularProgressIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: ProjectColors.white,
+        child: const Center(child: CircularProgressIndicator()),
+      );
+  }
+}
+
+class _EmailText extends StatelessWidget {
+  const _EmailText();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      ProjectStrings.emailText,
+      style: context.textTheme().titleMedium,
+    );
+  }
+}
+
+class _TextfieldEmail extends StatelessWidget {
+  const _TextfieldEmail({
+    required this.emailController,
+  });
+
+  final TextEditingController emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProjectTextfield(
+      hintText: ProjectStrings.tfEmailHint,
+      controller: emailController,
+      keyBoardType: TextInputType.emailAddress,
+      validator: Validators().validateEmail,
+      icon: Icons.person_outline_outlined,
+    );
+  }
+}
+
+class _PasswordText extends StatelessWidget {
+  const _PasswordText();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      ProjectStrings.passwordText,
+      style: context.textTheme().titleMedium,
+    );
+  }
+}
+
+class _TextfieldPassword extends StatelessWidget {
+  const _TextfieldPassword({
+    required this.passwordController,
+  });
+
+  final TextEditingController passwordController;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProjectTextfield(
+        isPassword: true,
+        hintText: ProjectStrings.tfPasswordHint,
+        controller: passwordController,
+        keyBoardType: TextInputType.visiblePassword,
+        validator: Validators().validatePassword);
+  }
+}
+
+class _ForgotPaswordButton extends StatelessWidget {
+  const _ForgotPaswordButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.topRight,
+        child: TextButton(
+          child: Text(ProjectStrings.forgatPasswordBtn,
+              style:
+                  context.textTheme().titleSmall),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ForgatPasswordPage()));
+            
+          },
+        ));
+  }
+}
+
+class _LoginButton extends StatelessWidget {
+  const _LoginButton({
+    required this.onPressed,
+  });
+  final Future<void> Function()
+      onPressed; 
+  @override
+  Widget build(BuildContext context) {
+    return ProjectButton(
+        text: ProjectStrings.loginButton,
+        onPressed: () async => await onPressed());
+  }
+}
+
+class _LoginWithGoogleButton extends StatelessWidget {
+  const _LoginWithGoogleButton({
+    required this.onPressed,
+  });
+
+  final Future<void> Function()
+      onPressed; 
+  @override
+  Widget build(BuildContext context) {
+    return TransparentButton(
+        stringIcon: PngItems.google_icon.path(),
+        text: ProjectStrings.loginWithGoogle,
+        onPressed: () async => await onPressed());
+  }
+}
+
+class _GoRegisterRow extends StatelessWidget {
+  const _GoRegisterRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          ProjectStrings.haventAccont,
+          style: context.textTheme().titleMedium,
+        ),
+        TextButton(
+            onPressed: () => context
+                .pushRoute(const RegisterRoute()),
+            child: Text(
+              ProjectStrings.registerButton,
+              style: context
+                  .textTheme()
+                  .titleMedium
+                  ?.copyWith(
+                      color: ProjectColors.iris),
+            ))
+      ],
+    );
   }
 }
 

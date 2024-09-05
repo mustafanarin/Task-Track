@@ -44,24 +44,10 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(JsonItems.loot.path()),
+            Lottie.asset(JsonItems.lottie.path()),
           ],
         ),
       ),
     );
   }
 }
-// Icon(
-            //   Icons.check_circle_outline,
-            //   size: 100,
-            //   color: Colors.blue,
-            // ),
-            // SizedBox(height: 24),
-            // Text(
-            //   'Todo App',
-            //   style: TextStyle(
-            //     fontSize: 24,
-            //     color: Colors.black,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),

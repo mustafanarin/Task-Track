@@ -5,6 +5,7 @@ import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
+import 'package:todo_app/product/widgets/app_name_text.dart';
 
 import '../../../product/widgets/project_button.dart';
 import '../../../product/widgets/transparent_button.dart';
@@ -89,21 +90,12 @@ class _CustomContainerAndAppName extends StatelessWidget {
       width: context.dynamicWidht(1),
       height: context.dynamicHeight(0.1),
       child: Center(
-          child: RichText(
-              text: TextSpan(
-                  text: ProjectStrings.appName1,
-                  style: context
-                      .textTheme()
-                      .titleLarge
-                      ?.copyWith(color: ProjectColors.black),
-                  children: [
-            TextSpan(
-                text: ProjectStrings.appName2,
-                style: context.textTheme().titleLarge)
-          ]))),
+          child: AppNameText()),
     );
   }
 }
+
+
 
 class _DescriptionText extends StatelessWidget {
   const _DescriptionText();
@@ -111,14 +103,11 @@ class _DescriptionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: context.paddingHorizontalMedium,
-      child: Text(ProjectStrings.welcomeDescription,
-          style: context
-              .textTheme()
-              .titleMedium
-              ?.copyWith(color: ProjectColors.grey,
-              ) // TODO ORTALA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-              // VE APP NAMEİNİ ORTAKLAŞTIR
-    ));
+        padding: context.paddingHorizontalMedium,
+        child: Text(ProjectStrings.welcomeDescription,
+            textAlign: TextAlign.center,
+            style: context.textTheme().titleMedium?.copyWith(
+                  color: ProjectColors.grey,
+    )));
   }
 }

@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/state/user_state.dart';
+import 'package:todo_app/product/utility/exception/auth_exception.dart';
 
 import '../../../service/auth_service.dart';
 import '../model/user_model.dart';
@@ -27,12 +28,17 @@ class RegisterProvider extends AutoDisposeNotifier<UserState> {
     try {
       final user = await _authService.register(name, email, password);
       state = state.copyWith(user: user);
+
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(isLoading: false);
       print(e.toString());
+      throw AuthException(message: e.toString());
+
     } catch (e) {
       state = state.copyWith(isLoading: false);
       print(e.toString());
+      throw AuthException(message: e.toString());
+
     }
   }
 }

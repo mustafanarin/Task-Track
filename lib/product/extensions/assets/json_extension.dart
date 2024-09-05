@@ -1,5 +1,5 @@
 enum JsonItems{
-  loot
+  lottie
 }
 
 extension JsonItemsExtension on JsonItems{

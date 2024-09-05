@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/product/constants/project_colors.dart';
 
 enum CategoryId {
   newTask(1),
@@ -14,11 +15,11 @@ class CardColor{
   List<Color> colorByCategory(CategoryId categoryId) {
     switch (categoryId) {
       case CategoryId.newTask:
-        return [Colors.green.shade400, Colors.green.shade800];
+        return [ProjectColors.green400, ProjectColors.green800];
       case CategoryId.continueTask:
-        return [Colors.blue.shade400, Colors.blue.shade800];
+        return [ProjectColors.blue400, ProjectColors.blue800];
       case CategoryId.finishTask:
-        return [Colors.red.shade400, Colors.red.shade800];
+        return [ProjectColors.red400, ProjectColors.red800];
     }
   }
 

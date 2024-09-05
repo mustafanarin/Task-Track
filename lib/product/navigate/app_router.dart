@@ -7,7 +7,6 @@ import 'package:todo_app/feature/splash/splash_page.dart';
 import 'package:todo_app/feature/tabbar/tabbar_page.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/extensions/profile_edit_field.dart';
-
 import '../../feature/authentication/views/login_page.dart';
 import '../../feature/authentication/views/register_page.dart';
 import '../../feature/authentication/views/welcome_page.dart';
@@ -19,7 +18,6 @@ import '../../feature/home/views/task_list_page.dart';
 
 part 'app_router.gr.dart';
 
-//TODO: custom route override route type
 @AutoRouterConfig(replaceInRouteName: 'Page,Route')
 class AppRouter extends RootStackRouter {
   @override
@@ -28,15 +26,10 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: WelcomeRoute.page),
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: RegisterRoute.page),
-        AutoRoute(
-          page: HomeRoute.page
-        ),
+        AutoRoute(page: HomeRoute.page),
         AutoRoute(page: TabbarRoute.page),
         AutoRoute(page: TaskAddRoute.page),
-        // CustomRoute(page: TaskListRoute.page,transitionsBuilder: TransitionsBuilders.zoomIn,opaque: false, durationInMilliseconds: 2000,),
-        AutoRoute(
-          page: TaskListRoute.page,
-        ),
+        AutoRoute(page: TaskListRoute.page),
         AutoRoute(page: TaskDetailRoute.page),
         AutoRoute(page: TaskEditRoute.page),
         AutoRoute(page: ProfileRoute.page),

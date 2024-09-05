@@ -7,6 +7,7 @@ import 'package:todo_app/product/constants/project_colors.dart';
 import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
+import 'package:todo_app/product/widgets/app_name_text.dart';
 
 @RoutePage()
 class HomePage extends ConsumerStatefulWidget {
@@ -37,19 +38,19 @@ class _HomePageState extends ConsumerState<HomePage> {
               children: [
                 _CardWidget(
                   title: ProjectStrings.newTaskCard,
-                  color: Colors.green.shade600,
+                  color: ProjectColors.green600,
                   categoryId: CategoryId.newTask.value,
                   category: CategoryId.newTask,
                 ),
                 _CardWidget(
                   title: ProjectStrings.continuesTaskCard,
-                  color: Colors.blue.shade600,
+                  color: ProjectColors.blue600,
                   categoryId: CategoryId.continueTask.value,
                   category: CategoryId.continueTask,
                 ),
                 _CardWidget(
                   title: ProjectStrings.finishedTaskCard,
-                  color: Colors.red.shade600,
+                  color: ProjectColors.red600,
                   categoryId: CategoryId.finishTask.value,
                   category: CategoryId.finishTask,
                 ),
@@ -64,18 +65,7 @@ class _AppbarTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-        text: TextSpan(
-            text: ProjectStrings.appName1,
-            style: context
-                .textTheme()
-                .titleLarge
-                ?.copyWith(color: ProjectColors.black),
-            children: [
-          TextSpan(
-              text: ProjectStrings.appName2,
-              style: context.textTheme().titleLarge)
-        ]));
+    return AppNameText();
   }
 }
 

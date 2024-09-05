@@ -13,7 +13,6 @@ class NotificationService {
     String? token = await _firebaseMessaging.getToken();
     print('FCM Token: $token');
 
-    // Android için ikon ayarı güncellendi
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/white_app_icon');
 
@@ -26,18 +25,17 @@ class NotificationService {
     );
     await _localNotifications.initialize(initializationSettings);
 
-    // Yeni: Bildirim kanalı oluşturma metodu eklendi
     await _createNotificationChannel();
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
   }
 
-  // Yeni: Bildirim kanalı oluşturma metodu
+  // Notification creation method
   Future<void> _createNotificationChannel() async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel', // Yeni kanal ID'si
-      'High Importance Notifications', // Yeni kanal adı
+      'notification_channel', 
+      'Notifications Channel',
       description: 'This channel is used for important notifications.',
       importance: Importance.high,
       playSound: false
@@ -52,9 +50,9 @@ class NotificationService {
   Future<void> showNotification(String title, String body) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'high_importance_channel', // Değişiklik: Yeni kanal ID'si kullanıldı
-      'High Importance Notifications', // Değişiklik: Yeni kanal adı kullanıldı
-      channelDescription: 'This channel is used for important notifications.',
+      'notification_channel', 
+      'Notifications Channel', 
+      channelDescription: 'My notificaiton channel',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/white_app_icon',
@@ -71,14 +69,14 @@ class NotificationService {
 
   void _handleForegroundMessage(RemoteMessage message) {
     showNotification(
-      message.notification?.title ?? 'Yeni Bildirim',
+      message.notification?.title ?? 'New Notification',
       message.notification?.body ?? '',
     );
   }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Arka planda mesaj alındı: ${message.messageId}");
+  print("message received: ${message.messageId}");
 }
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {

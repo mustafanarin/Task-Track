@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/providers/login_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
+import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
 import 'package:todo_app/product/widgets/project_textfield.dart';
@@ -42,47 +43,90 @@ class ForgatPasswordPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Forgot password"),
+        title: Text(ProjectStrings.forgotPassword),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: context.paddingHorizontalHeigh,
         child: Form(
           key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Email",
-                style: context.textTheme().titleMedium,
-              ),
-              SizedBox(height: 8),
-              ProjectTextfield(
-                controller: tfController,
-                keyBoardType: TextInputType.emailAddress,
-                validator: Validators().validateEmail,
-                hintText: "Enter your email",
-              ),
-              SizedBox(height: 30),
-              Stack(
-                children: [
-                  ProjectButton(
-                    text: isLoading ? "" : "Send email",
-                    onPressed: () async =>
-                        isLoading ? null : await handleSendResetLink(),
-                  ),
-                  if (isLoading)
-                    Center(
-                      child: CircularProgressIndicator(
-                        color: ProjectColors.white,
-                      ),
-                    )
-                ],
-              )
+              Spacer(flex: 40),
+              _EmailText(),
+              SizedBox(height: context.lowValue1),
+              _TextFieldEmail(tfController: tfController),
+              SizedBox(height: context.mediumValue),
+              _SendEmailButton(
+                isLoading: isLoading,
+                onPressed: handleSendResetLink ),
+              Spacer(flex: 60),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _EmailText extends StatelessWidget {
+  const _EmailText();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      ProjectStrings.emailText,
+      style: context.textTheme().titleMedium,
+    );
+  }
+}
+
+class _TextFieldEmail extends StatelessWidget {
+  const _TextFieldEmail({
+    required this.tfController,
+  });
+
+  final TextEditingController tfController;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProjectTextfield(
+      controller: tfController,
+      keyBoardType: TextInputType.emailAddress,
+      validator: Validators().validateEmail,
+      hintText: ProjectStrings.tfEmailHint,
+    );
+  }
+}
+
+class _SendEmailButton extends StatelessWidget {
+  const _SendEmailButton({
+    required this.isLoading,
+    required this.onPressed, 
+  });
+
+  final bool isLoading;
+  final Future<void> Function()
+      onPressed; 
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ProjectButton(
+          text: isLoading ? "" : ProjectStrings.buttonText,
+          onPressed: () async => isLoading
+              ? null
+              : await onPressed(), 
+        ),
+        if (isLoading)
+          Center(
+            child: CircularProgressIndicator(
+              color: ProjectColors.white,
+            ),
+          )
+      ],
     );
   }
 }

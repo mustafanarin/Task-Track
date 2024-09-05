@@ -5,8 +5,9 @@ class ProjectStrings {
   const ProjectStrings._();
 
   // Welcome Page
-  static const String appName1 = "Todo";
-  static const String appName2 = "App";
+  static const String appName = "Task Track";
+  static const String appName1 = "Task";
+  static const String appName2 = "Track";
   static const String welcomeDescription =
       "Every successful day starts with a well-planned list. Manage your tasks and achieve your goals.";
   static const String loginButton = "Login";
@@ -18,15 +19,19 @@ class ProjectStrings {
   static const String tfEmailHint = "Enter your email";
   static const String passwordText = "Password";
   static const String tfPasswordHint = "Enter password";
-  static const String forgatPassword = "Forgot password?";
+  static const String forgatPasswordBtn = "Forgot password?";
   static const String divderOrText = "or";
   static const String loginWithGoogle = "Login using Google";
   static const String haventAccont = "Don't have an account?";
   static const String loginError = "Login failed, please try again.";
   static const String googleLoginError =
       "Google login failed, please try again.";
+  static const String forgotPassword = "Forgot password";
   static const String tryAgainMessage =
       "An error occurred during Google login. Please try again.";
+
+  // Forgot Password Page
+  static const String buttonText = "Send email";
 
   // Register Page
   static const String supTitle = "Enter your personel information";

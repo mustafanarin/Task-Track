@@ -47,7 +47,6 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
               fontSize: 16.0);
           context.mounted ? context.maybePop() : null;
         } catch (error) {
-          //TODO isloading
           isLoading.value = false;
           Fluttertoast.showToast(
               msg: '${ProjectStrings.toastErrorAddMessage} $error',
