@@ -77,6 +77,9 @@ class ProjectStrings {
   static const String userIsNull = "User not logged in";
   static const String logoutApp = "Log Out";
   static const String logOutQuestionText = "Are you sure you want to log out?";
+  static const String logOutNotificationTitle = "Session closed!";
+  static const String logOutNotificationDescription =
+      "We are sorry to see you go.";
 
   // Profile Edit
   static const String profileEditAppbar = "Name Edit";

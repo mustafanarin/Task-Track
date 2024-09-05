@@ -49,13 +49,11 @@ class ProfileProvider extends AutoDisposeNotifier<ProfileState> {
     }
   }
 
-
-
   Future<void> logout() async {
     state = state.copyWith(isLoading: true);
     try {
       await _authService.logout();
-      state = ProfileState(user: const UserModel(), isLoading: false);
+      state = state.copyWith(user: UserModel());
     } catch (e) {
       print("Logout error: ${e.toString()}");
       state = state.copyWith(isLoading: false);
