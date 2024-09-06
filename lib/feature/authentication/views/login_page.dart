@@ -4,8 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/providers/login_provider.dart';
 import 'package:todo_app/feature/authentication/views/forgat_password_page.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/assets/png_extension.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
@@ -39,8 +39,8 @@ class LoginPage extends HookConsumerWidget {
       } catch (e) {
         print(e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(ProjectStrings.loginError),
+          SnackBar(
+            content: Text("loginError".localize(ref)),
           ),
         );
       }
@@ -52,19 +52,13 @@ class LoginPage extends HookConsumerWidget {
 
         if (context.mounted) {
           context.router.replaceAll([const TabbarRoute()]);
-        } else if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Google sign-in was cancelled or failed.'),
-            ),
-          );
-        }
+        } 
       } catch (e) {
         print("Error during Google login: $e");
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(ProjectStrings.tryAgainMessage),
+            SnackBar(
+              content: Text("tryAgainMessage".localize(ref)),
             ),
           );
         }
@@ -97,17 +91,22 @@ class LoginPage extends HookConsumerWidget {
                                 SizedBox(height: context.lowValue1),
                                 _EmailText(),
                                 SizedBox(height: context.lowValue1),
-                                _TextfieldEmail(emailController: emailController),
+                                _TextfieldEmail(
+                                    emailController: emailController),
                                 SizedBox(height: context.lowValue1),
                                 _PasswordText(),
                                 SizedBox(height: context.lowValue1),
-                                _TextfieldPassword(passwordController: passwordController),
+                                _TextfieldPassword(
+                                    passwordController: passwordController),
                                 _ForgotPaswordButton(),
-                                _LoginButton(onPressed: handleLogin,),
+                                _LoginButton(
+                                  onPressed: handleLogin,
+                                ),
                                 SizedBox(height: context.lowValue2),
                                 const _OrDivider(),
                                 SizedBox(height: context.lowValue2),
-                                _LoginWithGoogleButton(onPressed: handleGoogleLogin),
+                                _LoginWithGoogleButton(
+                                    onPressed: handleGoogleLogin),
                                 SizedBox(height: context.lowValue2),
                                 _GoRegisterRow(),
                                 SizedBox(height: context.highValue)
@@ -119,8 +118,7 @@ class LoginPage extends HookConsumerWidget {
                     )
                   ],
                 ),
-                if (authWatch.isLoading)
-                  _CirculerProgesIndicator()
+                if (authWatch.isLoading) _CirculerProgesIndicator()
               ],
             ),
           );
@@ -128,9 +126,7 @@ class LoginPage extends HookConsumerWidget {
 }
 
 class _CirculerProgesIndicator extends StatelessWidget {
-  const _CirculerProgesIndicator({
-    super.key,
-  });
+  const _CirculerProgesIndicator();
 
   @override
   Widget build(BuildContext context) {
@@ -156,25 +152,25 @@ class _CircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: ProjectColors.white,
-        child: const Center(child: CircularProgressIndicator()),
-      );
+      color: ProjectColors.white,
+      child: const Center(child: CircularProgressIndicator()),
+    );
   }
 }
 
-class _EmailText extends StatelessWidget {
+class _EmailText extends ConsumerWidget {
   const _EmailText();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Text(
-      ProjectStrings.emailText,
+      "emailText".localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextfieldEmail extends StatelessWidget {
+class _TextfieldEmail extends ConsumerWidget {
   const _TextfieldEmail({
     required this.emailController,
   });
@@ -182,9 +178,9 @@ class _TextfieldEmail extends StatelessWidget {
   final TextEditingController emailController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ProjectTextfield(
-      hintText: ProjectStrings.tfEmailHint,
+      hintText: "tfEmailHint".localize(ref),
       controller: emailController,
       keyBoardType: TextInputType.emailAddress,
       validator: Validators().validateEmail,
@@ -193,19 +189,19 @@ class _TextfieldEmail extends StatelessWidget {
   }
 }
 
-class _PasswordText extends StatelessWidget {
+class _PasswordText extends ConsumerWidget {
   const _PasswordText();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Text(
-      ProjectStrings.passwordText,
+      "passwordText".localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextfieldPassword extends StatelessWidget {
+class _TextfieldPassword extends ConsumerWidget {
   const _TextfieldPassword({
     required this.passwordController,
   });
@@ -213,104 +209,95 @@ class _TextfieldPassword extends StatelessWidget {
   final TextEditingController passwordController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ProjectTextfield(
         isPassword: true,
-        hintText: ProjectStrings.tfPasswordHint,
+        hintText: "tfPasswordHint".localize(ref),
         controller: passwordController,
         keyBoardType: TextInputType.visiblePassword,
         validator: Validators().validatePassword);
   }
 }
 
-class _ForgotPaswordButton extends StatelessWidget {
+class _ForgotPaswordButton extends ConsumerWidget {
   const _ForgotPaswordButton();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Align(
         alignment: Alignment.topRight,
         child: TextButton(
-          child: Text(ProjectStrings.forgatPasswordBtn,
-              style:
-                  context.textTheme().titleSmall),
+          child: Text("forgatPasswordBtn".localize(ref),
+              style: context.textTheme().titleSmall),
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ForgatPasswordPage()));
-            
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ForgatPasswordPage()));
           },
         ));
   }
 }
 
-class _LoginButton extends StatelessWidget {
+class _LoginButton extends ConsumerWidget {
   const _LoginButton({
     required this.onPressed,
   });
-  final Future<void> Function()
-      onPressed; 
+  final Future<void> Function() onPressed;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ProjectButton(
-        text: ProjectStrings.loginButton,
+        text: "loginButton".localize(ref),
         onPressed: () async => await onPressed());
   }
 }
 
-class _LoginWithGoogleButton extends StatelessWidget {
+class _LoginWithGoogleButton extends ConsumerWidget {
   const _LoginWithGoogleButton({
     required this.onPressed,
   });
 
-  final Future<void> Function()
-      onPressed; 
+  final Future<void> Function() onPressed;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return TransparentButton(
         stringIcon: PngItems.google_icon.path(),
-        text: ProjectStrings.loginWithGoogle,
+        text: "loginWithGoogle".localize(ref),
         onPressed: () async => await onPressed());
   }
 }
 
-class _GoRegisterRow extends StatelessWidget {
+class _GoRegisterRow extends ConsumerWidget {
   const _GoRegisterRow();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          ProjectStrings.haventAccont,
+          "haventAccont".localize(ref),
           style: context.textTheme().titleMedium,
         ),
         TextButton(
-            onPressed: () => context
-                .pushRoute(const RegisterRoute()),
+            onPressed: () => context.pushRoute(const RegisterRoute()),
             child: Text(
-              ProjectStrings.registerButton,
+              "registerButton".localize(ref),
               style: context
                   .textTheme()
                   .titleMedium
-                  ?.copyWith(
-                      color: ProjectColors.iris),
+                  ?.copyWith(color: ProjectColors.iris),
             ))
       ],
     );
   }
 }
 
-class _CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+class _CustomAppbar extends ConsumerWidget implements PreferredSizeWidget {
   const _CustomAppbar({
     required this.height,
   });
   final double height;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
       toolbarHeight: height,
       leading: Padding(
@@ -336,10 +323,11 @@ class _CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                   PngItems.man_working.path(),
                   fit: BoxFit.contain,
                 )),
-            Text(ProjectStrings.loginButton,
+            Text("loginButton".localize(ref),
                 style: context.textTheme().titleLarge),
             Text(
-              ProjectStrings.appBarSuptitle,
+              "appBarSuptitle".localize(ref),
+              textAlign: TextAlign.center,
               style: context
                   .textTheme()
                   .titleSmall
@@ -355,11 +343,11 @@ class _CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height);
 }
 
-class _OrDivider extends StatelessWidget {
+class _OrDivider extends ConsumerWidget {
   const _OrDivider();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -373,7 +361,7 @@ class _OrDivider extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
-            ProjectStrings.divderOrText,
+            "divderOrText".localize(ref),
             style: context.textTheme().titleMedium,
           ),
         ),

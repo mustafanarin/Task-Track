@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/providers/login_provider.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
+import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
 import 'package:todo_app/product/widgets/project_textfield.dart';
-import 'package:todo_app/product/extensions/context_extensions.dart';
 
 class ForgatPasswordPage extends HookConsumerWidget {
   const ForgatPasswordPage({super.key});
@@ -26,7 +26,7 @@ class ForgatPasswordPage extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                "A password reset email has been sent to ${tfController.text}"),
+                "${"successfulMessage".localize(ref)} ${tfController.text}"),
           ),
         );
         context.mounted ? Navigator.of(context).pop() : null;
@@ -34,8 +34,8 @@ class ForgatPasswordPage extends HookConsumerWidget {
         print(e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text("Password reset email could not be sent: ${e.toString()}"),
+            content: Text(
+                "${"failedMessage".localize(ref)} ${e.toString()}"),
           ),
         );
       }
@@ -43,7 +43,7 @@ class ForgatPasswordPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(ProjectStrings.forgotPassword),
+        title: Text('forgotPassword'.localize(ref)),
       ),
       body: Padding(
         padding: context.paddingHorizontalHeigh,
@@ -60,7 +60,8 @@ class ForgatPasswordPage extends HookConsumerWidget {
               SizedBox(height: context.mediumValue),
               _SendEmailButton(
                 isLoading: isLoading,
-                onPressed: handleSendResetLink ),
+                onPressed: handleSendResetLink,
+              ),
               Spacer(flex: 60),
             ],
           ),
@@ -70,19 +71,19 @@ class ForgatPasswordPage extends HookConsumerWidget {
   }
 }
 
-class _EmailText extends StatelessWidget {
+class _EmailText extends ConsumerWidget {
   const _EmailText();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Text(
-      ProjectStrings.emailText,
+      'emailText'.localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextFieldEmail extends StatelessWidget {
+class _TextFieldEmail extends ConsumerWidget {
   const _TextFieldEmail({
     required this.tfController,
   });
@@ -90,35 +91,32 @@ class _TextFieldEmail extends StatelessWidget {
   final TextEditingController tfController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ProjectTextfield(
       controller: tfController,
       keyBoardType: TextInputType.emailAddress,
       validator: Validators().validateEmail,
-      hintText: ProjectStrings.tfEmailHint,
+      hintText: 'tfEmailHint'.localize(ref),
     );
   }
 }
 
-class _SendEmailButton extends StatelessWidget {
+class _SendEmailButton extends ConsumerWidget {
   const _SendEmailButton({
     required this.isLoading,
-    required this.onPressed, 
+    required this.onPressed,
   });
 
   final bool isLoading;
-  final Future<void> Function()
-      onPressed; 
+  final Future<void> Function() onPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
         ProjectButton(
-          text: isLoading ? "" : ProjectStrings.buttonText,
-          onPressed: () async => isLoading
-              ? null
-              : await onPressed(), 
+          text: isLoading ? "" : 'buttonText'.localize(ref),
+          onPressed: () async => isLoading ? null : await onPressed(),
         ),
         if (isLoading)
           Center(

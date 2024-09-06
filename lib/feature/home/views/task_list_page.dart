@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/feature/home/providers/task_crud_provider.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
@@ -45,7 +46,7 @@ class TaskListPage extends HookConsumerWidget {
             : taskState.tasks.isEmpty
                 ? Center(
                     child: Text(
-                        "No ${categoryName.toLowerCase()} missions yet.",
+                        "${categoryName} ${"noTask".localize(ref)}",
                         style: const TextStyle(color: Colors.black)))
                 : _ListviewBuilderTasks(
                     cardColor: cardColor,
@@ -82,11 +83,18 @@ class _ListviewBuilderTasks extends ConsumerWidget {
               SlidableAction(
                 onPressed: (context) {
                   taskNotifier.deleteTask(task);
+                  Fluttertoast.showToast(
+                    msg: "taskDeleted".localize(ref),
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: ProjectColors.grey,
+                    textColor: ProjectColors.white,
+                    fontSize: 16.0);
                 },
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
-                label: ProjectStrings.delete,
+                label: "delete".localize(ref),
               ),
             ],
           ),
@@ -110,11 +118,11 @@ class _PopupShortMenu extends ConsumerWidget {
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           onTap: () => taskNotifier.sortTasks(SortType.name),
-          child: const Text(ProjectStrings.shortByName),
+          child: Text("shortByName".localize(ref)),
         ),
         PopupMenuItem<String>(
           onTap: () => taskNotifier.sortTasks(SortType.importance),
-          child: const Text(ProjectStrings.shortByImportance),
+          child: Text("shortByImportance".localize(ref)),
         ),
       ],
     );

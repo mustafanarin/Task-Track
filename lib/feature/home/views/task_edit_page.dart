@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/feature/home/views/task_add_page.dart';
 import 'package:todo_app/feature/home/providers/task_crud_provider.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/validators/validators.dart';
@@ -39,7 +39,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
         try {
           await taskNotifier.updateTask(newTask.value);
           Fluttertoast.showToast(
-              msg: ProjectStrings.toastSuccessUpdateMessage,
+              msg: "toastSuccessUpdateMessage".localize(ref),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: ProjectColors.grey,
@@ -51,7 +51,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
         } catch (error) {
           isLoading.value = false;
           Fluttertoast.showToast(
-              msg: '${ProjectStrings.toastErrorAddMessage} $error',
+              msg: '${"toastErrorAddMessage".localize(ref)} $error',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: ProjectColors.black,
@@ -68,7 +68,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
           )
         : Scaffold(
             appBar: AppBar(
-              title: const Text(ProjectStrings.taskEditAppbarTitle),
+              title: Text("taskEditAppbarTitle".localize(ref)),
             ),
             body: Padding(
               padding: context.paddingHorizontalMedium,
@@ -96,7 +96,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
                     _GridviewTaskIconList(newTask: newTask),
                     SizedBox(height: context.highValue),
                     ProjectButton(
-                        text: ProjectStrings.saveButtonText,
+                        text: "saveButtonText".localize(ref),
                         onPressed: submitForm),
                     SizedBox(height: context.mediumValue),
                   ],
@@ -107,7 +107,7 @@ class _TaskEditPageState extends ConsumerState<TaskEditPage> {
   }
 }
 
-class _TextfieldTaskName extends HookWidget {
+class _TextfieldTaskName extends HookConsumerWidget {
   const _TextfieldTaskName({
     required this.newTask,
     required this.model,
@@ -117,13 +117,13 @@ class _TextfieldTaskName extends HookWidget {
   final TaskModel model;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     final tfTitle = useTextEditingController(text: model.name);
     return ProjectTextfield(
       controller: tfTitle,
       keyBoardType: TextInputType.text,
       validator: Validators().validateTaskNameNotEmpty,
-      label: const Text(ProjectStrings.tfhintTaskName),
+      label: Text("tfhintTaskName".localize(ref)),
       onChanged: (value) {
         newTask.value = newTask.value.copyWith(name: value);
       },
@@ -131,7 +131,7 @@ class _TextfieldTaskName extends HookWidget {
   }
 }
 
-class _TextfieldDescription extends HookWidget {
+class _TextfieldDescription extends HookConsumerWidget {
   const _TextfieldDescription({
     required this.model,
     required this.newTask,
@@ -141,14 +141,14 @@ class _TextfieldDescription extends HookWidget {
   final TaskModel model;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     final descriptionLength = useState<int>(model.description.length);
     final tfDescription = useTextEditingController(text: model.description);
     return ProjectTextfield(
       controller: tfDescription,
       keyBoardType: TextInputType.multiline,
       validator: null,
-      label: const Text(ProjectStrings.tfhintTaskDes),
+      label: Text("tfhintTaskDes".localize(ref)),
       decoration: InputDecoration(
         counterText: "${descriptionLength.value}/200",
         alignLabelWithHint: true,
@@ -163,7 +163,7 @@ class _TextfieldDescription extends HookWidget {
   }
 }
 
-class _DropdownImportanceScore extends StatelessWidget {
+class _DropdownImportanceScore extends ConsumerWidget {
   final TaskEditPage widget;
   final ValueNotifier<TaskModel> newTask;
 
@@ -173,9 +173,9 @@ class _DropdownImportanceScore extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return ProjectDropdown(
-      labelText: ProjectStrings.dropdownImportance,
+      labelText: "dropdownImportance".localize(ref),
       value: widget.model.importance,
       itemValues: [1, 2, 3, 4, 5],
       onChanged: (value) {
@@ -185,7 +185,7 @@ class _DropdownImportanceScore extends StatelessWidget {
   }
 }
 
-class _DropdownChangeCategory extends StatelessWidget {
+class _DropdownChangeCategory extends ConsumerWidget {
   final TaskEditPage widget;
   final ValueNotifier<TaskModel> newTask;
 
@@ -195,21 +195,21 @@ class _DropdownChangeCategory extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     String getCategoryName(int value) {
       switch (value) {
         case 1:
-          return ProjectStrings.categoryNameNew;
+          return "categoryNameNew".localize(ref);
         case 2:
-          return ProjectStrings.categoryNameContinue;
+          return "categoryNameContinue".localize(ref);
         case 3:
-          return ProjectStrings.categoryNameFinished;
+          return "categoryNameFinished".localize(ref);
       }
       return "";
     }
 
     return ProjectDropdown(
-      labelText: ProjectStrings.dropdownCategory,
+      labelText: "dropdownCategory".localize(ref),
       value: widget.model.categoryId,
       itemValues: [1, 2, 3],
       itemBuilder: getCategoryName,
@@ -222,12 +222,12 @@ class _DropdownChangeCategory extends StatelessWidget {
   }
 }
 
-class _TaskIconListTitle extends StatelessWidget {
+class _TaskIconListTitle extends ConsumerWidget {
   const _TaskIconListTitle();
 
   @override
-  Widget build(BuildContext context) {
-    return Text(ProjectStrings.iconListTitle,
+  Widget build(BuildContext context,WidgetRef ref) {
+    return Text("iconListTitle".localize(ref),
         style: context.textTheme().titleMedium);
   }
 }

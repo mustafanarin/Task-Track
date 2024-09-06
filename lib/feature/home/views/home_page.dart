@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_app/feature/home/providers/home_provider.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/widgets/app_name_text.dart';
@@ -37,19 +37,19 @@ class _HomePageState extends ConsumerState<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _CardWidget(
-                  title: ProjectStrings.newTaskCard,
+                  title: "newTaskCard".localize(ref),
                   color: ProjectColors.green600,
                   categoryId: CategoryId.newTask.value,
                   category: CategoryId.newTask,
                 ),
                 _CardWidget(
-                  title: ProjectStrings.continuesTaskCard,
+                  title: "continuesTaskCard".localize(ref),
                   color: ProjectColors.blue600,
                   categoryId: CategoryId.continueTask.value,
                   category: CategoryId.continueTask,
                 ),
                 _CardWidget(
-                  title: ProjectStrings.finishedTaskCard,
+                  title: "finishedTaskCard".localize(ref),
                   color: ProjectColors.red600,
                   categoryId: CategoryId.finishTask.value,
                   category: CategoryId.finishTask,

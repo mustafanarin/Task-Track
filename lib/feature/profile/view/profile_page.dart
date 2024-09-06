@@ -2,10 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/feature/profile/provider/profile_provider.dart';
 import 'package:todo_app/feature/profile/state/profile_state.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/profile_edit_field.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/widgets/project_alert_dialog.dart';
@@ -21,14 +21,14 @@ class ProfilePage extends ConsumerWidget {
     final profileState = ref.watch(profileProvider);
     final profileRead = ref.read(profileProvider.notifier);
 
-    Future<void> handleLogout(BuildContext context, WidgetRef ref) async {
+    Future<void> handleLogout(BuildContext context) async {
       try {
         await profileRead.logout();
         if (context.mounted) {
           context.router.replaceAll([const LoginRoute()]);
           ref.read(notificationServiceProvider).showNotification(
-                ProjectStrings.logOutNotificationTitle,
-                ProjectStrings.logOutNotificationDescription,
+                'logOutNotificationTitle'.localize(ref),
+                'logOutNotificationDescription'.localize(ref),
               );
         }
       } catch (e) {
@@ -49,7 +49,8 @@ class ProfilePage extends ConsumerWidget {
         : Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const Text(ProjectStrings.profileAppbar),
+              title: Text('profileAppbar'.localize(ref)),
+              actions: [_SelectAppLanguage()],
             ),
             body: Padding(
               padding: context.paddingAllLow1,
@@ -57,14 +58,45 @@ class ProfilePage extends ConsumerWidget {
                 children: [
                   _UserNameCard(profileState: profileState),
                   _EmailCard(profileState: profileState),
-                  _LogOutCard(handleLogout: () => handleLogout(context, ref))
+                  _LogOutCard(handleLogout: () => handleLogout(context))
                 ],
               ),
             ));
   }
 }
 
-class _UserNameCard extends StatelessWidget {
+class _SelectAppLanguage extends ConsumerWidget {
+  const _SelectAppLanguage();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.language),
+      onSelected: (String languageCode) {
+        ref.read(languageProvider.notifier).changeLanguage(languageCode);
+        Fluttertoast.showToast(
+            msg: "appLanguage".localize(ref),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: ProjectColors.grey,
+            textColor: ProjectColors.white,
+            fontSize: 16.0);
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: 'tr',
+          child: Text('Türkçe'),
+        ),
+        PopupMenuItem<String>(
+          value: 'en',
+          child: Text('English'),
+        ),
+      ],
+    );
+  }
+}
+
+class _UserNameCard extends ConsumerWidget {
   const _UserNameCard({
     required this.profileState,
   });
@@ -72,7 +104,7 @@ class _UserNameCard extends StatelessWidget {
   final ProfileState profileState;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 4,
       color: ProjectColors.iris,
@@ -91,7 +123,7 @@ class _UserNameCard extends StatelessWidget {
   }
 }
 
-class _EmailCard extends StatelessWidget {
+class _EmailCard extends ConsumerWidget {
   const _EmailCard({
     required this.profileState,
   });
@@ -99,7 +131,7 @@ class _EmailCard extends StatelessWidget {
   final ProfileState profileState;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 4,
       color: ProjectColors.iris,
@@ -115,7 +147,7 @@ class _EmailCard extends StatelessWidget {
   }
 }
 
-class _LogOutCard extends StatelessWidget {
+class _LogOutCard extends ConsumerWidget {
   const _LogOutCard({
     required this.handleLogout,
   });
@@ -123,13 +155,13 @@ class _LogOutCard extends StatelessWidget {
   final VoidCallback handleLogout;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       elevation: 4,
       color: ProjectColors.iris,
       child: ListTile(
         leading: const Icon(Icons.exit_to_app, color: ProjectColors.white),
-        title: Text(ProjectStrings.logoutApp,
+        title: Text('logoutApp'.localize(ref),
             style: context
                 .textTheme()
                 .titleMedium
@@ -140,7 +172,7 @@ class _LogOutCard extends StatelessWidget {
               context: context,
               builder: (context1) {
                 return ProjectAlertDialog(
-                  titleText: ProjectStrings.logOutQuestionText,
+                  titleText: 'logOutQuestionText'.localize(ref),
                 );
               });
           if (result is bool && result) {

@@ -5,9 +5,9 @@ class ProjectColors {
   const ProjectColors._();
   static const Color iris = Color.fromRGBO(86, 82, 204, 1);
   static const Color grey = Color.fromRGBO(118, 151, 178, 1);
-  static const Color white = Colors.white;
-  static const Color black = Colors.black;
-  static const Color amber = Colors.amber;
+  static const Color white = Color.fromRGBO(255, 255, 255, 1);
+  static const Color black = Color.fromRGBO(0, 0, 0, 1);
+  static const Color amber = Color.fromRGBO(255, 193, 7, 1);
   static const Color green400 = Color.fromRGBO(102, 187, 106, 1);
   static const Color green600 = Color.fromRGBO(67, 160, 71, 1);
   static const Color green800 = Color.fromRGBO(46, 125, 50, 1);

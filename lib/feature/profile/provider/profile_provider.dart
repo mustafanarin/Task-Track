@@ -33,6 +33,7 @@ class ProfileProvider extends AutoDisposeNotifier<ProfileState> {
     } catch (e) {
       print("Initialize user error: ${e.toString()}");
       state = state.copyWith(isLoading: false);
+      
     }
   }
 
@@ -42,10 +43,12 @@ class ProfileProvider extends AutoDisposeNotifier<ProfileState> {
       await _authService.updateUserName(newName);
       final updatedUser = state.user.copyWith(name: newName);
       state = state.copyWith(user: updatedUser, isLoading: false);
+
     } catch (e) {
       print("Update user name error: ${e.toString()}");
       state = state.copyWith(isLoading: false);
       throw AuthException(message: e.toString());
+
     }
   }
 
@@ -54,10 +57,12 @@ class ProfileProvider extends AutoDisposeNotifier<ProfileState> {
     try {
       await _authService.logout();
       state = state.copyWith(user: UserModel());
+
     } catch (e) {
       print("Logout error: ${e.toString()}");
       state = state.copyWith(isLoading: false);
       throw AuthException(message: e.toString());
+
     }
   }
 }

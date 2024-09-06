@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/category_id_enum.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 
@@ -24,7 +24,7 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(ProjectStrings.taskDetailAppbarTitle),
+          title:  Text("taskDetailAppbarTitle".localize(ref)),
         ),
         body: Center(
           child: Padding(
@@ -162,7 +162,7 @@ class _TextTaskDate extends StatelessWidget {
   }
 }
 
-class _TextCategoryName extends StatelessWidget {
+class _TextCategoryName extends ConsumerWidget {
   const _TextCategoryName({
     required this.categoryName,
   });
@@ -170,8 +170,8 @@ class _TextCategoryName extends StatelessWidget {
   final String categoryName;
 
   @override
-  Widget build(BuildContext context) {
-    return Text("Category: $categoryName",
+  Widget build(BuildContext context,WidgetRef ref) {
+    return Text("${"categoryText".localize(ref)} $categoryName",
         style: context
             .textTheme()
             .titleMedium

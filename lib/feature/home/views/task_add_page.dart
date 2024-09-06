@@ -5,8 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:todo_app/feature/home/providers/task_crud_provider.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/validators/validators.dart';
 import 'package:todo_app/product/widgets/project_button.dart';
@@ -39,7 +39,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
         try {
           await taskNotifier.addTask(newTask.value);
           Fluttertoast.showToast(
-              msg: ProjectStrings.toastSuccessAddMessage,
+              msg: "toastSuccessAddMessage".localize(ref),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: ProjectColors.grey,
@@ -49,7 +49,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
         } catch (error) {
           isLoading.value = false;
           Fluttertoast.showToast(
-              msg: '${ProjectStrings.toastErrorAddMessage} $error',
+              msg: '${"toastErrorAddMessage".localize(ref)} $error',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: ProjectColors.black,
@@ -68,7 +68,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
           )
         : Scaffold(
             appBar: AppBar(
-              title: const Text(ProjectStrings.taskAddAppbarTitle),
+              title: Text("taskAddAppbarTitle".localize(ref)),
             ),
             body: Padding(
               padding: context.paddingHorizontalMedium,
@@ -88,7 +88,7 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
                     _GridViewTaskIconList(newTask: newTask),
                     SizedBox(height: context.highValue),
                     ProjectButton(
-                        text: ProjectStrings.saveButtonText,
+                        text: "saveButtonText".localize(ref),
                         onPressed: submitForm),
                     SizedBox(height: context.mediumValue),
                   ],
@@ -99,17 +99,17 @@ class _AddTaskPageState extends ConsumerState<TaskAddPage> {
   }
 }
 
-class _TextIconListTitle extends StatelessWidget {
+class _TextIconListTitle extends ConsumerWidget {
   const _TextIconListTitle();
 
   @override
-  Widget build(BuildContext context) {
-    return Text(ProjectStrings.iconListTitle,
+  Widget build(BuildContext context,WidgetRef ref) {
+    return Text("iconListTitle".localize(ref),
         style: context.textTheme().titleMedium);
   }
 }
 
-class _TextFormFieldName extends StatelessWidget {
+class _TextFormFieldName extends ConsumerWidget {
   const _TextFormFieldName({
     required this.newTask,
   });
@@ -117,9 +117,9 @@ class _TextFormFieldName extends StatelessWidget {
   final ValueNotifier<TaskModel> newTask;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return ProjectTextfield(
-      label: const Text(ProjectStrings.tfhintTaskName),
+      label: Text("tfhintTaskName".localize(ref)),
       keyBoardType: TextInputType.text,
       validator: Validators().validateTaskNameNotEmpty,
       onChanged: (value) {
@@ -129,7 +129,7 @@ class _TextFormFieldName extends StatelessWidget {
   }
 }
 
-class _TextfieldDescription extends HookWidget {
+class _TextfieldDescription extends HookConsumerWidget {
   const _TextfieldDescription({
     required this.newTask,
   });
@@ -137,12 +137,12 @@ class _TextfieldDescription extends HookWidget {
   final ValueNotifier<TaskModel> newTask;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     final descriptionLength = useState<int>(0);
     return ProjectTextfield(
       keyBoardType: TextInputType.multiline,
       validator: null,
-      label: const Text(ProjectStrings.tfhintTaskDes),
+      label: Text("tfhintTaskDes".localize(ref)),
       decoration: InputDecoration(
         counterText: "${descriptionLength.value}/200",
         alignLabelWithHint: true,
@@ -159,7 +159,7 @@ class _TextfieldDescription extends HookWidget {
 }
 
 
-class _DropdownImportanceScore extends StatelessWidget {
+class _DropdownImportanceScore extends ConsumerWidget {
   const _DropdownImportanceScore({
     required this.newTask,
   });
@@ -167,10 +167,10 @@ class _DropdownImportanceScore extends StatelessWidget {
   final ValueNotifier<TaskModel> newTask;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return DropdownButtonFormField<int>(
       decoration:
-          const InputDecoration(labelText: ProjectStrings.dropdownImportance),
+           InputDecoration(labelText: "dropdownImportance".localize(ref)),
       value: newTask.value.importance,
       items: [1, 2, 3, 4, 5].map((int value) {
         return DropdownMenuItem<int>(

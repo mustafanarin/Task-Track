@@ -4,8 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:todo_app/feature/authentication/providers/register_provider.dart';
 import 'package:todo_app/feature/authentication/state/user_state.dart';
+import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
-import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/context_extensions.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/validators/validators.dart';
@@ -39,8 +39,8 @@ class RegisterPage extends HookConsumerWidget {
       } catch (e) {
         print(e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(ProjectStrings.registerError),
+          SnackBar(
+            content: Text("registerError".localize(ref)),
           ),
         );
       }
@@ -101,13 +101,13 @@ class RegisterPage extends HookConsumerWidget {
   }
 }
 
-class _CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+class _CustomAppbar extends ConsumerWidget implements PreferredSizeWidget {
   const _CustomAppbar({
     required this.height,
   });
   final double height;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return AppBar(
       toolbarHeight: context.dynamicHeight(0.12),
       centerTitle: true,
@@ -119,11 +119,11 @@ class _CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               height: context.mediumValue,
             ),
             Text(
-              ProjectStrings.registerButton,
+              "registerButton".localize(ref),
               style: context.textTheme().titleLarge,
             ),
             Text(
-              ProjectStrings.supTitle,
+              "supTitle".localize(ref),
               style: context
                   .textTheme()
                   .titleSmall
@@ -160,19 +160,19 @@ class _Divider extends StatelessWidget {
   }
 }
 
-class _UserNameText extends StatelessWidget {
+class _UserNameText extends ConsumerWidget {
   const _UserNameText();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Text(
-      ProjectStrings.userName,
+      "userName".localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextfieldUserName extends StatelessWidget {
+class _TextfieldUserName extends ConsumerWidget {
   const _TextfieldUserName({
     required this.nameController,
   });
@@ -180,28 +180,28 @@ class _TextfieldUserName extends StatelessWidget {
   final TextEditingController nameController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return ProjectTextfield(
-        hintText: ProjectStrings.tfUserNameHint,
+        hintText: "tfUserNameHint".localize(ref),
         controller: nameController,
         keyBoardType: TextInputType.name,
         validator: Validators().validateName);
   }
 }
 
-class _EmailText extends StatelessWidget {
+class _EmailText extends ConsumerWidget {
   const _EmailText();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Text(
-      ProjectStrings.emailText,
+      "emailText".localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextfieldEmail extends StatelessWidget {
+class _TextfieldEmail extends ConsumerWidget {
   const _TextfieldEmail({
     required this.emailController,
   });
@@ -209,30 +209,30 @@ class _TextfieldEmail extends StatelessWidget {
   final TextEditingController emailController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return ProjectTextfield(
-        hintText: ProjectStrings.tfEmailHint,
+        hintText: "tfEmailHint".localize(ref),
         controller: emailController,
         keyBoardType: TextInputType.emailAddress,
         validator: Validators().validateEmail);
   }
 }
 
-class PasswordText extends StatelessWidget {
+class PasswordText extends ConsumerWidget {
   const PasswordText({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Text(
-      ProjectStrings.passwordText,
+      "passwordText".localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextfieldPassword extends StatelessWidget {
+class _TextfieldPassword extends ConsumerWidget {
   const _TextfieldPassword({
     required this.passwordController,
   });
@@ -240,10 +240,10 @@ class _TextfieldPassword extends StatelessWidget {
   final TextEditingController passwordController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return ProjectTextfield(
       isPassword: true,
-      hintText: ProjectStrings.tfPasswordHint,
+      hintText: "tfPasswordHint".localize(ref),
       controller: passwordController,
       keyBoardType: TextInputType.visiblePassword,
       validator: Validators().validatePassword,
@@ -251,19 +251,19 @@ class _TextfieldPassword extends StatelessWidget {
   }
 }
 
-class _ConfirmText extends StatelessWidget {
+class _ConfirmText extends ConsumerWidget {
   const _ConfirmText();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Text(
-      ProjectStrings.confirmText,
+      "confirmText".localize(ref),
       style: context.textTheme().titleMedium,
     );
   }
 }
 
-class _TextfieldConfirm extends StatelessWidget {
+class _TextfieldConfirm extends ConsumerWidget {
   const _TextfieldConfirm({
     required this.confirmController,
     required this.passwordController,
@@ -273,10 +273,10 @@ class _TextfieldConfirm extends StatelessWidget {
   final TextEditingController passwordController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return ProjectTextfield(
         isPassword: true,
-        hintText: ProjectStrings.tfConfirmHint,
+        hintText: "tfConfirmHint".localize(ref),
         controller: confirmController,
         keyBoardType: TextInputType.visiblePassword,
         validator: (value) => Validators()
@@ -284,7 +284,7 @@ class _TextfieldConfirm extends StatelessWidget {
   }
 }
 
-class _RegisterButton extends StatelessWidget {
+class _RegisterButton extends ConsumerWidget {
   const _RegisterButton({
     required this.authwatch,
     required this.onPressed,
@@ -294,11 +294,11 @@ class _RegisterButton extends StatelessWidget {
   final Future<void> Function() onPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return Stack(
       children: [
         ProjectButton(
-            text: authwatch.isLoading ? "" : ProjectStrings.registerButton,
+            text: authwatch.isLoading ? "" : "registerButton".localize(ref),
             onPressed: () async =>
                 authwatch.isLoading ? null : await onPressed()),
         if (authwatch.isLoading)
