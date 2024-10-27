@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class ProjectStrings {
-  const ProjectStrings._();
+abstract final class ProjectStrings {
 
   static const String appName = "Task Track";
   static const String appName1 = "Task";
@@ -90,6 +89,8 @@ class ProjectStrings {
       'logOutNotificationTitle': "Session closed!",
       'logOutNotificationDescription': "We are sorry to see you go.",
       'appLanguage': "Application language: English",
+      'yesButtonText': "Yes",
+      'noButtonText': "No",
 
       // Profile Edit
       'profileEditAppbar': "Name Edit",
@@ -182,6 +183,8 @@ class ProjectStrings {
       'logOutNotificationTitle': "Oturum kapatıldı!",
       'logOutNotificationDescription': "Gittiğinizi görmek üzücü.",
       'appLanguage': "Uygulama dili: Türkçe",
+      'yesButtonText': "Evet",
+      'noButtonText': "Hayır",
 
 
       // Profil Düzenleme

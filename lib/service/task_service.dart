@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/feature/home/model/task_model.dart';
 import 'package:intl/intl.dart';
+import 'package:todo_app/product/constants/collection_enum.dart';
 
 class TaskService {
-  final _collection = FirebaseFirestore.instance.collection("tasks");
+  final _collection = FirebaseFirestore.instance.collection(CollectionEnum.tasks.value);
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String get userId => _auth.currentUser?.uid ?? '';
@@ -16,18 +17,18 @@ class TaskService {
       }
 
       final now = DateTime.now();
-      final formattedDate = DateFormat('d MMMM').format(now);
+      final currentDayAndMonth = DateFormat(_DateFormatType.dayAndMonth.value).format(now);
 
       final updatedTask = task.copyWith(
         userId: userId,
-        createdAt: formattedDate,
+        createdAt: currentDayAndMonth,
         description: task.description,
         iconCodePoint: task.iconCodePoint == 62504 ? 62504 : task.iconCodePoint,
       );
 
       final newTask = await _collection.add(updatedTask.toMap());
 
-      await newTask.update({'id': newTask.id});
+      await newTask.update({_TaskDocumant.id.value: newTask.id});
     } catch (e) {
       throw Exception('An error occurred while adding the task: $e');
     }
@@ -40,15 +41,15 @@ class TaskService {
       }
       final querySnapshot = await _collection
           .where(
-            'userId',
+            _TaskDocumant.userId.value,
             isEqualTo: userId,
           )
-          .where('categoryId', isEqualTo: categoryId)
-          .orderBy('createdAt', descending: true)
+          .where(_TaskDocumant.categoryId.value, isEqualTo: categoryId)
+          .orderBy(_TaskDocumant.createdAt.value, descending: true)
           .get();
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
-        data['id'] = doc.id;
+        data[_TaskDocumant.id.value] = doc.id;
         return TaskModel.fromMap(data);
       }).toList();
     } catch (e) {
@@ -77,4 +78,23 @@ class TaskService {
       throw Exception('An error occurred while deleting the task: $e');
     }
   }
+}
+
+enum _TaskDocumant {
+  id("id"),
+  userId("userId"),
+  categoryId("categoryId"),
+  createdAt("createdAt");
+
+  final String value;
+
+  const _TaskDocumant(this.value);
+}
+
+enum _DateFormatType {
+  dayAndMonth('d MMMM');
+
+  final String value;
+
+  const _DateFormatType(this.value);
 }

@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:todo_app/firebase_options.dart'; 
 
 @immutable
-class ApplicationStart {
-  const ApplicationStart._();
+final class ApplicationStart {
 
   static Future<void> init() async {
     try {

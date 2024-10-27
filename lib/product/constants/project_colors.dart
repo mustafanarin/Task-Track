@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class ProjectColors {
-  const ProjectColors._();
+abstract final class ProjectColors {
+  
   static const Color iris = Color.fromRGBO(86, 82, 204, 1);
   static const Color grey = Color.fromRGBO(118, 151, 178, 1);
   static const Color white = Color.fromRGBO(255, 255, 255, 1);

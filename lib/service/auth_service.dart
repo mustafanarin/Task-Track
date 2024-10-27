@@ -2,29 +2,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:todo_app/feature/authentication/model/user_model.dart';
+import 'package:todo_app/product/constants/collection_enum.dart';
 import 'package:todo_app/product/utility/exception/auth_exception.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _collection = FirebaseFirestore.instance.collection("users");
+  final _collection = FirebaseFirestore.instance.collection(CollectionEnum.users.value);
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   Future<UserModel> login(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      DocumentSnapshot userDoc =
-          await _collection.doc(userCredential.user!.uid).get();
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      DocumentSnapshot userDoc = await _collection.doc(userCredential.user!.uid).get();
 
       if (!userDoc.exists) {
         throw AuthException(message: "User doc not exist");
       }
 
-      return UserModel(
-          id: userCredential.user!.uid, name: userDoc["name"], email: email);
+      return UserModel(id: userCredential.user!.uid, name: userDoc[_UserDoc.name.value], email: email);
     } on FirebaseAuthException catch (e) {
       throw AuthException(message: "Login Error: ${e.toString()}");
     } catch (e) {
@@ -34,11 +32,10 @@ class AuthService {
 
   Future<UserModel> register(String name, String email, String password) async {
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       await _collection.doc(userCredential.user!.uid).set({
-        "name": name,
-        "email": email,
+        _UserDoc.name.value: name,
+        _UserDoc.email.value: email,
       });
 
       return UserModel(id: userCredential.user!.uid, name: name, email: email);
@@ -66,11 +63,7 @@ class AuthService {
       try {
         await user.updateDisplayName(newName);
 
-        await _firestore
-            .collection("users")
-            .doc(user.uid)
-            .update({"name": newName});
-
+        await _firestore.collection(CollectionEnum.users.value).doc(user.uid).update({_UserDoc.name.value: newName});
       } catch (error) {
         throw AuthException(message: "Update User Name Error: $error");
       }
@@ -83,8 +76,7 @@ class AuthService {
     final user = _auth.currentUser;
     if (user != null) {
       try {
-        DocumentSnapshot userDoc =
-            await _firestore.collection("users").doc(user.uid).get();
+        DocumentSnapshot userDoc = await _firestore.collection(CollectionEnum.users.value).doc(user.uid).get();
 
         if (!userDoc.exists) {
           throw AuthException(message: "User doc not exist");
@@ -94,7 +86,7 @@ class AuthService {
 
         return UserModel(
           id: user.uid,
-          name: userData['name'] ?? user.displayName ?? "",
+          name: userData[_UserDoc.name.value] ?? user.displayName ?? "",
           email: user.email ?? "",
         );
       } on FirebaseAuthException catch (error) {
@@ -105,7 +97,6 @@ class AuthService {
     }
     return null;
   }
-
 
   Future<UserModel> signInWithGoogle() async {
     try {
@@ -119,22 +110,20 @@ class AuthService {
         throw AuthException(message: "Google sign-in cancelled by user");
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
       if (user != null) {
         // Update or create user information in firestore
-        await _firestore.collection("users").doc(user.uid).set({
-          'name': user.displayName ?? '',
-          'email': user.email ?? '',
+        await _firestore.collection(CollectionEnum.users.value).doc(user.uid).set({
+          _UserDoc.name.value : user.displayName ?? '',
+          _UserDoc.email.value: user.email ?? '',
         }, SetOptions(merge: true));
 
         return UserModel(
@@ -157,4 +146,14 @@ class AuthService {
       throw AuthException(message: "Password reset error: ${error.toString()}");
     }
   }
+}
+
+enum _UserDoc {
+  name("name"),
+  email("email");
+
+  final String value;
+
+  const _UserDoc(this.value);
+
 }

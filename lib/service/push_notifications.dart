@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -11,7 +12,9 @@ class NotificationService {
     await _firebaseMessaging.requestPermission();
 
     String? token = await _firebaseMessaging.getToken();
-    print('FCM Token: $token');
+    if (kDebugMode) {
+      print('FCM Token: $token'); 
+    }
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/white_app_icon');

@@ -13,7 +13,7 @@ import 'package:todo_app/product/widgets/project_button.dart';
 
 import '../../../product/widgets/project_textfield.dart';
 
-part '../../../product/part_of/my_icon_list.dart';
+part '../../../product/utility/app_part/my_icon_list.dart';
 
 @RoutePage()
 class TaskAddPage extends StatefulHookConsumerWidget {

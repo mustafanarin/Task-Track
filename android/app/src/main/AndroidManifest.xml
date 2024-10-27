@@ -7,7 +7,8 @@
     <application
         android:label="Task Track"
         android:name="${applicationName}"
-        android:icon="@mipmap/app_icon">
+        android:icon="@mipmap/app_icon"
+        android:enableOnBackInvokedCallback="true">
         <activity
             
             android:name=".MainActivity"

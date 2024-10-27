@@ -20,8 +20,7 @@ class LanguageNotifier extends StateNotifier<Locale> {
     _loadSavedLanguage();
   }
 
-  
-  static const String _languageKey = 'selected_language';
+  static String _languageKey = _LanguageKey.seleceted.value;
 
   Future<void> _loadSavedLanguage() async {
     final prefs = await SharedPreferences.getInstance();
@@ -31,7 +30,6 @@ class LanguageNotifier extends StateNotifier<Locale> {
     }
   }
 
-  
   Future<void> changeLanguage(String languageCode) async {
     state = Locale(languageCode, languageCode.toUpperCase());
     final prefs = await SharedPreferences.getInstance();
@@ -39,6 +37,10 @@ class LanguageNotifier extends StateNotifier<Locale> {
   }
 }
 
+enum _LanguageKey {
+  seleceted('selected_language');
 
+  final String value;
 
-
+  const _LanguageKey(this.value);
+}
