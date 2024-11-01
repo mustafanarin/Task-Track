@@ -6,6 +6,7 @@ import 'package:todo_app/feature/profile/provider/language_provider.dart';
 import 'package:todo_app/feature/profile/provider/profile_provider.dart';
 import 'package:todo_app/feature/profile/state/profile_state.dart';
 import 'package:todo_app/product/constants/project_colors.dart';
+import 'package:todo_app/product/constants/project_strings.dart';
 import 'package:todo_app/product/extensions/profile_edit_field.dart';
 import 'package:todo_app/product/navigate/app_router.dart';
 import 'package:todo_app/product/widgets/project_alert_dialog.dart';
@@ -20,6 +21,7 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
     final profileRead = ref.read(profileProvider.notifier);
+    final locale = ref.watch(languageProvider);
 
     Future<void> handleLogout(BuildContext context) async {
       try {
@@ -27,9 +29,9 @@ class ProfilePage extends ConsumerWidget {
         if (context.mounted) {
           context.router.replaceAll([const LoginRoute()]);
           ref.read(notificationServiceProvider).showNotification(
-                'logOutNotificationTitle'.localize(ref),
-                'logOutNotificationDescription'.localize(ref),
-              );
+            ProjectStrings.getString('logOutNotificationTitle', locale.languageCode),
+            ProjectStrings.getString('logOutNotificationDescription', locale.languageCode),
+          );
         }
       } catch (e) {
         print("ERROR: ${e.toString()}");
@@ -49,7 +51,7 @@ class ProfilePage extends ConsumerWidget {
         : Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: Text('profileAppbar'.localize(ref)),
+              title: Text(ProjectStrings.getString('profileAppbar', locale.languageCode)),
               actions: [_SelectAppLanguage()],
             ),
             body: Padding(
@@ -61,7 +63,8 @@ class ProfilePage extends ConsumerWidget {
                   _LogOutCard(handleLogout: () => handleLogout(context))
                 ],
               ),
-            ));
+            ),
+          );
   }
 }
 
@@ -70,63 +73,75 @@ class _SelectAppLanguage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
+    final currentLanguageCode = locale.languageCode;
+
     return PopupMenuButton<String>(
       icon: Icon(Icons.language),
       onSelected: (String languageCode) {
         ref.read(languageProvider.notifier).changeLanguage(languageCode);
         Fluttertoast.showToast(
-            msg: "appLanguage".localize(ref),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: ProjectColors.grey,
-            textColor: ProjectColors.white,
-            fontSize: 16.0);
+          msg: ProjectStrings.getString("appLanguage", languageCode),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: ProjectColors.grey,
+          textColor: ProjectColors.white,
+          fontSize: 16.0,
+        );
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           value: 'tr',
-          child: Text('Türkçe'),
+          child: Row(
+            children: [
+              if (currentLanguageCode == 'tr') Icon(Icons.check, color: ProjectColors.iris),
+              if (currentLanguageCode == 'tr') SizedBox(width: 8),
+              Text('Türkçe'),
+            ],
+          ),
         ),
         PopupMenuItem<String>(
           value: 'en',
-          child: Text('English'),
+          child: Row(
+            children: [
+              if (currentLanguageCode == 'en') Icon(Icons.check, color: ProjectColors.iris),
+              if (currentLanguageCode == 'en') SizedBox(width: 8),
+              Text('English'),
+            ],
+          ),
         ),
       ],
     );
   }
 }
 
+
 class _UserNameCard extends ConsumerWidget {
-  const _UserNameCard({
-    required this.profileState,
-  });
+  const _UserNameCard({required this.profileState});
 
   final ProfileState profileState;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     return Card(
       elevation: 4,
       color: ProjectColors.iris,
       child: ListTile(
         leading: const Icon(Icons.person_outline, color: ProjectColors.white),
-        title: Text(profileState.user.name ?? "",
-            style: context
-                .textTheme()
-                .titleMedium
-                ?.copyWith(color: ProjectColors.white)),
+        title: Text(
+          profileState.user.name ?? "",
+          style: context.textTheme().titleMedium?.copyWith(color: ProjectColors.white),
+        ),
         trailing: const Icon(Icons.arrow_outward, color: ProjectColors.white),
-        onTap: () => context
-            .pushRoute(ProfileEditRoute(profileEditEnum: ProfileEditEnum.name)),
+        onTap: () => context.pushRoute(ProfileEditRoute(profileEditEnum: ProfileEditEnum.name)),
       ),
     );
   }
 }
 
 class _EmailCard extends ConsumerWidget {
-  const _EmailCard({
-    required this.profileState,
-  });
+  const _EmailCard({required this.profileState});
 
   final ProfileState profileState;
 
@@ -137,44 +152,43 @@ class _EmailCard extends ConsumerWidget {
       color: ProjectColors.iris,
       child: ListTile(
         leading: const Icon(Icons.email_outlined, color: ProjectColors.white),
-        title: Text(profileState.user.email ?? "",
-            style: context
-                .textTheme()
-                .titleMedium
-                ?.copyWith(color: ProjectColors.white)),
+        title: Text(
+          profileState.user.email ?? "",
+          style: context.textTheme().titleMedium?.copyWith(color: ProjectColors.white),
+        ),
       ),
     );
   }
 }
 
 class _LogOutCard extends ConsumerWidget {
-  const _LogOutCard({
-    required this.handleLogout,
-  });
+  const _LogOutCard({required this.handleLogout});
 
   final VoidCallback handleLogout;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(languageProvider);
+
     return Card(
       elevation: 4,
       color: ProjectColors.iris,
       child: ListTile(
         leading: const Icon(Icons.exit_to_app, color: ProjectColors.white),
-        title: Text('logoutApp'.localize(ref),
-            style: context
-                .textTheme()
-                .titleMedium
-                ?.copyWith(color: ProjectColors.white)),
+        title: Text(
+          ProjectStrings.getString('logoutApp', locale.languageCode),
+          style: context.textTheme().titleMedium?.copyWith(color: ProjectColors.white),
+        ),
         trailing: const Icon(Icons.arrow_outward, color: ProjectColors.white),
         onTap: () async {
           final result = await showDialog(
-              context: context,
-              builder: (context1) {
-                return ProjectAlertDialog(
-                  titleText: 'logOutQuestionText'.localize(ref),
-                );
-              });
+            context: context,
+            builder: (context1) {
+              return ProjectAlertDialog(
+                titleText: ProjectStrings.getString('logOutQuestionText', locale.languageCode),
+              );
+            },
+          );
           if (result is bool && result) {
             handleLogout();
           }
