@@ -5,14 +5,18 @@ import 'package:todo_app/firebase_options.dart';
 
 @immutable
 final class ApplicationStart {
-
   static Future<void> init() async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
 
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.android,
-      );
+      // Check if Firebase is started
+      if (Firebase.apps.isEmpty) {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.android,
+        );
+      } else {
+        Firebase.app(); // Use existing instance
+      }
 
       // Set device orientation preferences
       await _setPreferredOrientations();
