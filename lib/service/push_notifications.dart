@@ -25,17 +25,6 @@ class NotificationService {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         await _setupLocalNotifications();
 
-        try {
-          String? token = await _firebaseMessaging.getToken();
-          if (kDebugMode) {
-            print('FCM Token: $token');
-          }
-        } catch (tokenError) {
-          if (kDebugMode) {
-            print('Token error: $tokenError');
-          }
-        }
-
         // Default topic
         await _firebaseMessaging.subscribeToTopic('all');
 

@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -13,10 +14,7 @@ part of 'app_router.dart';
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
-      : super(
-          HomeRoute.name,
-          initialChildren: children,
-        );
+    : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
@@ -32,10 +30,7 @@ class HomeRoute extends PageRouteInfo<void> {
 /// [LoginPage]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})
-      : super(
-          LoginRoute.name,
-          initialChildren: children,
-        );
+    : super(LoginRoute.name, initialChildren: children);
 
   static const String name = 'LoginRoute';
 
@@ -55,13 +50,10 @@ class ProfileEditRoute extends PageRouteInfo<ProfileEditRouteArgs> {
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          ProfileEditRoute.name,
-          args: ProfileEditRouteArgs(
-            profileEditEnum: profileEditEnum,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+         ProfileEditRoute.name,
+         args: ProfileEditRouteArgs(profileEditEnum: profileEditEnum, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'ProfileEditRoute';
 
@@ -69,19 +61,13 @@ class ProfileEditRoute extends PageRouteInfo<ProfileEditRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ProfileEditRouteArgs>();
-      return ProfileEditPage(
-        args.profileEditEnum,
-        key: args.key,
-      );
+      return ProfileEditPage(args.profileEditEnum, key: args.key);
     },
   );
 }
 
 class ProfileEditRouteArgs {
-  const ProfileEditRouteArgs({
-    required this.profileEditEnum,
-    this.key,
-  });
+  const ProfileEditRouteArgs({required this.profileEditEnum, this.key});
 
   final ProfileEditEnum profileEditEnum;
 
@@ -97,10 +83,7 @@ class ProfileEditRouteArgs {
 /// [ProfilePage]
 class ProfileRoute extends PageRouteInfo<void> {
   const ProfileRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileRoute.name,
-          initialChildren: children,
-        );
+    : super(ProfileRoute.name, initialChildren: children);
 
   static const String name = 'ProfileRoute';
 
@@ -116,10 +99,7 @@ class ProfileRoute extends PageRouteInfo<void> {
 /// [RegisterPage]
 class RegisterRoute extends PageRouteInfo<void> {
   const RegisterRoute({List<PageRouteInfo>? children})
-      : super(
-          RegisterRoute.name,
-          initialChildren: children,
-        );
+    : super(RegisterRoute.name, initialChildren: children);
 
   static const String name = 'RegisterRoute';
 
@@ -135,10 +115,7 @@ class RegisterRoute extends PageRouteInfo<void> {
 /// [SplashPage]
 class SplashRoute extends PageRouteInfo<void> {
   const SplashRoute({List<PageRouteInfo>? children})
-      : super(
-          SplashRoute.name,
-          initialChildren: children,
-        );
+    : super(SplashRoute.name, initialChildren: children);
 
   static const String name = 'SplashRoute';
 
@@ -154,10 +131,7 @@ class SplashRoute extends PageRouteInfo<void> {
 /// [TabbarPage]
 class TabbarRoute extends PageRouteInfo<void> {
   const TabbarRoute({List<PageRouteInfo>? children})
-      : super(
-          TabbarRoute.name,
-          initialChildren: children,
-        );
+    : super(TabbarRoute.name, initialChildren: children);
 
   static const String name = 'TabbarRoute';
 
@@ -173,10 +147,7 @@ class TabbarRoute extends PageRouteInfo<void> {
 /// [TaskAddPage]
 class TaskAddRoute extends PageRouteInfo<void> {
   const TaskAddRoute({List<PageRouteInfo>? children})
-      : super(
-          TaskAddRoute.name,
-          initialChildren: children,
-        );
+    : super(TaskAddRoute.name, initialChildren: children);
 
   static const String name = 'TaskAddRoute';
 
@@ -197,14 +168,10 @@ class TaskDetailRoute extends PageRouteInfo<TaskDetailRouteArgs> {
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          TaskDetailRoute.name,
-          args: TaskDetailRouteArgs(
-            model: model,
-            category: category,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+         TaskDetailRoute.name,
+         args: TaskDetailRouteArgs(model: model, category: category, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'TaskDetailRoute';
 
@@ -212,11 +179,7 @@ class TaskDetailRoute extends PageRouteInfo<TaskDetailRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<TaskDetailRouteArgs>();
-      return TaskDetailPage(
-        args.model,
-        args.category,
-        key: args.key,
-      );
+      return TaskDetailPage(args.model, args.category, key: args.key);
     },
   );
 }
@@ -248,13 +211,10 @@ class TaskEditRoute extends PageRouteInfo<TaskEditRouteArgs> {
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          TaskEditRoute.name,
-          args: TaskEditRouteArgs(
-            model: model,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+         TaskEditRoute.name,
+         args: TaskEditRouteArgs(model: model, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'TaskEditRoute';
 
@@ -262,19 +222,13 @@ class TaskEditRoute extends PageRouteInfo<TaskEditRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<TaskEditRouteArgs>();
-      return TaskEditPage(
-        args.model,
-        key: args.key,
-      );
+      return TaskEditPage(args.model, key: args.key);
     },
   );
 }
 
 class TaskEditRouteArgs {
-  const TaskEditRouteArgs({
-    required this.model,
-    this.key,
-  });
+  const TaskEditRouteArgs({required this.model, this.key});
 
   final TaskModel model;
 
@@ -296,15 +250,15 @@ class TaskListRoute extends PageRouteInfo<TaskListRouteArgs> {
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          TaskListRoute.name,
-          args: TaskListRouteArgs(
-            categoryId: categoryId,
-            category: category,
-            categoryName: categoryName,
-            key: key,
-          ),
-          initialChildren: children,
-        );
+         TaskListRoute.name,
+         args: TaskListRouteArgs(
+           categoryId: categoryId,
+           category: category,
+           categoryName: categoryName,
+           key: key,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'TaskListRoute';
 
@@ -348,10 +302,7 @@ class TaskListRouteArgs {
 /// [WelcomePage]
 class WelcomeRoute extends PageRouteInfo<void> {
   const WelcomeRoute({List<PageRouteInfo>? children})
-      : super(
-          WelcomeRoute.name,
-          initialChildren: children,
-        );
+    : super(WelcomeRoute.name, initialChildren: children);
 
   static const String name = 'WelcomeRoute';
 

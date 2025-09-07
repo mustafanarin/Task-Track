@@ -18,7 +18,7 @@ class LightTheme {
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ))),
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
           titleTextStyle: _titleMediumStyle.copyWith(fontSize: 20),
         ),
         textButtonTheme: TextButtonThemeData(
